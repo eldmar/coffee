@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://thedailybrew.pages.dev/sitemap-index.xml
+Sitemap: https://coffee.ridkous.workers.dev/sitemap-index.xml

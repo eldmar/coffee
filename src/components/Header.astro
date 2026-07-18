@@ -10,7 +10,7 @@ const { pathname } = Astro.url;
 ---
 
 <header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
-  <div class="mx-auto flex max-w-6xl items-center gap-6 px-5 py-3.5">
+  <div class="mx-auto flex max-w-6xl items-center gap-4 px-5 py-3.5 lg:gap-6">
     <a href="/" class="font-display text-lg font-semibold tracking-[0.08em] whitespace-nowrap">
       THE DAILY BREW
     </a>
@@ -29,7 +29,7 @@ const { pathname } = Astro.url;
       ))}
     </nav>
 
-    <form action="/recipes" method="get" class="hidden items-center md:flex" role="search">
+    <form action="/recipes" method="get" class="hidden items-center lg:flex" role="search">
       <label class="flex items-center gap-2 rounded-full border border-line bg-card px-3.5 py-1.5 text-sm text-ink-soft focus-within:border-clay">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <circle cx="11" cy="11" r="7" />
@@ -42,13 +42,152 @@ const { pathname } = Astro.url;
           class="w-40 bg-transparent outline-none placeholder:text-ink-soft/70"
         />
       </label>
+      <button type="submit" class="sr-only">Search</button>
     </form>
 
     <a
       href="/recipes"
-      class="ml-auto rounded-md bg-clay px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-clay-dark md:ml-0"
+      class="ml-auto hidden rounded-md bg-clay px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-clay-dark sm:block lg:ml-0"
     >
       Explore recipes
     </a>
+
+    <button
+      id="menu-toggle"
+      type="button"
+      class="ml-auto flex h-10 w-10 items-center justify-center rounded-md border border-line text-ink sm:ml-0 lg:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Open menu"
+    >
+      <svg id="menu-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path class="burger-line" d="M4 7h16" />
+        <path class="burger-line" d="M4 12h16" />
+        <path class="burger-line" d="M4 17h16" />
+      </svg>
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="lg:hidden">
+    <div class="menu-clip">
+      <div class="menu-inner mx-auto flex max-w-6xl flex-col gap-1 border-t border-line px-5 py-4">
+      <form action="/recipes" method="get" role="search" class="mb-3">
+        <label class="flex items-center gap-2 rounded-md border border-line bg-card px-3.5 py-2.5 text-sm text-ink-soft focus-within:border-clay">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <input
+            type="search"
+            name="q"
+            placeholder="Search recipes & guides"
+            class="w-full bg-transparent outline-none placeholder:text-ink-soft/70"
+          />
+        </label>
+        <button type="submit" class="sr-only">Search</button>
+      </form>
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'rounded-md px-3 py-2.5 text-[15px] font-medium transition-colors hover:bg-cream',
+            pathname.startsWith(item.href) ? 'bg-cream text-ink' : 'text-ink-soft',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+      <a
+        href="/recipes"
+        class="mt-3 rounded-md bg-clay px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-clay-dark sm:hidden"
+      >
+        Explore recipes
+      </a>
+      </div>
+    </div>
   </div>
 </header>
+
+<style>
+  #mobile-menu {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+  }
+  #mobile-menu.open {
+    grid-template-rows: 1fr;
+  }
+  .menu-clip {
+    overflow: hidden;
+    min-height: 0;
+    visibility: hidden;
+    transition: visibility 0s linear 0.3s;
+  }
+  #mobile-menu.open .menu-clip {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  .menu-inner {
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.3s ease;
+  }
+  #mobile-menu.open .menu-inner {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.05s;
+  }
+  .burger-line {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      transform 0.3s ease,
+      opacity 0.2s ease;
+  }
+  #menu-toggle.open .burger-line:nth-child(1) {
+    transform: translateY(5px) rotate(45deg);
+  }
+  #menu-toggle.open .burger-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0.4);
+  }
+  #menu-toggle.open .burger-line:nth-child(3) {
+    transform: translateY(-5px) rotate(-45deg);
+  }
+  @media (min-width: 1024px) {
+    #mobile-menu {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #mobile-menu,
+    .menu-clip,
+    .menu-inner,
+    .burger-line {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+
+  function setMenu(open: boolean) {
+    if (!toggle || !menu) return;
+    menu.classList.toggle('open', open);
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+
+  toggle?.addEventListener('click', () => {
+    setMenu(!menu?.classList.contains('open'));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setMenu(false);
+  });
+</script>

@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Lora Variable", Georgia, serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --color-cream: #f2ecdf;
+  --color-paper: #faf7f0;
+  --color-card: #fdfcf8;
+  --color-ink: #33291e;
+  --color-ink-soft: #7c6f5f;
+  --color-clay: #a9502c;
+  --color-clay-dark: #8c4021;
+  --color-sage: #aab5a1;
+  --color-sage-dark: #5f6e54;
+  --color-line: #e5dcca;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background-color: var(--color-paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-clay);
+}

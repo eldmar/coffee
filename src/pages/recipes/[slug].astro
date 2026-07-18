@@ -1,0 +1,83 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const recipes = await getCollection('recipes');
+  return recipes.map((recipe) => ({
+    params: { slug: recipe.id },
+    props: { recipe },
+  }));
+}
+
+const { recipe } = Astro.props;
+const { Content } = await render(recipe);
+const { data } = recipe;
+
+const methodLabels: Record<string, string> = {
+  espresso: 'Espresso machine',
+  aeropress: 'AeroPress',
+  v60: 'V60 pour over',
+  'french-press': 'French press',
+  'moka-pot': 'Moka pot',
+  'cold-brew': 'Cold brew',
+};
+
+const facts = [
+  ['Method', methodLabels[data.brewMethod] ?? data.brewMethod],
+  ['Time', `${data.time} min`],
+  ['Difficulty', data.difficulty],
+  ['Serve', data.temperature === 'iced' ? 'Iced' : 'Hot'],
+];
+---
+
+<Layout title={`${data.title} — The Daily Brew`} description={data.description}>
+  <article class="mx-auto max-w-3xl px-5 py-12">
+    <a href="/recipes" class="text-sm font-medium text-clay hover:underline">&#8592; All recipes</a>
+    <span class="eyebrow mt-6 block">{data.category.replace('-', ' ')}</span>
+    <h1 class="mt-2 font-display text-4xl font-medium text-balance">{data.title}</h1>
+    <p class="mt-4 text-lg text-ink-soft">{data.description}</p>
+
+    <img
+      src={data.image}
+      alt={data.title}
+      class="mt-8 aspect-[16/9] w-full rounded-lg object-cover"
+      width="768"
+      height="432"
+    />
+
+    <dl class="mt-8 grid grid-cols-2 gap-4 rounded-lg border border-line bg-card p-5 sm:grid-cols-4">
+      {facts.map(([label, value]) => (
+        <div>
+          <dt class="eyebrow">{label}</dt>
+          <dd class="mt-1 text-sm font-medium capitalize">{value}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="mt-10 grid gap-8 sm:grid-cols-2">
+      <section>
+        <h2 class="font-display text-xl font-medium">Ingredients</h2>
+        <ul class="mt-3 flex flex-col gap-2 text-sm text-ink-soft">
+          {data.ingredients.map((item) => (
+            <li class="border-b border-line pb-2">{item}</li>
+          ))}
+        </ul>
+      </section>
+      <section>
+        <h2 class="font-display text-xl font-medium">Equipment</h2>
+        <ul class="mt-3 flex flex-col gap-2 text-sm text-ink-soft">
+          {data.equipment.map((item) => (
+            <li class="border-b border-line pb-2">{item}</li>
+          ))}
+        </ul>
+      </section>
+    </div>
+
+    <div
+      class="prose-recipe mt-10 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-medium [&_h2]:mt-8 [&_h2]:mb-3 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:flex [&_ol]:flex-col [&_ol]:gap-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:flex [&_ul]:flex-col [&_ul]:gap-2 [&_li]:text-ink-soft [&_p]:text-ink-soft"
+    >
+      <Content />
+    </div>
+  </article>
+</Layout>

@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import RecipeFilters from '../../components/RecipeFilters';
+
+const recipes = (await getCollection('recipes')).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title),
+);
+
+const catalog = recipes.map((r) => ({
+  slug: r.id,
+  title: r.data.title,
+  description: r.data.description,
+  image: r.data.image,
+  category: r.data.category,
+  brewMethod: r.data.brewMethod,
+  temperature: r.data.temperature,
+  milk: r.data.milk,
+  time: r.data.time,
+  difficulty: r.data.difficulty,
+  ingredients: r.data.ingredients,
+}));
+---
+
+<Layout title="Recipes — The Daily Brew" description="Every recipe on The Daily Brew: espresso drinks, pour overs, and cold coffee.">
+  <section class="mx-auto max-w-6xl px-5 py-14">
+    <span class="eyebrow">Recipes</span>
+    <h1 class="mt-3 font-display text-4xl font-medium">All recipes</h1>
+    <p class="mt-3 max-w-lg text-ink-soft">
+      Espresso drinks, pour overs, and cold coffee — each with exact doses, times, and fixes for when things go wrong.
+    </p>
+    <div class="mt-8">
+      <RecipeFilters client:load recipes={catalog} />
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,71 @@
+---
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    heading: 'Explore',
+    links: [
+      { label: 'Recipes', href: '/recipes' },
+      { label: 'Brew Guides', href: '/guides' },
+      { label: 'Learn', href: '/learn' },
+      { label: 'Journal', href: '/journal' },
+      { label: 'Shop', href: '/shop' },
+    ],
+  },
+  {
+    heading: 'Learn',
+    links: [
+      { label: 'Coffee basics', href: '/learn#basics' },
+      { label: 'Dial in espresso', href: '/learn#espresso' },
+      { label: 'Understand your beans', href: '/learn#beans' },
+      { label: 'All learning paths', href: '/learn' },
+    ],
+  },
+  {
+    heading: 'About',
+    links: [
+      { label: 'Our story', href: '/journal' },
+      { label: 'Contact', href: 'mailto:hello@thedailybrew.coffee' },
+    ],
+  },
+  {
+    heading: 'Connect',
+    links: [
+      { label: 'Instagram', href: 'https://instagram.com' },
+      { label: 'YouTube', href: 'https://youtube.com' },
+      { label: 'Newsletter', href: '/#newsletter' },
+    ],
+  },
+];
+---
+
+<footer class="border-t border-line bg-paper">
+  <div class="mx-auto grid max-w-6xl gap-10 px-5 py-12 md:grid-cols-[1.2fr_repeat(4,1fr)]">
+    <div>
+      <p class="font-display text-lg font-semibold tracking-[0.08em]">THE DAILY BREW</p>
+      <p class="mt-3 text-sm text-ink-soft">Better coffee at home.<br />Every day.</p>
+    </div>
+    {columns.map((col) => (
+      <nav aria-label={col.heading}>
+        <h3 class="eyebrow">{col.heading}</h3>
+        <ul class="mt-3 flex flex-col gap-2 text-sm text-ink-soft">
+          {col.links.map((link) => (
+            <li>
+              <a href={link.href} class="transition-colors hover:text-ink">{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    ))}
+  </div>
+  <div class="border-t border-line">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-4 text-xs text-ink-soft">
+      <p>&copy; {year} The Daily Brew. All rights reserved.</p>
+      <div class="flex gap-5">
+        <a href="/terms" class="hover:text-ink">Terms</a>
+        <a href="/privacy" class="hover:text-ink">Privacy</a>
+        <a href="/accessibility" class="hover:text-ink">Accessibility</a>
+      </div>
+    </div>
+  </div>
+</footer>

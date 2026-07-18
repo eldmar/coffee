@@ -1,0 +1,56 @@
+---
+const fixes = [
+  {
+    title: 'Sour espresso',
+    href: '/guides/espresso#troubleshooting',
+    icon: `<circle cx="24" cy="24" r="16"/><path d="M24 8a16 16 0 0 1 0 32"/><path d="M24 13v22M13.5 18.5l21 11m0-11-21 11"/>`,
+  },
+  {
+    title: 'Bitter coffee',
+    href: '/guides/v60#troubleshooting',
+    icon: `<ellipse cx="24" cy="24" rx="12" ry="16"/><path d="M24 8c6 8 6 24 0 32"/>`,
+  },
+  {
+    title: 'No crema',
+    href: '/guides/espresso#troubleshooting',
+    icon: `<circle cx="24" cy="24" r="14"/><circle cx="24" cy="24" r="7"/>`,
+  },
+  {
+    title: 'Milk not foaming',
+    href: '/guides/espresso#milk',
+    icon: `<path d="M14 12h16v6l4 4v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V12Z"/><path d="M14 18h16"/><path d="M34 22h4l-3 6"/>`,
+  },
+];
+---
+
+<section class="border-y border-line bg-paper">
+  <div class="mx-auto grid max-w-6xl items-center gap-8 px-5 py-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,2fr)]">
+    <div class="lg:border-r lg:border-line lg:pr-8">
+      <h2 class="font-display text-2xl font-medium">Fix your coffee</h2>
+      <p class="mt-2 text-sm text-ink-soft">Quick answers to common problems.</p>
+    </div>
+    <ul class="grid grid-cols-2 gap-6 sm:grid-cols-4">
+      {fixes.map((fix) => (
+        <li class="flex flex-col items-center gap-2 text-center">
+          <svg
+            width="44"
+            height="44"
+            viewBox="0 0 48 48"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="text-ink"
+            aria-hidden="true"
+            set:html={fix.icon}
+          />
+          <span class="text-sm font-medium">{fix.title}</span>
+          <a href={fix.href} class="text-sm font-medium text-clay hover:underline">
+            See fixes &#8594;
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

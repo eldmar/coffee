@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import RecipeFinder from '../components/RecipeFinder';
+import RecipeCard from '../components/RecipeCard.astro';
+import BrewMethods from '../components/BrewMethods.astro';
+import LearningPaths from '../components/LearningPaths.astro';
+import Troubleshooting from '../components/Troubleshooting.astro';
+import Newsletter from '../components/Newsletter.astro';
+import ShopComingSoon from '../components/ShopComingSoon.astro';
+
+const recipes = await getCollection('recipes');
+const popular = recipes.filter((r) => r.data.popular).slice(0, 3);
+
+const finderRecipes = recipes.map((r) => ({
+  slug: r.id,
+  title: r.data.title,
+  image: r.data.image,
+  category: r.data.category,
+  brewMethod: r.data.brewMethod,
+  temperature: r.data.temperature,
+  milk: r.data.milk,
+  time: r.data.time,
+  difficulty: r.data.difficulty,
+}));
+---
+
+<Layout>
+  <Hero />
+
+  <section class="mx-auto max-w-6xl px-5">
+    <div class="relative z-10 -mt-2 md:-mt-28">
+      <RecipeFinder client:visible recipes={finderRecipes} />
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-5 py-16">
+    <div class="flex items-baseline justify-between gap-4">
+      <h2 class="font-display text-3xl font-medium">Popular recipes</h2>
+      <a href="/recipes" class="text-sm font-medium text-clay hover:underline">View all recipes &#8594;</a>
+    </div>
+    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {popular.map((recipe) => (
+        <RecipeCard
+          slug={recipe.id}
+          title={recipe.data.title}
+          image={recipe.data.image}
+          category={recipe.data.category}
+          time={recipe.data.time}
+          difficulty={recipe.data.difficulty}
+        />
+      ))}
+    </div>
+  </section>
+
+  <BrewMethods />
+  <LearningPaths />
+  <Troubleshooting />
+  <div id="newsletter">
+    <Newsletter />
+  </div>
+  <ShopComingSoon />
+</Layout>

@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+const guides = await getCollection('guides');
+const order = ['espresso', 'aeropress', 'v60', 'french-press', 'moka-pot'];
+const sorted = order
+  .map((m) => guides.find((g) => g.data.method === m))
+  .filter((g) => g !== undefined);
+---
+
+<Layout title="Brew Guides — The Daily Brew" description="Step-by-step guides for every brew method: espresso, AeroPress, V60, French press, and moka pot.">
+  <section class="mx-auto max-w-6xl px-5 py-14">
+    <span class="eyebrow">Brew Guides</span>
+    <h1 class="mt-3 font-display text-4xl font-medium">Choose your brew method</h1>
+    <p class="mt-3 max-w-lg text-ink-soft">
+      Every method rewards slightly different habits. Pick yours and learn the handful of details that matter.
+    </p>
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {sorted.map((guide) => (
+        <a
+          href={`/guides/${guide.id}`}
+          class="group rounded-lg border border-line bg-card p-6 transition-shadow hover:shadow-md"
+        >
+          <h2 class="font-display text-2xl font-medium">{guide.data.title}</h2>
+          <p class="mt-2 text-sm text-ink-soft">{guide.data.description}</p>
+          <span class="mt-4 inline-block text-sm font-medium text-clay">
+            Read the guide
+            <span class="inline-block transition-transform group-hover:translate-x-1" aria-hidden="true">&#8594;</span>
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Layout>

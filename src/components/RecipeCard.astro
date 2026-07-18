@@ -1,0 +1,59 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  image: string;
+  category: string;
+  time: number;
+  difficulty: string;
+}
+
+const { slug, title, image, category, time, difficulty } = Astro.props;
+
+const categoryLabels: Record<string, string> = {
+  espresso: 'Espresso',
+  'milk-based': 'Milk-based',
+  filter: 'Filter',
+  cold: 'Cold',
+};
+const difficultyLabels: Record<string, string> = {
+  easy: 'Easy',
+  medium: 'Medium',
+  hard: 'Hard',
+};
+---
+
+<a
+  href={`/recipes/${slug}`}
+  class="group flex flex-col overflow-hidden rounded-lg border border-line bg-card transition-shadow hover:shadow-md"
+>
+  <img
+    src={image}
+    alt=""
+    class="aspect-[4/3] w-full object-cover"
+    width="400"
+    height="300"
+    loading="lazy"
+  />
+  <div class="flex flex-1 flex-col gap-1.5 p-5">
+    <span class="eyebrow">{categoryLabels[category] ?? category}</span>
+    <h3 class="font-display text-xl font-medium">{title}</h3>
+    <div class="mt-auto flex items-center gap-2 pt-2 text-sm text-ink-soft">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 2" />
+      </svg>
+      <span>{time} min</span>
+      <span aria-hidden="true">·</span>
+      <span class:list={[difficulty === 'medium' && 'text-clay', difficulty === 'hard' && 'text-clay']}>
+        {difficultyLabels[difficulty] ?? difficulty}
+      </span>
+      <span
+        class="ml-auto text-clay transition-transform group-hover:translate-x-1"
+        aria-hidden="true"
+      >
+        &#8594;
+      </span>
+    </div>
+  </div>
+</a>

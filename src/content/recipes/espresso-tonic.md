@@ -2,7 +2,7 @@
 title: Espresso Tonic
 description: A bright and refreshing iced coffee made with a double espresso, chilled tonic water and plenty of ice.
 seoDescription: Make a refreshing espresso tonic with a double espresso, chilled tonic water, ice and optional citrus. Includes ratios, coffee tips and variations.
-image: /images/recipes/espresso-tonic.svg
+image: /images/recipes/espresso-tonic.jpg
 category: cold
 brewMethod: espresso
 temperature: iced

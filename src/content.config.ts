@@ -6,6 +6,8 @@ const recipes = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
     image: z.string(),
     category: z.enum(['espresso', 'milk-based', 'filter', 'cold']),
     brewMethod: z.enum(['espresso', 'aeropress', 'v60', 'french-press', 'moka-pot', 'cold-brew']),

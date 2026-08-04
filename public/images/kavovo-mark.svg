@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="291 28 325 156" role="img" aria-label="Kavovo mark">
+  <g fill="none" stroke="#2B211B" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="369" cy="106" r="72"/>
+    <path d="M369 34 C348 61 351 84 367 107 C383 131 379 155 360 178"/>
+    <circle cx="515" cy="106" r="72"/>
+    <circle cx="515" cy="106" r="47" fill="#2B211B" stroke="none"/>
+    <rect x="582" y="94" width="28" height="24" rx="5" fill="#2B211B" stroke="none"/>
+  </g>
+</svg>

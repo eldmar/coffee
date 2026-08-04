@@ -12,7 +12,7 @@ interface Props {
 }
 
 const {
-  title = 'The Daily Brew — Better coffee at home',
+  title = 'Kavovo — Better coffee at home',
   description = 'Simple recipes, practical guides, and the confidence to brew your best cup at home.',
   ogImage = '/images/hero.jpg',
 } = Astro.props;
@@ -29,10 +29,11 @@ const ogImageUrl = new URL(ogImage, Astro.site);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="The Daily Brew" />
+    <meta property="og:site_name" content="Kavovo" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

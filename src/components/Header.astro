@@ -11,8 +11,9 @@ const { pathname } = Astro.url;
 
 <header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
   <div class="mx-auto flex max-w-6xl items-center gap-4 px-5 py-3.5 lg:gap-6">
-    <a href="/" class="font-display text-lg font-semibold tracking-[0.08em] whitespace-nowrap">
-      THE DAILY BREW
+    <a href="/" class="flex items-center gap-2.5 whitespace-nowrap" aria-label="Kavovo — home">
+      <img src="/images/kavovo-mark.svg" alt="" width="325" height="156" class="h-6 w-auto" />
+      <img src="/images/kavovo-wordmark.svg" alt="Kavovo" width="818" height="124" class="h-[18px] w-auto" />
     </a>
 
     <nav class="hidden flex-1 justify-center gap-6 text-sm text-ink-soft lg:flex" aria-label="Main">

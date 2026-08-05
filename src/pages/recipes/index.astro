@@ -11,12 +11,11 @@ const recipes = (await getCollection('recipes')).sort((a, b) =>
   a.data.title.localeCompare(b.data.title),
 );
 
-const catalog = await Promise.all(
-  recipes.map(async (r) => ({
+const catalog = recipes.map((r) => ({
   slug: r.id,
   title: r.data.title,
   description: r.data.description,
-  image: await cardImage(r.data.image),
+  image: cardImage(r.data.image),
   category: r.data.category,
   brewMethod: r.data.brewMethod,
   temperature: r.data.temperature,
@@ -26,8 +25,7 @@ const catalog = await Promise.all(
   totalTimeLabel: r.data.totalTimeLabel,
   difficulty: r.data.difficulty,
     ingredients: r.data.ingredients,
-  })),
-);
+}));
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 

@@ -1,5 +1,5 @@
 ---
-import { getImage } from 'astro:assets';
+import { photo } from '../lib/photos';
 import type { CollectionEntry } from 'astro:content';
 import JsonLd from './JsonLd.astro';
 import { categoryLabel, extractSteps, isoDuration } from '../lib/recipes';
@@ -22,7 +22,7 @@ const schema = {
   url,
   name: data.title,
   description: data.description,
-  image: `${site}${(await getImage({ src: data.image, format: 'jpeg', width: 1200 })).src}`,
+  image: `${site}${photo(data.image).src}`,
   author: { '@type': 'Organization', name: data.author },
   publisher: { '@type': 'Organization', name: 'KAVOVO' },
   datePublished: data.datePublished.toISOString().slice(0, 10),

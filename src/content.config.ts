@@ -3,39 +3,38 @@ import { glob } from 'astro/loaders';
 
 const recipes = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/recipes' }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      description: z.string(),
-      seoTitle: z.string().optional(),
-      seoDescription: z.string().optional(),
-      image: image(),
-      category: z.enum([
-      'espresso-drinks',
-      'milk-drinks',
-      'filter-coffee',
-      'iced-coffee',
-      'brewing-methods',
-      ]),
-      brewMethod: z.enum(['espresso', 'aeropress', 'v60', 'french-press', 'moka-pot', 'cold-brew']),
-      temperature: z.enum(['hot', 'iced']),
-      milk: z.enum(['black', 'milk']),
-      difficulty: z.enum(['easy', 'medium', 'hard']),
-      // All times in minutes. activeTime is hands-on; totalTime is elapsed.
-      prepTime: z.number(),
-      brewTime: z.number(),
-      activeTime: z.number(),
-      totalTime: z.number(),
-      // Set when a range is more honest than a single number, e.g. "12–18 hr".
-      totalTimeLabel: z.string().optional(),
-      yield: z.string().default('1 drink'),
-      author: z.string().default('KAVOVO'),
-      datePublished: z.coerce.date(),
-      dateModified: z.coerce.date(),
-      ingredients: z.array(z.string()),
-      equipment: z.array(z.string()),
-      popular: z.boolean().default(false),
-    }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    seoTitle: z.string().optional(),
+    seoDescription: z.string().optional(),
+    image: z.string(),
+    category: z.enum([
+    'espresso-drinks',
+    'milk-drinks',
+    'filter-coffee',
+    'iced-coffee',
+    'brewing-methods',
+    ]),
+    brewMethod: z.enum(['espresso', 'aeropress', 'v60', 'french-press', 'moka-pot', 'cold-brew']),
+    temperature: z.enum(['hot', 'iced']),
+    milk: z.enum(['black', 'milk']),
+    difficulty: z.enum(['easy', 'medium', 'hard']),
+    // All times in minutes. activeTime is hands-on; totalTime is elapsed.
+    prepTime: z.number(),
+    brewTime: z.number(),
+    activeTime: z.number(),
+    totalTime: z.number(),
+    // Set when a range is more honest than a single number, e.g. "12–18 hr".
+    totalTimeLabel: z.string().optional(),
+    yield: z.string().default('1 drink'),
+    author: z.string().default('KAVOVO'),
+    datePublished: z.coerce.date(),
+    dateModified: z.coerce.date(),
+    ingredients: z.array(z.string()),
+    equipment: z.array(z.string()),
+    popular: z.boolean().default(false),
+  }),
 });
 
 const guides = defineCollection({

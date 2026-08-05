@@ -1,5 +1,4 @@
-import { getImage } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
+import { photo, srcset } from './photos';
 
 export interface CardImage {
   src: string;
@@ -9,36 +8,24 @@ export interface CardImage {
 }
 
 /**
- * React islands cannot use <Picture>, so optimised sources are resolved at
- * build time and handed over as plain strings.
+ * React islands cannot render <picture>, so they get a plain WebP srcset built
+ * from the pre-generated manifest.
  */
-export async function cardImage(image: ImageMetadata): Promise<CardImage> {
-  const [set, fallback] = await Promise.all([
-    getImage({ src: image, format: 'webp', widths: [400, 640, 800] }),
-    // Browsers without srcset support would otherwise pull the full-size file.
-    getImage({ src: image, format: 'webp', width: 640 }),
-  ]);
-
+function fromManifest(key: string, displayWidth: number, displayHeight: number): CardImage {
+  const entry = photo(key);
   return {
-    src: fallback.src,
-    srcset: set.srcSet.attribute,
-    width: 400,
-    height: 300,
+    src: entry.src,
+    srcset: srcset(entry.webp),
+    width: displayWidth,
+    height: displayHeight,
   };
 }
 
-/** Small square thumbnail for the homepage finder results. */
-export async function thumbImage(image: ImageMetadata): Promise<CardImage> {
-  const optimised = await getImage({
-    src: image,
-    format: 'webp',
-    widths: [96, 192],
-  });
+export function cardImage(key: string): CardImage {
+  return fromManifest(key, 400, 300);
+}
 
-  return {
-    src: optimised.src,
-    srcset: optimised.srcSet.attribute,
-    width: 96,
-    height: 96,
-  };
+/** Small square thumbnail for the homepage finder results. */
+export function thumbImage(key: string): CardImage {
+  return fromManifest(key, 96, 96);
 }

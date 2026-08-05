@@ -1,7 +1,7 @@
 ---
 title: Flat White
 description: A double shot of espresso under a thin layer of silky microfoam — strong, smooth, and velvety.
-image: ../../assets/recipes/flat-white.jpg
+image: flat-white
 category: milk-drinks
 brewMethod: espresso
 temperature: hot

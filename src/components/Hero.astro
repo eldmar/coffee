@@ -1,16 +1,13 @@
 ---
-import { Picture } from 'astro:assets';
-import hero from '../assets/site/hero.jpg';
+import Photo from './Photo.astro';
 ---
 
 <section
   class="relative overflow-hidden bg-ivory md:h-[min(56.25vw,calc(100vh-4rem))] md:min-h-[640px] lg:min-h-[680px]"
 >
-  <Picture
-    src={hero}
+  <Photo
+    name="hero"
     alt=""
-    formats={['avif', 'webp']}
-    widths={[768, 1200, 1920]}
     sizes="100vw"
     class="absolute inset-0 hidden h-full w-full object-cover object-right md:block"
     loading="eager"
@@ -47,11 +44,9 @@ import hero from '../assets/site/hero.jpg';
       </div>
     </div>
   </div>
-  <Picture
-    src={hero}
+  <Photo
+    name="hero"
     alt="Latte with rosetta art beside a pour-over brewing on a wooden table"
-    formats={['avif', 'webp']}
-    widths={[480, 768, 1200]}
     sizes="100vw"
     class="h-72 w-full object-cover object-[70%_center] sm:h-80 md:hidden"
     loading="eager"

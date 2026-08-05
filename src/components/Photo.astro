@@ -1,0 +1,39 @@
+---
+import { photo, srcset } from '../lib/photos';
+
+interface Props {
+  /** Manifest key, i.e. the source file name without extension. */
+  name: string;
+  alt: string;
+  sizes: string;
+  class?: string;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'auto' | 'low';
+}
+
+const {
+  name,
+  alt,
+  sizes,
+  class: className,
+  loading = 'lazy',
+  fetchpriority = 'auto',
+} = Astro.props;
+
+const entry = photo(name);
+---
+
+<picture>
+  <source type="image/avif" srcset={srcset(entry.avif)} sizes={sizes} />
+  <source type="image/webp" srcset={srcset(entry.webp)} sizes={sizes} />
+  <img
+    src={entry.src}
+    alt={alt}
+    width={entry.width}
+    height={entry.height}
+    class={className}
+    loading={loading}
+    fetchpriority={fetchpriority}
+    decoding="async"
+  />
+</picture>

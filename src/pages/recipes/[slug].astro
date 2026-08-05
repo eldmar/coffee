@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
-import { Picture, getImage } from 'astro:assets';
+import Photo from '../../components/Photo.astro';
+import { photo } from '../../lib/photos';
 import Layout from '../../layouts/Layout.astro';
 import RecipeCard from '../../components/RecipeCard.astro';
 import RecipeSchema from '../../components/RecipeSchema.astro';
@@ -47,8 +48,8 @@ const related = [
   ),
 ].slice(0, 3);
 
-// Absolute JPEG URL for social cards and structured data.
-const ogAsset = await getImage({ src: data.image, format: 'jpeg', width: 1200 });
+// Absolute URL for social cards and structured data.
+const ogImagePath = photo(data.image).src;
 
 const dateFmt = (d: Date) =>
   d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -57,7 +58,7 @@ const dateFmt = (d: Date) =>
 <Layout
   title={data.seoTitle ?? `${data.title} Recipe — KAVOVO`}
   description={data.seoDescription ?? data.description}
-  ogImage={ogAsset.src}
+  ogImage={ogImagePath}
 >
   <article class="mx-auto max-w-3xl px-5 py-12">
     <RecipeSchema recipe={recipe} />
@@ -90,11 +91,9 @@ const dateFmt = (d: Date) =>
       </button>
     </div>
 
-    <Picture
-      src={data.image}
+    <Photo
+      name={data.image}
       alt={data.title}
-      formats={['avif', 'webp']}
-      widths={[480, 768, 1200]}
       sizes="(min-width: 768px) 768px, 100vw"
       class="mt-8 aspect-[16/9] w-full rounded-lg object-cover"
       loading="eager"

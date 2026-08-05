@@ -1,7 +1,7 @@
 ---
 title: Cappuccino
 description: Equal parts espresso, steamed milk, and airy foam — the classic morning cup with a deep coffee core.
-image: ../../assets/recipes/cappuccino.jpg
+image: cappuccino
 category: milk-drinks
 brewMethod: espresso
 temperature: hot

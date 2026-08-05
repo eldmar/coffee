@@ -1,0 +1,27 @@
+{
+  "_comment": "Maps each photo key used on the site to its original file in photos-src/. Recipe keys must match the `image` field in src/content/recipes/*.md. After editing, run `npm run images`.",
+  "crop": { "aspect": [4, 3] },
+  "photos": {
+    "aeropress-daily": "aeropress-daily.png",
+    "americano": "americano.png",
+    "caffe-latte": "caffe-latte.png",
+    "caffe-mocha": "caffe-mocha.png",
+    "cappuccino": "cappuccino.png",
+    "classic-french-press": "classic-french-press.png",
+    "cold-brew": "cold-brew.png",
+    "cortado": "cortado.png",
+    "espresso": "espresso.png",
+    "espresso-tonic": "espresso-tonic.webp",
+    "flat-white": "flat-white.png",
+    "iced-caramel-latte": "iced-caramel-latte.png",
+    "iced-latte": "iced-latte.png",
+    "moka-pot-classic": "moka-pot-classic.png",
+    "v60-pour-over": "v60-brewing.png",
+    "learn-basics": "beans-bowl.png",
+    "learn-espresso": "espresso-pull.png",
+    "learn-beans": "roast-levels.png",
+    "hero": "hero-latte-v60.png",
+    "shop-teaser": "shop-teaser-kavovo.jpg"
+  },
+  "wide": ["hero", "shop-teaser"]
+}

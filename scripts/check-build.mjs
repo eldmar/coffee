@@ -40,13 +40,13 @@ for (const page of pages) {
     );
   }
 
-  for (const match of html.matchAll(/(?:src|href)="(\/_astro\/[^"?#]+)"/g)) {
+  for (const match of html.matchAll(/(?:src|href)="(\/(?:_astro|img)\/[^"?#]+)"/g)) {
     if (!existsSync(join(DIST, match[1]))) missingAssets.add(match[1]);
   }
   for (const match of html.matchAll(/srcset="([^"]+)"/gi)) {
     for (const candidate of match[1].split(',')) {
       const url = candidate.trim().split(/\s+/)[0];
-      if (url.startsWith('/_astro/') && !existsSync(join(DIST, url))) missingAssets.add(url);
+      if (/^\/(?:_astro|img)\//.test(url) && !existsSync(join(DIST, url))) missingAssets.add(url);
     }
   }
 }
@@ -59,14 +59,18 @@ if (problems.length > 0) {
   if (problems.length > 15) console.error(`  … and ${problems.length - 15} more`);
   if (onDemandImages > 0) {
     console.error(
-      '\n  Fix: make sure `sharp` installs in the build environment (it is an\n' +
-        '  explicit dependency) so Astro can pre-generate AVIF/WebP variants.\n',
+      '\n  Photos must come from public/img via the Photo component, never from\n' +
+        "  Astro's image pipeline — the host cannot run it. See scripts/build-images.mjs.\n",
     );
   }
   process.exit(1);
 }
 
-const assets = readdirSync(join(DIST, '_astro')).filter((f) => /\.(avif|webp)$/.test(f));
-console.log(
-  `Build check passed: ${pages.length} pages, ${assets.length} pre-generated image variants.`,
-);
+const variants = existsSync(join(DIST, 'img'))
+  ? readdirSync(join(DIST, 'img')).filter((f) => /\.(avif|webp)$/.test(f)).length
+  : 0;
+if (variants === 0) {
+  console.error('\nBuild check failed: no image variants in dist/img — run `npm run images`.\n');
+  process.exit(1);
+}
+console.log(`Build check passed: ${pages.length} pages, ${variants} image variants served statically.`);

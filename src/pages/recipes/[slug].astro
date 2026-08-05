@@ -32,12 +32,12 @@ const facts = [
 ---
 
 <Layout
-  title={data.seoTitle ?? `${data.title} Recipe — Kavovo`}
+  title={data.seoTitle ?? `${data.title} Recipe — KAVOVO`}
   description={data.seoDescription ?? data.description}
   ogImage={data.image}
 >
   <article class="mx-auto max-w-3xl px-5 py-12">
-    <a href="/recipes" class="text-sm font-medium text-clay hover:underline">&#8592; All recipes</a>
+    <a href="/recipes/" class="text-sm font-medium text-accent hover:underline">&#8592; All recipes</a>
     <span class="eyebrow mt-6 block">{data.category.replace('-', ' ')}</span>
     <h1 class="mt-2 font-display text-4xl font-medium text-balance">{data.title}</h1>
     <p class="mt-4 text-lg text-ink-soft">{data.description}</p>

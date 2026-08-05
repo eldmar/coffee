@@ -1,0 +1,73 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TextPage from '../components/TextPage.astro';
+
+// TODO before launch: add the operating legal entity, its registered address and,
+// if required in your jurisdiction, a data protection contact. Have a lawyer review.
+---
+
+<Layout
+  title="Privacy notice — KAVOVO"
+  description="What data KAVOVO collects, why, and how to have it removed."
+>
+  <TextPage
+    eyebrow="Privacy"
+    title="Privacy notice"
+    intro="A short, honest description of what happens to data when you visit KAVOVO."
+    updated="2026-08-05"
+  >
+    <h2>The short version</h2>
+    <p>
+      KAVOVO is a static website. We do not run advertising, we do not set tracking cookies, and we do not sell or share
+      personal data. The only personal data we deliberately collect is an email address, and only if you hand it to us.
+    </p>
+
+    <h2>What we collect</h2>
+    <ul>
+      <li>
+        <strong>Nothing, if you only read.</strong> Browsing recipes and guides requires no account and sets no cookies
+        from us.
+      </li>
+      <li>
+        <strong>Your email address,</strong> if you subscribe to the newsletter or join the shop waitlist. We store the
+        address, the date, and which form you used, so we can send the right emails and prove consent.
+      </li>
+    </ul>
+
+    <h2>Hosting and server logs</h2>
+    <p>
+      The site is served by Cloudflare. Like any web host, Cloudflare processes technical request data — including IP
+      address, browser type and requested URL — to deliver pages and protect against abuse. We do not use that data to
+      build profiles of visitors.
+    </p>
+
+    <h2>Analytics</h2>
+    <p>
+      We currently run no analytics. If that changes, we intend to use a cookieless, privacy-preserving tool that does
+      not identify individual visitors, and this notice will be updated before it goes live.
+    </p>
+
+    <h2>Newsletter</h2>
+    <p>
+      The newsletter is not yet running. When it launches, subscriptions will use double opt-in: you enter your address,
+      we email you a confirmation link, and nothing is sent until you click it. Every email will carry a one-click
+      unsubscribe link, and unsubscribing removes your address from the sending list.
+    </p>
+
+    <h2>Your choices</h2>
+    <ul>
+      <li>Unsubscribe at any time using the link in any email we send.</li>
+      <li>
+        Ask us what we hold about you, ask for it to be corrected, or ask for it to be deleted, by emailing
+        <a href="mailto:hello@kavovo.coffee">hello@kavovo.coffee</a>.
+      </li>
+    </ul>
+    <p>We aim to answer requests within 30 days.</p>
+
+    <h2>Changes</h2>
+    <p>
+      When this notice changes we update the date at the top. Material changes to how we handle email addresses will
+      also be announced in the newsletter itself.
+    </p>
+  </TextPage>
+</Layout>

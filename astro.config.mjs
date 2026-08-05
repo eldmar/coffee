@@ -11,6 +11,7 @@ const SITE_URL = 'https://coffee.ridkous.workers.dev';
 // https://astro.build/config
 export default defineConfig({
   site: SITE_URL,
+  trailingSlash: 'always',
   vite: {
     plugins: [tailwindcss()],
   },

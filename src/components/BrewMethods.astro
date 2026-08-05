@@ -16,13 +16,13 @@ const icons: Record<string, string> = {
 };
 ---
 
-<section class="bg-cream">
+<section class="bg-ivory">
   <div class="mx-auto max-w-6xl px-5 py-16">
     <h2 class="font-display text-3xl font-medium">Choose your brew method</h2>
     <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
       {sorted.map((guide) => (
         <a
-          href={`/guides/${guide.id}`}
+          href={`/guides/${guide.id}/`}
           class="group flex flex-col items-center rounded-lg border border-line bg-card p-6 text-center transition-shadow hover:shadow-md"
         >
           <svg
@@ -40,7 +40,7 @@ const icons: Record<string, string> = {
           />
           <h3 class="mt-4 font-medium">{guide.data.title}</h3>
           <p class="mt-1.5 text-sm text-ink-soft">{guide.data.tagline}</p>
-          <span class="mt-4 text-sm font-medium text-clay">
+          <span class="mt-4 text-sm font-medium text-accent">
             Explore guides
             <span class="inline-block transition-transform group-hover:translate-x-1" aria-hidden="true">&#8594;</span>
           </span>

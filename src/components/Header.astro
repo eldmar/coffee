@@ -1,19 +1,24 @@
 ---
 const nav = [
-  { label: 'Recipes', href: '/recipes' },
-  { label: 'Brew Guides', href: '/guides' },
-  { label: 'Learn', href: '/learn' },
-  { label: 'Journal', href: '/journal' },
-  { label: 'Shop', href: '/shop' },
+  { label: 'Recipes', href: '/recipes/' },
+  { label: 'Brew Guides', href: '/guides/' },
+  { label: 'Learn', href: '/learn/' },
+  { label: 'Journal', href: '/journal/' },
+  { label: 'Shop', href: '/shop/' },
 ];
 const { pathname } = Astro.url;
 ---
 
 <header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
   <div class="mx-auto flex max-w-6xl items-center gap-4 px-5 py-3.5 lg:gap-6">
-    <a href="/" class="flex items-center gap-2.5 whitespace-nowrap" aria-label="Kavovo — home">
-      <img src="/images/kavovo-mark.svg" alt="" width="325" height="156" class="h-6 w-auto" />
-      <img src="/images/kavovo-wordmark.svg" alt="Kavovo" width="818" height="124" class="h-[18px] w-auto" />
+    <a href="/" class="shrink-0" aria-label="KAVOVO — home">
+      <img
+        src="/images/kavovo-lockup.svg"
+        alt="KAVOVO"
+        width="1191"
+        height="156"
+        class="h-5 w-auto sm:h-6"
+      />
     </a>
 
     <nav class="hidden flex-1 justify-center gap-6 text-sm text-ink-soft lg:flex" aria-label="Main">
@@ -30,8 +35,8 @@ const { pathname } = Astro.url;
       ))}
     </nav>
 
-    <form action="/recipes" method="get" class="hidden items-center lg:flex" role="search">
-      <label class="flex items-center gap-2 rounded-full border border-line bg-card px-3.5 py-1.5 text-sm text-ink-soft focus-within:border-clay">
+    <form action="/recipes/" method="get" class="hidden items-center lg:flex" role="search">
+      <label class="flex items-center gap-2 rounded-full border border-line bg-card px-3.5 py-1.5 text-sm text-ink-soft focus-within:border-accent">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3.5-3.5" />
@@ -39,7 +44,7 @@ const { pathname } = Astro.url;
         <input
           type="search"
           name="q"
-          placeholder="Search recipes & guides"
+          placeholder="Search recipes"
           class="w-40 bg-transparent outline-none placeholder:text-ink-soft/70"
         />
       </label>
@@ -47,8 +52,8 @@ const { pathname } = Astro.url;
     </form>
 
     <a
-      href="/recipes"
-      class="ml-auto hidden rounded-md bg-clay px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-clay-dark sm:block lg:ml-0"
+      href="/recipes/"
+      class="ml-auto hidden rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-ink transition-colors hover:bg-accent-dark sm:block lg:ml-0"
     >
       Explore recipes
     </a>
@@ -72,8 +77,8 @@ const { pathname } = Astro.url;
   <div id="mobile-menu" class="lg:hidden">
     <div class="menu-clip">
       <div class="menu-inner mx-auto flex max-w-6xl flex-col gap-1 border-t border-line px-5 py-4">
-      <form action="/recipes" method="get" role="search" class="mb-3">
-        <label class="flex items-center gap-2 rounded-md border border-line bg-card px-3.5 py-2.5 text-sm text-ink-soft focus-within:border-clay">
+      <form action="/recipes/" method="get" role="search" class="mb-3">
+        <label class="flex items-center gap-2 rounded-md border border-line bg-card px-3.5 py-2.5 text-sm text-ink-soft focus-within:border-accent">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="11" cy="11" r="7" />
             <path d="m20 20-3.5-3.5" />
@@ -81,7 +86,7 @@ const { pathname } = Astro.url;
           <input
             type="search"
             name="q"
-            placeholder="Search recipes & guides"
+            placeholder="Search recipes"
             class="w-full bg-transparent outline-none placeholder:text-ink-soft/70"
           />
         </label>
@@ -91,16 +96,16 @@ const { pathname } = Astro.url;
         <a
           href={item.href}
           class:list={[
-            'rounded-md px-3 py-2.5 text-[15px] font-medium transition-colors hover:bg-cream',
-            pathname.startsWith(item.href) ? 'bg-cream text-ink' : 'text-ink-soft',
+            'rounded-md px-3 py-2.5 text-[15px] font-medium transition-colors hover:bg-ivory',
+            pathname.startsWith(item.href) ? 'bg-ivory text-ink' : 'text-ink-soft',
           ]}
         >
           {item.label}
         </a>
       ))}
       <a
-        href="/recipes"
-        class="mt-3 rounded-md bg-clay px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-clay-dark sm:hidden"
+        href="/recipes/"
+        class="mt-3 rounded-md bg-accent px-4 py-2.5 text-center text-sm font-medium text-accent-ink transition-colors hover:bg-accent-dark sm:hidden"
       >
         Explore recipes
       </a>

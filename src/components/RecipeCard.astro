@@ -24,7 +24,7 @@ const difficultyLabels: Record<string, string> = {
 ---
 
 <a
-  href={`/recipes/${slug}`}
+  href={`/recipes/${slug}/`}
   class="group flex flex-col overflow-hidden rounded-lg border border-line bg-card transition-shadow hover:shadow-md"
 >
   <img
@@ -45,11 +45,11 @@ const difficultyLabels: Record<string, string> = {
       </svg>
       <span>{time} min</span>
       <span aria-hidden="true">·</span>
-      <span class:list={[difficulty === 'medium' && 'text-clay', difficulty === 'hard' && 'text-clay']}>
+      <span class:list={[difficulty === 'medium' && 'text-accent', difficulty === 'hard' && 'text-accent']}>
         {difficultyLabels[difficulty] ?? difficulty}
       </span>
       <span
-        class="ml-auto text-clay transition-transform group-hover:translate-x-1"
+        class="ml-auto text-accent transition-transform group-hover:translate-x-1"
         aria-hidden="true"
       >
         &#8594;

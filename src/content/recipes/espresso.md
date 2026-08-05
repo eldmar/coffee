@@ -1,7 +1,7 @@
 ---
 title: Espresso
 description: A reliable starting recipe for a balanced double espresso using an 18 g dose and a 1:2 brew ratio.
-seoTitle: How to Make Espresso at Home — Kavovo
+seoTitle: How to Make Espresso at Home — KAVOVO
 seoDescription: Dial in a balanced double espresso with an 18 g dose, 36 g yield and practical fixes for shots that run too fast or too slowly.
 image: /images/recipes/espresso.jpg
 category: espresso

@@ -1,6 +1,6 @@
 ---
-import '@fontsource-variable/lora';
-import '@fontsource-variable/inter';
+import '@fontsource-variable/newsreader';
+import '@fontsource-variable/manrope';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -12,8 +12,8 @@ interface Props {
 }
 
 const {
-  title = 'Kavovo — Better coffee at home',
-  description = 'Simple recipes, practical guides, and the confidence to brew your best cup at home.',
+  title = 'KAVOVO — Coffee, made clear.',
+  description = 'Straightforward drink recipes, practical brewing guides and, soon, coffee chosen for the way you brew.',
   ogImage = '/images/hero.jpg',
 } = Astro.props;
 
@@ -33,7 +33,7 @@ const ogImageUrl = new URL(ogImage, Astro.site);
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Kavovo" />
+    <meta property="og:site_name" content="KAVOVO" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

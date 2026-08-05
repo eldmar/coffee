@@ -36,7 +36,7 @@ const methodOptions = [
 ] as const;
 
 const selectClass =
-  'rounded-md border border-line bg-card px-3.5 py-2.5 text-sm text-ink outline-none transition-colors focus:border-clay';
+  'rounded-md border border-line bg-card px-3.5 py-2.5 text-sm text-ink outline-none transition-colors focus:border-accent';
 
 export default function RecipeFilters({ recipes }: Props) {
   const [query, setQuery] = useState('');
@@ -72,7 +72,7 @@ export default function RecipeFilters({ recipes }: Props) {
   return (
     <div>
       <div className="flex flex-wrap items-center gap-3">
-        <label className="flex min-w-56 flex-1 items-center gap-2 rounded-md border border-line bg-card px-3.5 py-2.5 text-sm focus-within:border-clay sm:max-w-xs">
+        <label className="flex min-w-56 flex-1 items-center gap-2 rounded-md border border-line bg-card px-3.5 py-2.5 text-sm focus-within:border-accent sm:max-w-xs">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
             <circle cx="11" cy="11" r="7" />
             <path d="m20 20-3.5-3.5" />
@@ -120,7 +120,7 @@ export default function RecipeFilters({ recipes }: Props) {
           {results.map((r) => (
             <li key={r.slug}>
               <a
-                href={`/recipes/${r.slug}`}
+                href={`/recipes/${r.slug}/`}
                 className="group flex h-full flex-col overflow-hidden rounded-lg border border-line bg-card transition-shadow hover:shadow-md"
               >
                 <img src={r.image} alt="" className="aspect-[4/3] w-full object-cover" width="400" height="300" loading="lazy" />
@@ -135,7 +135,7 @@ export default function RecipeFilters({ recipes }: Props) {
                     {r.time} min
                     <span aria-hidden="true">·</span>
                     <span className="capitalize">{r.difficulty}</span>
-                    <span className="ml-auto text-clay transition-transform group-hover:translate-x-1" aria-hidden="true">
+                    <span className="ml-auto text-accent transition-transform group-hover:translate-x-1" aria-hidden="true">
                       &#8594;
                     </span>
                   </span>

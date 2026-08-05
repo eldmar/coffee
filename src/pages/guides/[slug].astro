@@ -19,9 +19,9 @@ const related = (await getCollection('recipes')).filter(
 );
 ---
 
-<Layout title={`${guide.data.title} guide — Kavovo`} description={guide.data.description}>
+<Layout title={`${guide.data.title} guide — KAVOVO`} description={guide.data.description}>
   <article class="mx-auto max-w-3xl px-5 py-12">
-    <a href="/guides" class="text-sm font-medium text-clay hover:underline">&#8592; All brew guides</a>
+    <a href="/guides/" class="text-sm font-medium text-accent hover:underline">&#8592; All brew guides</a>
     <span class="eyebrow mt-6 block">Brew guide</span>
     <h1 class="mt-2 font-display text-4xl font-medium">{guide.data.title}</h1>
     <p class="mt-4 text-lg text-ink-soft">{guide.data.description}</p>

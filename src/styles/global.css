@@ -1,19 +1,41 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   KAVOVO brand tokens — the single source of truth for colour, type, radius
+   and rhythm. Components must reference these tokens, never raw hex values.
+   --------------------------------------------------------------------------- */
 @theme {
-  --font-display: "Lora Variable", Georgia, serif;
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  /* Type */
+  --font-display: "Newsreader Variable", Georgia, serif;
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
 
-  --color-cream: #f2ecdf;
-  --color-paper: #faf7f0;
-  --color-card: #fdfcf8;
-  --color-ink: #33291e;
-  --color-ink-soft: #7c6f5f;
-  --color-clay: #a9502c;
-  --color-clay-dark: #8c4021;
-  --color-sage: #aab5a1;
-  --color-sage-dark: #5f6e54;
-  --color-line: #e5dcca;
+  /* Core brand palette */
+  --color-espresso: #2b211b;
+  --color-kalyna: #a43b32;
+  --color-sage: #6e7455;
+  --color-ivory: #f3ebdd;
+
+  /* Semantic surfaces, derived from the palette */
+  --color-paper: #fbf8f2;
+  --color-card: #fffdf8;
+  --color-line: #e5dbc9;
+
+  /* Semantic text */
+  --color-ink: var(--color-espresso);
+  --color-ink-soft: #6f6357;
+
+  /* Semantic accents */
+  --color-accent: var(--color-kalyna);
+  --color-accent-dark: #86302a;
+  --color-accent-ink: var(--color-ivory);
+
+  /* Radii */
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  /* Vertical rhythm for page sections */
+  --spacing-section: 4rem;
 }
 
 html {
@@ -42,5 +64,12 @@ body {
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-clay);
+  color: var(--color-accent);
+}
+
+/* Visible keyboard focus on every interactive element. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
 }

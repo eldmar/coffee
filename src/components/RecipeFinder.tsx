@@ -39,7 +39,7 @@ const milkOptions = [
 ] as const;
 
 const selectClass =
-  'w-full appearance-none rounded-md border border-line bg-card px-3.5 py-2.5 pr-9 text-sm text-ink outline-none transition-colors focus:border-clay';
+  'w-full appearance-none rounded-md border border-line bg-card px-3.5 py-2.5 pr-9 text-sm text-ink outline-none transition-colors focus:border-accent';
 
 function Field({
   label,
@@ -152,7 +152,7 @@ export default function RecipeFinder({ recipes }: Props) {
 
         <button
           type="submit"
-          className="rounded-md bg-clay px-5 py-2.5 text-sm font-medium whitespace-nowrap text-white transition-colors hover:bg-clay-dark"
+          className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium whitespace-nowrap text-accent-ink transition-colors hover:bg-accent-dark"
         >
           Show me recipes
         </button>
@@ -163,7 +163,7 @@ export default function RecipeFinder({ recipes }: Props) {
           {results.length === 0 ? (
             <p className="text-sm text-ink-soft">
               No exact match yet — try loosening one filter, or{' '}
-              <a href="/recipes" className="font-medium text-clay hover:underline">
+              <a href="/recipes/" className="font-medium text-accent hover:underline">
                 browse all recipes
               </a>
               .
@@ -173,8 +173,8 @@ export default function RecipeFinder({ recipes }: Props) {
               {results.map((r) => (
                 <li key={r.slug}>
                   <a
-                    href={`/recipes/${r.slug}`}
-                    className="group flex items-center gap-3 rounded-lg border border-line p-3 transition-colors hover:border-clay"
+                    href={`/recipes/${r.slug}/`}
+                    className="group flex items-center gap-3 rounded-lg border border-line p-3 transition-colors hover:border-accent"
                   >
                     <img src={r.image} alt="" className="h-12 w-12 rounded-md object-cover" width="48" height="48" />
                     <span className="min-w-0">
@@ -183,7 +183,7 @@ export default function RecipeFinder({ recipes }: Props) {
                         {r.time} min · {r.difficulty}
                       </span>
                     </span>
-                    <span className="ml-auto text-clay transition-transform group-hover:translate-x-0.5" aria-hidden="true">
+                    <span className="ml-auto text-accent transition-transform group-hover:translate-x-0.5" aria-hidden="true">
                       &#8594;
                     </span>
                   </a>

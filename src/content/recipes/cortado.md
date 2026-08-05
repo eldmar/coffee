@@ -1,7 +1,7 @@
 ---
 title: Cortado
 description: A balanced combination of equal parts espresso and lightly textured steamed milk served in a small glass.
-seoTitle: How to Make a Cortado — Kavovo
+seoTitle: How to Make a Cortado — KAVOVO
 seoDescription: Make a balanced cortado with equal parts double espresso and lightly textured steamed milk, plus the difference between a cortado and flat white.
 image: /images/recipes/cortado.jpg
 category: milk-based

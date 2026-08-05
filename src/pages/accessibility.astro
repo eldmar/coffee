@@ -1,0 +1,48 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TextPage from '../components/TextPage.astro';
+---
+
+<Layout
+  title="Accessibility — KAVOVO"
+  description="How KAVOVO approaches accessibility, what is in place today, and how to report a problem."
+>
+  <TextPage
+    eyebrow="Accessibility"
+    title="Accessibility"
+    intro="A recipe is no use if you cannot read it. Here is where we stand."
+    updated="2026-08-05"
+  >
+    <h2>What we aim for</h2>
+    <p>
+      We target WCAG 2.1 level AA. That is a goal we work towards rather than a certified result, and this page is meant
+      to be an honest account rather than a badge.
+    </p>
+
+    <h2>In place today</h2>
+    <ul>
+      <li>Semantic headings in order, so screen readers and skim-readers get the same structure.</li>
+      <li>A visible focus ring on every link, button and form field for keyboard users.</li>
+      <li>The mobile menu is a real button with <code>aria-expanded</code>, and closes with Escape.</li>
+      <li>Filter results announce their count to assistive technology as they change.</li>
+      <li>Text alternatives on photography; decorative images are hidden from screen readers.</li>
+      <li>Body text and controls stay readable down to a 320&nbsp;px viewport, with no horizontal scrolling.</li>
+      <li>Animation is disabled for visitors who ask for reduced motion.</li>
+      <li>Difficulty and category are always words, never colour alone.</li>
+    </ul>
+
+    <h2>Known gaps</h2>
+    <ul>
+      <li>Some recipe photography still uses generic alternative text rather than a full description.</li>
+      <li>A few placeholder illustrations remain while final photography is produced.</li>
+      <li>We have not yet completed a full audit with screen readers on every page.</li>
+    </ul>
+
+    <h2>Tell us what breaks</h2>
+    <p>
+      If something is hard or impossible to use, email <a href="mailto:hello@kavovo.coffee">hello@kavovo.coffee</a> with
+      the page address and what went wrong. Access problems are treated as bugs, not feature requests, and we will tell
+      you what we intend to do about it.
+    </p>
+  </TextPage>
+</Layout>

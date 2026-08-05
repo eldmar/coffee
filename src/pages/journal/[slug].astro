@@ -17,9 +17,9 @@ const formatDate = (date: Date) =>
   date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
-<Layout title={`${post.data.title} — Kavovo`} description={post.data.description}>
+<Layout title={`${post.data.title} — KAVOVO`} description={post.data.description}>
   <article class="mx-auto max-w-2xl px-5 py-12">
-    <a href="/journal" class="text-sm font-medium text-clay hover:underline">&#8592; Journal</a>
+    <a href="/journal/" class="text-sm font-medium text-accent hover:underline">&#8592; Journal</a>
     <time datetime={post.data.date.toISOString()} class="mt-6 block text-sm text-ink-soft">
       {formatDate(post.data.date)}
     </time>

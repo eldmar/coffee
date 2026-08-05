@@ -1,7 +1,7 @@
 ---
 title: Classic French Press
 description: Heavy body, rich flavor, zero technique anxiety — the four-minute immersion brew that always delivers.
-image: /images/recipes/classic-french-press.svg
+image: ../../assets/recipes/classic-french-press.jpg
 category: filter-coffee
 brewMethod: french-press
 temperature: hot

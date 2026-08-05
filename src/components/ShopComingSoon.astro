@@ -1,4 +1,6 @@
 ---
+import { Picture } from 'astro:assets';
+import bag from '../assets/site/shop-teaser.jpg';
 ---
 
 <section class="bg-ivory">
@@ -19,13 +21,15 @@
       </a>
     </div>
     <div class="-mx-5 md:mx-0 md:self-stretch">
-      <img
-        src="/images/shop-teaser.jpg"
+      <Picture
+        src={bag}
         alt="KAVOVO Ethiopia coffee bag on a wooden board beside a ceramic cup"
+        formats={['avif', 'webp']}
+        widths={[480, 768, 1200]}
+        sizes="(min-width: 768px) 50vw, 100vw"
         class="h-64 w-full object-cover md:h-full md:min-h-[380px]"
-        width="620"
-        height="380"
         loading="lazy"
+        decoding="async"
       />
     </div>
   </div>

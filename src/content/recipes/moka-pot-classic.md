@@ -1,7 +1,7 @@
 ---
 title: Moka Pot Classic
 description: Strong, syrupy stovetop coffee the Italian way — with the two details that keep it from turning bitter.
-image: /images/recipes/moka-pot-classic.svg
+image: ../../assets/recipes/moka-pot-classic.jpg
 category: brewing-methods
 brewMethod: moka-pot
 temperature: hot

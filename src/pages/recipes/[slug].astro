@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Picture, getImage } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import RecipeCard from '../../components/RecipeCard.astro';
 import RecipeSchema from '../../components/RecipeSchema.astro';
@@ -46,6 +47,9 @@ const related = [
   ),
 ].slice(0, 3);
 
+// Absolute JPEG URL for social cards and structured data.
+const ogAsset = await getImage({ src: data.image, format: 'jpeg', width: 1200 });
+
 const dateFmt = (d: Date) =>
   d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
@@ -53,7 +57,7 @@ const dateFmt = (d: Date) =>
 <Layout
   title={data.seoTitle ?? `${data.title} Recipe — KAVOVO`}
   description={data.seoDescription ?? data.description}
-  ogImage={data.image}
+  ogImage={ogAsset.src}
 >
   <article class="mx-auto max-w-3xl px-5 py-12">
     <RecipeSchema recipe={recipe} />
@@ -86,12 +90,15 @@ const dateFmt = (d: Date) =>
       </button>
     </div>
 
-    <img
+    <Picture
       src={data.image}
       alt={data.title}
+      formats={['avif', 'webp']}
+      widths={[480, 768, 1200]}
+      sizes="(min-width: 768px) 768px, 100vw"
       class="mt-8 aspect-[16/9] w-full rounded-lg object-cover"
-      width="768"
-      height="432"
+      loading="eager"
+      fetchpriority="high"
     />
 
     <dl class="mt-8 grid grid-cols-2 gap-4 rounded-lg border border-line bg-card p-5 sm:grid-cols-4">

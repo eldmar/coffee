@@ -5,16 +5,18 @@ import RecipeFilters from '../../components/RecipeFilters';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { CATEGORIES } from '../../lib/recipes';
+import { cardImage } from '../../lib/cardImage';
 
 const recipes = (await getCollection('recipes')).sort((a, b) =>
   a.data.title.localeCompare(b.data.title),
 );
 
-const catalog = recipes.map((r) => ({
+const catalog = await Promise.all(
+  recipes.map(async (r) => ({
   slug: r.id,
   title: r.data.title,
   description: r.data.description,
-  image: r.data.image,
+  image: await cardImage(r.data.image),
   category: r.data.category,
   brewMethod: r.data.brewMethod,
   temperature: r.data.temperature,
@@ -23,8 +25,9 @@ const catalog = recipes.map((r) => ({
   totalTime: r.data.totalTime,
   totalTimeLabel: r.data.totalTimeLabel,
   difficulty: r.data.difficulty,
-  ingredients: r.data.ingredients,
-}));
+    ingredients: r.data.ingredients,
+  })),
+);
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 

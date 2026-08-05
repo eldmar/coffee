@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { categoryLabel, formatTimeShort } from "../lib/recipes";
+import type { CardImage } from "../lib/cardImage";
 
 interface CatalogRecipe {
   slug: string;
   title: string;
   description: string;
-  image: string;
+  image: CardImage;
   category: string;
   brewMethod: string;
   temperature: string;
@@ -119,7 +120,17 @@ export default function RecipeFilters({ recipes }: Props) {
                 href={`/recipes/${r.slug}/`}
                 className="group flex h-full flex-col overflow-hidden rounded-lg border border-line bg-card transition-shadow hover:shadow-md"
               >
-                <img src={r.image} alt="" className="aspect-[4/3] w-full object-cover" width="400" height="300" loading="lazy" />
+                <img
+                  src={r.image.src}
+                  srcSet={r.image.srcset}
+                  sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 92vw"
+                  alt=""
+                  className="aspect-[4/3] w-full object-cover"
+                  width={r.image.width}
+                  height={r.image.height}
+                  loading="lazy"
+                  decoding="async"
+                />
                 <span className="flex flex-1 flex-col gap-1.5 p-5">
                   <span className="eyebrow">{categoryLabel(r.category)}</span>
                   <span className="font-display text-xl font-medium">{r.title}</span>

@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { thumbImage } from '../lib/cardImage';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import RecipeFinder from '../components/RecipeFinder';
@@ -34,7 +35,7 @@ const website = {
   publisher: { '@id': `${site}/#organization` },
   potentialAction: {
     '@type': 'SearchAction',
-    target: { '@type': 'EntryPoint', urlTemplate: `${site}/recipes/?q={search_term_string}` },
+    target: { '@type': 'EntryPoint', urlTemplate: `${site}/search/?q={search_term_string}` },
     'query-input': 'required name=search_term_string',
   },
 };
@@ -42,10 +43,11 @@ const website = {
 const recipes = await getCollection('recipes');
 const popular = recipes.filter((r) => r.data.popular).slice(0, 3);
 
-const finderRecipes = recipes.map((r) => ({
+const finderRecipes = await Promise.all(
+  recipes.map(async (r) => ({
   slug: r.id,
   title: r.data.title,
-  image: r.data.image,
+  image: await thumbImage(r.data.image),
   category: r.data.category,
   brewMethod: r.data.brewMethod,
   temperature: r.data.temperature,
@@ -53,8 +55,9 @@ const finderRecipes = recipes.map((r) => ({
   activeTime: r.data.activeTime,
   totalTime: r.data.totalTime,
   totalTimeLabel: r.data.totalTimeLabel,
-  difficulty: r.data.difficulty,
-}));
+    difficulty: r.data.difficulty,
+  })),
+);
 ---
 
 <Layout>

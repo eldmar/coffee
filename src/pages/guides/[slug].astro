@@ -2,6 +2,8 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import RecipeCard from '../../components/RecipeCard.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import JsonLd from '../../components/JsonLd.astro';
 
 export async function getStaticPaths() {
   const guides = await getCollection('guides');
@@ -17,11 +19,33 @@ const { Content } = await render(guide);
 const related = (await getCollection('recipes')).filter(
   (r) => r.data.brewMethod === guide.data.method,
 );
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const url = `${site}/guides/${guide.id}/`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  '@id': url,
+  url,
+  headline: `${guide.data.title} brew guide`,
+  description: guide.data.description,
+  author: { '@type': 'Organization', name: 'KAVOVO', url: `${site}/about/` },
+  publisher: { '@type': 'Organization', name: 'KAVOVO' },
+  mainEntityOfPage: url,
+};
 ---
 
-<Layout title={`${guide.data.title} guide — KAVOVO`} description={guide.data.description}>
+<Layout
+  title={`${guide.data.title} guide — KAVOVO`}
+  description={guide.data.description}
+  ogType="article"
+>
   <article class="mx-auto max-w-3xl px-5 py-12">
-    <a href="/guides/" class="text-sm font-medium text-accent hover:underline">&#8592; All brew guides</a>
+    <JsonLd schema={schema} />
+    <Breadcrumbs
+      trail={[{ label: 'Brew Guides', href: '/guides/' }, { label: guide.data.title }]}
+    />
     <span class="eyebrow mt-6 block">Brew guide</span>
     <h1 class="mt-2 font-display text-4xl font-medium">{guide.data.title}</h1>
     <p class="mt-4 text-lg text-ink-soft">{guide.data.description}</p>

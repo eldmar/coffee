@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { formatTimeShort } from "../lib/recipes";
+import type { CardImage } from "../lib/cardImage";
 
 export interface FinderRecipe {
   slug: string;
   title: string;
-  image: string;
+  image: CardImage;
   category: string;
   brewMethod: string;
   temperature: string;
@@ -179,7 +180,17 @@ export default function RecipeFinder({ recipes }: Props) {
                     href={`/recipes/${r.slug}/`}
                     className="group flex items-center gap-3 rounded-lg border border-line p-3 transition-colors hover:border-accent"
                   >
-                    <img src={r.image} alt="" className="h-12 w-12 rounded-md object-cover" width="48" height="48" />
+                    <img
+                      src={r.image.src}
+                      srcSet={r.image.srcset}
+                      sizes="48px"
+                      alt=""
+                      className="h-12 w-12 rounded-md object-cover"
+                      width="48"
+                      height="48"
+                      loading="lazy"
+                      decoding="async"
+                    />
                     <span className="min-w-0">
                       <span className="block truncate font-medium">{r.title}</span>
                       <span className="block text-xs text-ink-soft">

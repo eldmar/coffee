@@ -1,7 +1,7 @@
 ---
 title: Daily AeroPress
 description: The forgiving everyday brewer — rich like a French press, clean like a filter, ready in six minutes.
-image: /images/recipes/aeropress-daily.svg
+image: ../../assets/recipes/aeropress-daily.jpg
 category: filter-coffee
 brewMethod: aeropress
 temperature: hot

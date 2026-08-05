@@ -2,7 +2,7 @@
 title: Caffè Mocha
 description: A rich combination of double espresso, chocolate and silky steamed milk, finished with optional cocoa.
 seoDescription: Make a rich caffè mocha with double espresso, dark chocolate and silky steamed milk, with tips for controlling sweetness.
-image: /images/recipes/caffe-mocha.jpg
+image: ../../assets/recipes/caffe-mocha.jpg
 category: milk-drinks
 brewMethod: espresso
 temperature: hot

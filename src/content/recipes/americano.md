@@ -3,7 +3,7 @@ title: Americano
 description: A double espresso lengthened with hot water for a clean, balanced and easy-drinking black coffee.
 seoTitle: How to Make an Americano — KAVOVO
 seoDescription: Make a balanced Americano with double espresso and hot water, including the ideal ratio and the difference between an Americano and Long Black.
-image: /images/recipes/americano.jpg
+image: ../../assets/recipes/americano.jpg
 category: espresso-drinks
 brewMethod: espresso
 temperature: hot

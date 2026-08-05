@@ -24,7 +24,12 @@ function htmlFiles(dir) {
 }
 
 const pages = htmlFiles(DIST);
-if (pages.length === 0) problems.push('no HTML pages were emitted');
+if (pages.length === 0) {
+  problems.push(
+    'no HTML pages in dist/ — the build produced a server bundle rather than a static site',
+  );
+}
+console.log(`Checking ${pages.length} pages in ${DIST}/`);
 
 const missingAssets = new Set();
 let onDemandImages = 0;

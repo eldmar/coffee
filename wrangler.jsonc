@@ -1,0 +1,12 @@
+{
+  // Static site: no Worker script, Cloudflare just serves the built files.
+  // `not_found_handling` is the reason this file exists — without it an unknown
+  // URL returns a 404 with an empty body instead of the branded 404 page.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "coffee",
+  "compatibility_date": "2026-08-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

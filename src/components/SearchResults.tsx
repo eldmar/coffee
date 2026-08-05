@@ -79,7 +79,8 @@ export default function SearchResults({ docs }: Props) {
             value={query}
             autoFocus
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search recipes & guides"
+            placeholder="Search KAVOVO"
+            aria-label="Search recipes, guides, learning paths and journal articles"
             className="w-full bg-transparent text-base outline-none placeholder:text-ink-soft/70"
           />
         </label>

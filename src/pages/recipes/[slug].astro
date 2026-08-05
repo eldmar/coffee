@@ -89,23 +89,24 @@ const share = shareText(data, extractSteps(recipe.body ?? ''), recipeUrl);
         Updated <time datetime={data.dateModified.toISOString()}>{dateFmt(data.dateModified)}</time>
       </span>
       <span class="ml-auto flex items-center gap-2 print:hidden">
-        <button
-          type="button"
-          data-share
-          data-share-text={share}
-          data-share-url={recipeUrl}
-          class="rounded-md border border-line px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-accent"
-        >
+        <button type="button" data-share data-share-text={share} data-share-url={recipeUrl} class="recipe-action recipe-action--primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="18" cy="5" r="3" />
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="19" r="3" />
+            <path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4" />
+          </svg>
           Share recipe
         </button>
-        <button
-          type="button"
-          data-print
-          class="rounded-md border border-line px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-accent"
-        >
+        <button type="button" data-print class="recipe-action recipe-action--secondary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 9V3h12v6" />
+            <path d="M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2" />
+            <rect x="6" y="14" width="12" height="7" rx="1" />
+          </svg>
           Print recipe
         </button>
-        <span data-share-status role="status" aria-live="polite" class="text-xs text-accent"></span>
+        <span data-share-status role="status" aria-live="polite" class="text-xs font-medium text-accent"></span>
       </span>
     </div>
 
@@ -215,6 +216,70 @@ const share = shareText(data, extractSteps(recipe.body ?? ''), recipeUrl);
 </Layout>
 
 <style is:global>
+  /* The two things you actually do with a recipe, made to look clickable. */
+  .recipe-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
+  }
+
+  .recipe-action--primary {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+
+  .recipe-action--primary:hover {
+    background: var(--color-accent-dark);
+    border-color: var(--color-accent-dark);
+    box-shadow: 0 4px 10px rgb(43 33 27 / 0.16);
+    transform: translateY(-1px);
+  }
+
+  .recipe-action--secondary {
+    background: var(--color-card);
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+  }
+
+  .recipe-action--secondary:hover {
+    background: var(--color-ivory);
+    border-color: var(--color-accent);
+    box-shadow: 0 4px 10px rgb(43 33 27 / 0.12);
+    transform: translateY(-1px);
+  }
+
+  .recipe-action:active {
+    transform: translateY(0);
+  }
+
+  .recipe-action:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .recipe-action {
+      transition: none;
+    }
+    .recipe-action:hover {
+      transform: none;
+    }
+  }
+
   /* Numbered steps double as a checklist you can tick while brewing. */
   #recipe-body ol {
     counter-reset: step;

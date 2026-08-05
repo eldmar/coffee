@@ -11,6 +11,7 @@
  *   npm run images
  */
 import sharp from 'sharp';
+import { createHash } from 'node:crypto';
 import { mkdirSync, writeFileSync, existsSync, rmSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -38,6 +39,9 @@ for (const [key, file] of Object.entries(config.photos)) {
     continue;
   }
 
+  // Content hash in the file name is what makes immutable caching safe:
+  // replace a photo and every URL changes with it.
+  const hash = createHash('sha256').update(readFileSync(input)).digest('hex').slice(0, 8);
   const meta = await sharp(input).metadata();
   // Cards are 4:3; the hero and shop teaser keep their own wider framing.
   const ratio = wide.has(key) ? meta.width / meta.height : aspectW / aspectH;
@@ -50,7 +54,7 @@ for (const [key, file] of Object.entries(config.photos)) {
   for (const width of widths) {
     const height = Math.round(width / ratio);
     for (const format of ['avif', 'webp']) {
-      const name = `${key}-${width}.${format}`;
+      const name = `${key}.${hash}-${width}.${format}`;
       await sharp(input)
         .resize(width, height, { fit: 'cover', position: 'centre' })
         [format](format === 'avif' ? { quality: 55 } : { quality: 78 })
@@ -61,7 +65,7 @@ for (const [key, file] of Object.entries(config.photos)) {
 
   const fallbackWidth = widths.includes(FALLBACK_WIDTH) ? FALLBACK_WIDTH : widths.at(-1);
   const fallbackHeight = Math.round(fallbackWidth / ratio);
-  const fallbackName = `${key}-${fallbackWidth}.jpg`;
+  const fallbackName = `${key}.${hash}-${fallbackWidth}.jpg`;
   await sharp(input)
     .resize(fallbackWidth, fallbackHeight, { fit: 'cover', position: 'centre' })
     .jpeg({ quality: 80, mozjpeg: true })

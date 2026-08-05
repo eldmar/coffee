@@ -4,789 +4,789 @@
     "height": 600,
     "avif": [
       {
-        "url": "/img/aeropress-daily-400.avif",
+        "url": "/img/aeropress-daily.80842189-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/aeropress-daily-800.avif",
+        "url": "/img/aeropress-daily.80842189-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/aeropress-daily-1200.avif",
+        "url": "/img/aeropress-daily.80842189-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/aeropress-daily-400.webp",
+        "url": "/img/aeropress-daily.80842189-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/aeropress-daily-800.webp",
+        "url": "/img/aeropress-daily.80842189-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/aeropress-daily-1200.webp",
+        "url": "/img/aeropress-daily.80842189-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/aeropress-daily-800.jpg"
+    "src": "/img/aeropress-daily.80842189-800.jpg"
   },
   "americano": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/americano-400.avif",
+        "url": "/img/americano.204af1d2-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/americano-800.avif",
+        "url": "/img/americano.204af1d2-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/americano-1200.avif",
+        "url": "/img/americano.204af1d2-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/americano-400.webp",
+        "url": "/img/americano.204af1d2-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/americano-800.webp",
+        "url": "/img/americano.204af1d2-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/americano-1200.webp",
+        "url": "/img/americano.204af1d2-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/americano-800.jpg"
+    "src": "/img/americano.204af1d2-800.jpg"
   },
   "caffe-latte": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/caffe-latte-400.avif",
+        "url": "/img/caffe-latte.f7cc5d7f-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/caffe-latte-800.avif",
+        "url": "/img/caffe-latte.f7cc5d7f-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/caffe-latte-1200.avif",
+        "url": "/img/caffe-latte.f7cc5d7f-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/caffe-latte-400.webp",
+        "url": "/img/caffe-latte.f7cc5d7f-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/caffe-latte-800.webp",
+        "url": "/img/caffe-latte.f7cc5d7f-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/caffe-latte-1200.webp",
+        "url": "/img/caffe-latte.f7cc5d7f-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/caffe-latte-800.jpg"
+    "src": "/img/caffe-latte.f7cc5d7f-800.jpg"
   },
   "caffe-mocha": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/caffe-mocha-400.avif",
+        "url": "/img/caffe-mocha.e9ca2d4b-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/caffe-mocha-800.avif",
+        "url": "/img/caffe-mocha.e9ca2d4b-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/caffe-mocha-1200.avif",
+        "url": "/img/caffe-mocha.e9ca2d4b-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/caffe-mocha-400.webp",
+        "url": "/img/caffe-mocha.e9ca2d4b-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/caffe-mocha-800.webp",
+        "url": "/img/caffe-mocha.e9ca2d4b-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/caffe-mocha-1200.webp",
+        "url": "/img/caffe-mocha.e9ca2d4b-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/caffe-mocha-800.jpg"
+    "src": "/img/caffe-mocha.e9ca2d4b-800.jpg"
   },
   "cappuccino": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/cappuccino-400.avif",
+        "url": "/img/cappuccino.1782de8b-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/cappuccino-800.avif",
+        "url": "/img/cappuccino.1782de8b-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/cappuccino-1200.avif",
+        "url": "/img/cappuccino.1782de8b-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/cappuccino-400.webp",
+        "url": "/img/cappuccino.1782de8b-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/cappuccino-800.webp",
+        "url": "/img/cappuccino.1782de8b-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/cappuccino-1200.webp",
+        "url": "/img/cappuccino.1782de8b-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/cappuccino-800.jpg"
+    "src": "/img/cappuccino.1782de8b-800.jpg"
   },
   "classic-french-press": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/classic-french-press-400.avif",
+        "url": "/img/classic-french-press.2b8d7ead-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/classic-french-press-800.avif",
+        "url": "/img/classic-french-press.2b8d7ead-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/classic-french-press-1200.avif",
+        "url": "/img/classic-french-press.2b8d7ead-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/classic-french-press-400.webp",
+        "url": "/img/classic-french-press.2b8d7ead-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/classic-french-press-800.webp",
+        "url": "/img/classic-french-press.2b8d7ead-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/classic-french-press-1200.webp",
+        "url": "/img/classic-french-press.2b8d7ead-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/classic-french-press-800.jpg"
+    "src": "/img/classic-french-press.2b8d7ead-800.jpg"
   },
   "cold-brew": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/cold-brew-400.avif",
+        "url": "/img/cold-brew.5815400c-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/cold-brew-800.avif",
+        "url": "/img/cold-brew.5815400c-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/cold-brew-1200.avif",
+        "url": "/img/cold-brew.5815400c-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/cold-brew-400.webp",
+        "url": "/img/cold-brew.5815400c-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/cold-brew-800.webp",
+        "url": "/img/cold-brew.5815400c-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/cold-brew-1200.webp",
+        "url": "/img/cold-brew.5815400c-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/cold-brew-800.jpg"
+    "src": "/img/cold-brew.5815400c-800.jpg"
   },
   "cortado": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/cortado-400.avif",
+        "url": "/img/cortado.268662ec-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/cortado-800.avif",
+        "url": "/img/cortado.268662ec-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/cortado-1200.avif",
+        "url": "/img/cortado.268662ec-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/cortado-400.webp",
+        "url": "/img/cortado.268662ec-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/cortado-800.webp",
+        "url": "/img/cortado.268662ec-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/cortado-1200.webp",
+        "url": "/img/cortado.268662ec-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/cortado-800.jpg"
+    "src": "/img/cortado.268662ec-800.jpg"
   },
   "espresso": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/espresso-400.avif",
+        "url": "/img/espresso.63f352b9-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/espresso-800.avif",
+        "url": "/img/espresso.63f352b9-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/espresso-1200.avif",
+        "url": "/img/espresso.63f352b9-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/espresso-400.webp",
+        "url": "/img/espresso.63f352b9-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/espresso-800.webp",
+        "url": "/img/espresso.63f352b9-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/espresso-1200.webp",
+        "url": "/img/espresso.63f352b9-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/espresso-800.jpg"
+    "src": "/img/espresso.63f352b9-800.jpg"
   },
   "espresso-tonic": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/espresso-tonic-400.avif",
+        "url": "/img/espresso-tonic.8ecfa08a-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/espresso-tonic-800.avif",
+        "url": "/img/espresso-tonic.8ecfa08a-800.avif",
         "width": 800,
         "height": 600
       }
     ],
     "webp": [
       {
-        "url": "/img/espresso-tonic-400.webp",
+        "url": "/img/espresso-tonic.8ecfa08a-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/espresso-tonic-800.webp",
+        "url": "/img/espresso-tonic.8ecfa08a-800.webp",
         "width": 800,
         "height": 600
       }
     ],
-    "src": "/img/espresso-tonic-800.jpg"
+    "src": "/img/espresso-tonic.8ecfa08a-800.jpg"
   },
   "flat-white": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/flat-white-400.avif",
+        "url": "/img/flat-white.d5bba336-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/flat-white-800.avif",
+        "url": "/img/flat-white.d5bba336-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/flat-white-1200.avif",
+        "url": "/img/flat-white.d5bba336-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/flat-white-400.webp",
+        "url": "/img/flat-white.d5bba336-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/flat-white-800.webp",
+        "url": "/img/flat-white.d5bba336-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/flat-white-1200.webp",
+        "url": "/img/flat-white.d5bba336-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/flat-white-800.jpg"
+    "src": "/img/flat-white.d5bba336-800.jpg"
   },
   "iced-caramel-latte": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/iced-caramel-latte-400.avif",
+        "url": "/img/iced-caramel-latte.db0be710-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/iced-caramel-latte-800.avif",
+        "url": "/img/iced-caramel-latte.db0be710-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/iced-caramel-latte-1200.avif",
+        "url": "/img/iced-caramel-latte.db0be710-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/iced-caramel-latte-400.webp",
+        "url": "/img/iced-caramel-latte.db0be710-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/iced-caramel-latte-800.webp",
+        "url": "/img/iced-caramel-latte.db0be710-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/iced-caramel-latte-1200.webp",
+        "url": "/img/iced-caramel-latte.db0be710-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/iced-caramel-latte-800.jpg"
+    "src": "/img/iced-caramel-latte.db0be710-800.jpg"
   },
   "iced-latte": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/iced-latte-400.avif",
+        "url": "/img/iced-latte.5e8b9d18-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/iced-latte-800.avif",
+        "url": "/img/iced-latte.5e8b9d18-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/iced-latte-1200.avif",
+        "url": "/img/iced-latte.5e8b9d18-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/iced-latte-400.webp",
+        "url": "/img/iced-latte.5e8b9d18-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/iced-latte-800.webp",
+        "url": "/img/iced-latte.5e8b9d18-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/iced-latte-1200.webp",
+        "url": "/img/iced-latte.5e8b9d18-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/iced-latte-800.jpg"
+    "src": "/img/iced-latte.5e8b9d18-800.jpg"
   },
   "moka-pot-classic": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/moka-pot-classic-400.avif",
+        "url": "/img/moka-pot-classic.ec9ae607-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/moka-pot-classic-800.avif",
+        "url": "/img/moka-pot-classic.ec9ae607-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/moka-pot-classic-1200.avif",
+        "url": "/img/moka-pot-classic.ec9ae607-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/moka-pot-classic-400.webp",
+        "url": "/img/moka-pot-classic.ec9ae607-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/moka-pot-classic-800.webp",
+        "url": "/img/moka-pot-classic.ec9ae607-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/moka-pot-classic-1200.webp",
+        "url": "/img/moka-pot-classic.ec9ae607-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/moka-pot-classic-800.jpg"
+    "src": "/img/moka-pot-classic.ec9ae607-800.jpg"
   },
   "v60-pour-over": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/v60-pour-over-400.avif",
+        "url": "/img/v60-pour-over.76b285f7-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/v60-pour-over-800.avif",
+        "url": "/img/v60-pour-over.76b285f7-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/v60-pour-over-1200.avif",
+        "url": "/img/v60-pour-over.76b285f7-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/v60-pour-over-400.webp",
+        "url": "/img/v60-pour-over.76b285f7-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/v60-pour-over-800.webp",
+        "url": "/img/v60-pour-over.76b285f7-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/v60-pour-over-1200.webp",
+        "url": "/img/v60-pour-over.76b285f7-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/v60-pour-over-800.jpg"
+    "src": "/img/v60-pour-over.76b285f7-800.jpg"
   },
   "learn-basics": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/learn-basics-400.avif",
+        "url": "/img/learn-basics.4ad887b2-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/learn-basics-800.avif",
+        "url": "/img/learn-basics.4ad887b2-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/learn-basics-1200.avif",
+        "url": "/img/learn-basics.4ad887b2-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/learn-basics-400.webp",
+        "url": "/img/learn-basics.4ad887b2-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/learn-basics-800.webp",
+        "url": "/img/learn-basics.4ad887b2-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/learn-basics-1200.webp",
+        "url": "/img/learn-basics.4ad887b2-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/learn-basics-800.jpg"
+    "src": "/img/learn-basics.4ad887b2-800.jpg"
   },
   "learn-espresso": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/learn-espresso-400.avif",
+        "url": "/img/learn-espresso.9af8888d-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/learn-espresso-800.avif",
+        "url": "/img/learn-espresso.9af8888d-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/learn-espresso-1200.avif",
+        "url": "/img/learn-espresso.9af8888d-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/learn-espresso-400.webp",
+        "url": "/img/learn-espresso.9af8888d-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/learn-espresso-800.webp",
+        "url": "/img/learn-espresso.9af8888d-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/learn-espresso-1200.webp",
+        "url": "/img/learn-espresso.9af8888d-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/learn-espresso-800.jpg"
+    "src": "/img/learn-espresso.9af8888d-800.jpg"
   },
   "learn-beans": {
     "width": 800,
     "height": 600,
     "avif": [
       {
-        "url": "/img/learn-beans-400.avif",
+        "url": "/img/learn-beans.0babad0c-400.avif",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/learn-beans-800.avif",
+        "url": "/img/learn-beans.0babad0c-800.avif",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/learn-beans-1200.avif",
+        "url": "/img/learn-beans.0babad0c-1200.avif",
         "width": 1200,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/learn-beans-400.webp",
+        "url": "/img/learn-beans.0babad0c-400.webp",
         "width": 400,
         "height": 300
       },
       {
-        "url": "/img/learn-beans-800.webp",
+        "url": "/img/learn-beans.0babad0c-800.webp",
         "width": 800,
         "height": 600
       },
       {
-        "url": "/img/learn-beans-1200.webp",
+        "url": "/img/learn-beans.0babad0c-1200.webp",
         "width": 1200,
         "height": 900
       }
     ],
-    "src": "/img/learn-beans-800.jpg"
+    "src": "/img/learn-beans.0babad0c-800.jpg"
   },
   "hero": {
     "width": 800,
     "height": 450,
     "avif": [
       {
-        "url": "/img/hero-400.avif",
+        "url": "/img/hero.404f5c86-400.avif",
         "width": 400,
         "height": 225
       },
       {
-        "url": "/img/hero-800.avif",
+        "url": "/img/hero.404f5c86-800.avif",
         "width": 800,
         "height": 450
       },
       {
-        "url": "/img/hero-1200.avif",
+        "url": "/img/hero.404f5c86-1200.avif",
         "width": 1200,
         "height": 675
       },
       {
-        "url": "/img/hero-1600.avif",
+        "url": "/img/hero.404f5c86-1600.avif",
         "width": 1600,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/hero-400.webp",
+        "url": "/img/hero.404f5c86-400.webp",
         "width": 400,
         "height": 225
       },
       {
-        "url": "/img/hero-800.webp",
+        "url": "/img/hero.404f5c86-800.webp",
         "width": 800,
         "height": 450
       },
       {
-        "url": "/img/hero-1200.webp",
+        "url": "/img/hero.404f5c86-1200.webp",
         "width": 1200,
         "height": 675
       },
       {
-        "url": "/img/hero-1600.webp",
+        "url": "/img/hero.404f5c86-1600.webp",
         "width": 1600,
         "height": 900
       }
     ],
-    "src": "/img/hero-800.jpg"
+    "src": "/img/hero.404f5c86-800.jpg"
   },
   "shop-teaser": {
     "width": 800,
     "height": 450,
     "avif": [
       {
-        "url": "/img/shop-teaser-400.avif",
+        "url": "/img/shop-teaser.24987a70-400.avif",
         "width": 400,
         "height": 225
       },
       {
-        "url": "/img/shop-teaser-800.avif",
+        "url": "/img/shop-teaser.24987a70-800.avif",
         "width": 800,
         "height": 450
       },
       {
-        "url": "/img/shop-teaser-1200.avif",
+        "url": "/img/shop-teaser.24987a70-1200.avif",
         "width": 1200,
         "height": 675
       },
       {
-        "url": "/img/shop-teaser-1600.avif",
+        "url": "/img/shop-teaser.24987a70-1600.avif",
         "width": 1600,
         "height": 900
       }
     ],
     "webp": [
       {
-        "url": "/img/shop-teaser-400.webp",
+        "url": "/img/shop-teaser.24987a70-400.webp",
         "width": 400,
         "height": 225
       },
       {
-        "url": "/img/shop-teaser-800.webp",
+        "url": "/img/shop-teaser.24987a70-800.webp",
         "width": 800,
         "height": 450
       },
       {
-        "url": "/img/shop-teaser-1200.webp",
+        "url": "/img/shop-teaser.24987a70-1200.webp",
         "width": 1200,
         "height": 675
       },
       {
-        "url": "/img/shop-teaser-1600.webp",
+        "url": "/img/shop-teaser.24987a70-1600.webp",
         "width": 1600,
         "height": 900
       }
     ],
-    "src": "/img/shop-teaser-800.jpg"
+    "src": "/img/shop-teaser.24987a70-800.jpg"
   }
 }

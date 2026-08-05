@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import SearchResults, { type SearchDoc } from '../components/SearchResults';
+import { categoryLabel, formatTimeShort } from '../lib/recipes';
+import { LEARN_PATHS } from '../lib/learn';
+
+/** Strip markdown syntax so the index holds words, not punctuation. */
+const plain = (body: string) =>
+  body
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/[#*_`>\[\]()-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const [recipes, guides, journal] = await Promise.all([
+  getCollection('recipes'),
+  getCollection('guides'),
+  getCollection('journal'),
+]);
+
+const docs: SearchDoc[] = [
+  ...recipes.map((r) => ({
+    type: 'recipe' as const,
+    title: r.data.title,
+    description: r.data.description,
+    url: `/recipes/${r.id}/`,
+    meta: `${categoryLabel(r.data.category)} · ${formatTimeShort(r.data)}`,
+    text: [
+      r.data.title,
+      r.data.description,
+      categoryLabel(r.data.category),
+      r.data.brewMethod,
+      r.data.temperature,
+      ...r.data.ingredients,
+      ...r.data.equipment,
+      plain(r.body ?? ''),
+    ]
+      .join(' ')
+      .toLowerCase(),
+  })),
+  ...guides.map((g) => ({
+    type: 'guide' as const,
+    title: g.data.title,
+    description: g.data.description,
+    url: `/guides/${g.id}/`,
+    meta: 'Brew guide',
+    text: [g.data.title, g.data.description, g.data.tagline, plain(g.body ?? '')]
+      .join(' ')
+      .toLowerCase(),
+  })),
+  ...LEARN_PATHS.map((p) => ({
+    type: 'learn' as const,
+    title: p.title,
+    description: p.description,
+    url: `/learn/#${p.id}`,
+    meta: 'Learning path',
+    text: [p.title, p.description, p.short].join(' ').toLowerCase(),
+  })),
+  ...journal.map((p) => ({
+    type: 'journal' as const,
+    title: p.data.title,
+    description: p.data.description,
+    url: `/journal/${p.id}/`,
+    meta: p.data.date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
+    text: [p.data.title, p.data.description, plain(p.body ?? '')].join(' ').toLowerCase(),
+  })),
+];
+---
+
+<Layout
+  title="Search — KAVOVO"
+  description="Search every KAVOVO recipe, brew guide, learning path and journal article."
+>
+  <section class="mx-auto max-w-3xl px-5 py-14">
+    <Breadcrumbs trail={[{ label: 'Search' }]} />
+    <span class="eyebrow mt-6 block">Search</span>
+    <h1 class="mt-2 font-display text-4xl font-medium">Find it fast</h1>
+    <p class="mt-3 text-ink-soft">
+      Recipes, brew guides, learning paths and journal articles — all in one place.
+    </p>
+
+    <div class="mt-8">
+      <SearchResults client:load docs={docs} />
+    </div>
+
+    <noscript>
+      <p class="mt-6 text-sm text-ink-soft">
+        Search needs JavaScript. You can still <a href="/recipes/" class="text-accent underline">browse all recipes</a>.
+      </p>
+    </noscript>
+  </section>
+</Layout>

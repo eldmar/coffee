@@ -22,13 +22,13 @@ const popular = recipes.filter((r) => r.data.popular).slice(0, 3);
         from one of the recipes below.
       </p>
 
-      <form action="/recipes/" method="get" role="search" class="mx-auto mt-8 flex max-w-sm gap-2">
-        <label class="sr-only" for="notfound-search">Search recipes</label>
+      <form action="/search/" method="get" role="search" class="mx-auto mt-8 flex max-w-sm gap-2">
+        <label class="sr-only" for="notfound-search">Search recipes and guides</label>
         <input
           id="notfound-search"
           type="search"
           name="q"
-          placeholder="Search recipes"
+          placeholder="Search recipes & guides"
           class="flex-1 rounded-md border border-line bg-card px-4 py-2.5 text-sm outline-none focus:border-accent"
         />
         <button

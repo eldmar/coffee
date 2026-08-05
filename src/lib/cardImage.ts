@@ -13,15 +13,15 @@ export interface CardImage {
  * build time and handed over as plain strings.
  */
 export async function cardImage(image: ImageMetadata): Promise<CardImage> {
-  const optimised = await getImage({
-    src: image,
-    format: 'webp',
-    widths: [400, 640, 800],
-  });
+  const [set, fallback] = await Promise.all([
+    getImage({ src: image, format: 'webp', widths: [400, 640, 800] }),
+    // Browsers without srcset support would otherwise pull the full-size file.
+    getImage({ src: image, format: 'webp', width: 640 }),
+  ]);
 
   return {
-    src: optimised.src,
-    srcset: optimised.srcSet.attribute,
+    src: fallback.src,
+    srcset: set.srcSet.attribute,
     width: 400,
     height: 300,
   };

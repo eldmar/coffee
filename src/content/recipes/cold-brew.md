@@ -2,12 +2,19 @@
 title: Overnight Cold Brew
 description: Smooth, sweet, and low in acidity — five minutes of prep, and the fridge does the rest overnight.
 image: /images/recipes/cold-brew.svg
-category: cold
+category: iced-coffee
 brewMethod: cold-brew
 temperature: iced
 milk: black
 difficulty: easy
-time: 5
+prepTime: 5
+brewTime: 960
+activeTime: 5
+totalTime: 965
+totalTimeLabel: "12–18 hr"
+yield: "4 servings"
+datePublished: 2026-07-18
+dateModified: 2026-07-18
 ingredients:
   - 60 g coarsely ground coffee
   - 600 ml cold filtered water

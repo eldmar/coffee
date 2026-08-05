@@ -2,12 +2,18 @@
 title: Flat White
 description: A double shot of espresso under a thin layer of silky microfoam — strong, smooth, and velvety.
 image: /images/recipes/flat-white.jpg
-category: espresso
+category: milk-drinks
 brewMethod: espresso
 temperature: hot
 milk: milk
 difficulty: easy
-time: 8
+prepTime: 3
+brewTime: 5
+activeTime: 8
+totalTime: 8
+yield: "1 drink"
+datePublished: 2026-07-18
+dateModified: 2026-07-18
 popular: true
 ingredients:
   - 18 g finely ground coffee (double shot)

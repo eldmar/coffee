@@ -1,0 +1,92 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import RecipeCard from './RecipeCard.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import JsonLd from './JsonLd.astro';
+import { CATEGORIES, type CategoryId } from '../lib/recipes';
+
+interface Props {
+  id: CategoryId;
+}
+
+const { id } = Astro.props;
+const category = CATEGORIES.find((c) => c.id === id)!;
+
+const recipes = (await getCollection('recipes'))
+  .filter((r) => r.data.category === id)
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: category.title,
+  description: category.description,
+  numberOfItems: recipes.length,
+  itemListElement: recipes.map((r, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: `${site}/recipes/${r.id}/`,
+    name: r.data.title,
+  })),
+};
+---
+
+<Layout title={`${category.title} — KAVOVO`} description={category.description}>
+  <section class="mx-auto max-w-6xl px-5 py-14">
+    <JsonLd schema={schema} />
+    <Breadcrumbs trail={[{ label: 'Recipes', href: '/recipes/' }, { label: category.label }]} />
+
+    <span class="eyebrow mt-6 block">{category.label}</span>
+    <h1 class="mt-2 font-display text-4xl font-medium text-balance">{category.title}</h1>
+    <p class="mt-3 max-w-lg text-ink-soft">{category.description}</p>
+
+    <nav aria-label="Recipe categories" class="mt-8 flex flex-wrap gap-2">
+      <a
+        href="/recipes/"
+        class="rounded-md border border-line px-3.5 py-1.5 text-sm text-ink-soft transition-colors hover:border-accent hover:text-ink"
+      >
+        All recipes
+      </a>
+      {
+        CATEGORIES.map((c) => (
+          <a
+            href={`/recipes/${c.slug}/`}
+            aria-current={c.id === category.id ? 'page' : undefined}
+            class:list={[
+              'rounded-md border px-3.5 py-1.5 text-sm transition-colors',
+              c.id === category.id
+                ? 'border-accent bg-accent text-accent-ink'
+                : 'border-line text-ink-soft hover:border-accent hover:text-ink',
+            ]}
+          >
+            {c.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <p class="mt-8 text-sm text-ink-soft">
+      {recipes.length} {recipes.length === 1 ? 'recipe' : 'recipes'}
+    </p>
+
+    <div class="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        recipes.map((recipe) => (
+          <RecipeCard
+            slug={recipe.id}
+            title={recipe.data.title}
+            image={recipe.data.image}
+            category={recipe.data.category}
+            activeTime={recipe.data.activeTime}
+            totalTime={recipe.data.totalTime}
+            totalTimeLabel={recipe.data.totalTimeLabel}
+            difficulty={recipe.data.difficulty}
+          />
+        ))
+      }
+    </div>
+  </section>
+</Layout>

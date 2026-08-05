@@ -2,12 +2,18 @@
 title: Iced Caramel Latte
 description: Cold milk, fresh espresso, and a ribbon of caramel over ice — a sweet café classic in five minutes.
 image: /images/recipes/iced-caramel-latte.jpg
-category: milk-based
+category: iced-coffee
 brewMethod: espresso
 temperature: iced
 milk: milk
 difficulty: easy
-time: 5
+prepTime: 2
+brewTime: 3
+activeTime: 5
+totalTime: 5
+yield: "1 drink"
+datePublished: 2026-07-18
+dateModified: 2026-07-18
 popular: true
 ingredients:
   - 18 g finely ground coffee (double shot)

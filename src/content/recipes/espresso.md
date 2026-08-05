@@ -4,12 +4,18 @@ description: A reliable starting recipe for a balanced double espresso using an 
 seoTitle: How to Make Espresso at Home — KAVOVO
 seoDescription: Dial in a balanced double espresso with an 18 g dose, 36 g yield and practical fixes for shots that run too fast or too slowly.
 image: /images/recipes/espresso.jpg
-category: espresso
+category: espresso-drinks
 brewMethod: espresso
 temperature: hot
 milk: black
 difficulty: medium
-time: 5
+prepTime: 3
+brewTime: 2
+activeTime: 5
+totalTime: 5
+yield: "1 double shot"
+datePublished: 2026-08-03
+dateModified: 2026-08-05
 ingredients:
   - 18 g freshly roasted coffee beans
 equipment:

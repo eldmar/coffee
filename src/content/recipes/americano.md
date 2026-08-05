@@ -4,12 +4,18 @@ description: A double espresso lengthened with hot water for a clean, balanced a
 seoTitle: How to Make an Americano — KAVOVO
 seoDescription: Make a balanced Americano with double espresso and hot water, including the ideal ratio and the difference between an Americano and Long Black.
 image: /images/recipes/americano.jpg
-category: espresso
+category: espresso-drinks
 brewMethod: espresso
 temperature: hot
 milk: black
 difficulty: easy
-time: 5
+prepTime: 2
+brewTime: 3
+activeTime: 5
+totalTime: 5
+yield: "1 drink"
+datePublished: 2026-08-03
+dateModified: 2026-08-05
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 120–180 ml fresh hot water

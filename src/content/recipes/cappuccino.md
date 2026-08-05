@@ -2,12 +2,18 @@
 title: Cappuccino
 description: Equal parts espresso, steamed milk, and airy foam — the classic morning cup with a deep coffee core.
 image: /images/recipes/cappuccino.svg
-category: espresso
+category: milk-drinks
 brewMethod: espresso
 temperature: hot
 milk: milk
 difficulty: easy
-time: 10
+prepTime: 4
+brewTime: 6
+activeTime: 10
+totalTime: 10
+yield: "1 drink"
+datePublished: 2026-07-18
+dateModified: 2026-07-18
 ingredients:
   - 18 g finely ground coffee (double shot)
   - 150 ml whole milk

@@ -1,6 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import JsonLd from '../../components/JsonLd.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('journal');
@@ -15,16 +17,47 @@ const { Content } = await render(post);
 
 const formatDate = (date: Date) =>
   date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const url = `${site}/journal/${post.id}/`;
+const image = `${site}${post.data.image ?? '/images/hero.jpg'}`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  '@id': url,
+  url,
+  headline: post.data.title,
+  description: post.data.description,
+  image,
+  datePublished: post.data.date.toISOString().slice(0, 10),
+  dateModified: post.data.date.toISOString().slice(0, 10),
+  author: { '@type': 'Organization', name: 'KAVOVO', url: `${site}/about/` },
+  publisher: { '@type': 'Organization', name: 'KAVOVO', logo: `${site}/images/kavovo-lockup.svg` },
+  mainEntityOfPage: url,
+};
 ---
 
-<Layout title={`${post.data.title} — KAVOVO`} description={post.data.description}>
+<Layout
+  title={`${post.data.title} — KAVOVO`}
+  description={post.data.description}
+  ogType="article"
+  ogImage={post.data.image ?? '/images/hero.jpg'}
+  publishedTime={post.data.date}
+  modifiedTime={post.data.date}
+>
   <article class="mx-auto max-w-2xl px-5 py-12">
-    <a href="/journal/" class="text-sm font-medium text-accent hover:underline">&#8592; Journal</a>
+    <JsonLd schema={schema} />
+    <Breadcrumbs trail={[{ label: 'Journal', href: '/journal/' }, { label: post.data.title }]} />
+
     <time datetime={post.data.date.toISOString()} class="mt-6 block text-sm text-ink-soft">
       {formatDate(post.data.date)}
     </time>
     <h1 class="mt-2 font-display text-4xl leading-tight font-medium text-balance">{post.data.title}</h1>
     <p class="mt-4 text-lg text-ink-soft">{post.data.description}</p>
+    <p class="mt-3 text-sm text-ink-soft">
+      By <a href="/about/" class="text-accent hover:underline">KAVOVO</a>
+    </p>
     <div
       class="mt-8 border-t border-line pt-8 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-medium [&_h2]:mt-8 [&_h2]:mb-3 [&_p]:mt-4 [&_p]:text-ink-soft [&_p]:leading-relaxed"
     >

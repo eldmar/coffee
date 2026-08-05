@@ -9,6 +9,35 @@ import LearningPaths from '../components/LearningPaths.astro';
 import Troubleshooting from '../components/Troubleshooting.astro';
 import Newsletter from '../components/Newsletter.astro';
 import ShopComingSoon from '../components/ShopComingSoon.astro';
+import JsonLd from '../components/JsonLd.astro';
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+
+const organisation = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${site}/#organization`,
+  name: 'KAVOVO',
+  url: `${site}/`,
+  logo: `${site}/images/kavovo-lockup.svg`,
+  description:
+    'Straightforward coffee drink recipes and practical brewing guides for people making coffee at home.',
+  email: 'hello@kavovo.coffee',
+};
+
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${site}/#website`,
+  name: 'KAVOVO',
+  url: `${site}/`,
+  publisher: { '@id': `${site}/#organization` },
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: { '@type': 'EntryPoint', urlTemplate: `${site}/recipes/?q={search_term_string}` },
+    'query-input': 'required name=search_term_string',
+  },
+};
 
 const recipes = await getCollection('recipes');
 const popular = recipes.filter((r) => r.data.popular).slice(0, 3);
@@ -21,12 +50,16 @@ const finderRecipes = recipes.map((r) => ({
   brewMethod: r.data.brewMethod,
   temperature: r.data.temperature,
   milk: r.data.milk,
-  time: r.data.time,
+  activeTime: r.data.activeTime,
+  totalTime: r.data.totalTime,
+  totalTimeLabel: r.data.totalTimeLabel,
   difficulty: r.data.difficulty,
 }));
 ---
 
 <Layout>
+  <JsonLd schema={organisation} />
+  <JsonLd schema={website} />
   <Hero />
 
   <section class="mx-auto max-w-6xl px-5">
@@ -47,7 +80,9 @@ const finderRecipes = recipes.map((r) => ({
           title={recipe.data.title}
           image={recipe.data.image}
           category={recipe.data.category}
-          time={recipe.data.time}
+          activeTime={recipe.data.activeTime}
+          totalTime={recipe.data.totalTime}
+          totalTimeLabel={recipe.data.totalTimeLabel}
           difficulty={recipe.data.difficulty}
         />
       ))}

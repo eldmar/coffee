@@ -2,12 +2,18 @@
 title: V60 Pour Over
 description: A clean, balanced pour-over with bright clarity — the reference brew for tasting what your beans can do.
 image: /images/recipes/v60-pour-over.jpg
-category: filter
+category: filter-coffee
 brewMethod: v60
 temperature: hot
 milk: black
 difficulty: medium
-time: 12
+prepTime: 3
+brewTime: 4
+activeTime: 7
+totalTime: 12
+yield: "1 large cup"
+datePublished: 2026-07-18
+dateModified: 2026-07-18
 popular: true
 ingredients:
   - 15 g medium-fine ground coffee

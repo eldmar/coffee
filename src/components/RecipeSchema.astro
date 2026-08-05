@@ -1,0 +1,49 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import JsonLd from './JsonLd.astro';
+import { categoryLabel, extractSteps, isoDuration } from '../lib/recipes';
+
+interface Props {
+  recipe: CollectionEntry<'recipes'>;
+}
+
+const { recipe } = Astro.props;
+const { data } = recipe;
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const url = `${site}/recipes/${recipe.id}/`;
+const steps = extractSteps(recipe.body ?? '');
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Recipe',
+  '@id': url,
+  url,
+  name: data.title,
+  description: data.description,
+  image: `${site}${data.image}`,
+  author: { '@type': 'Organization', name: data.author },
+  publisher: { '@type': 'Organization', name: 'KAVOVO' },
+  datePublished: data.datePublished.toISOString().slice(0, 10),
+  dateModified: data.dateModified.toISOString().slice(0, 10),
+  prepTime: isoDuration(data.prepTime),
+  cookTime: isoDuration(data.brewTime),
+  totalTime: isoDuration(data.totalTime),
+  recipeYield: data.yield,
+  recipeCategory: categoryLabel(data.category),
+  recipeCuisine: 'Coffee',
+  recipeIngredient: data.ingredients,
+  ...(steps.length
+    ? {
+        recipeInstructions: steps.map((text, index) => ({
+          '@type': 'HowToStep',
+          position: index + 1,
+          text,
+          url: `${url}#step-${index + 1}`,
+        })),
+      }
+    : {}),
+};
+---
+
+<JsonLd schema={schema} />

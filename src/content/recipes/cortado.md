@@ -4,12 +4,18 @@ description: A balanced combination of equal parts espresso and lightly textured
 seoTitle: How to Make a Cortado — KAVOVO
 seoDescription: Make a balanced cortado with equal parts double espresso and lightly textured steamed milk, plus the difference between a cortado and flat white.
 image: /images/recipes/cortado.jpg
-category: milk-based
+category: milk-drinks
 brewMethod: espresso
 temperature: hot
 milk: milk
 difficulty: easy
-time: 7
+prepTime: 3
+brewTime: 4
+activeTime: 7
+totalTime: 7
+yield: "1 drink"
+datePublished: 2026-08-03
+dateModified: 2026-08-05
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 40–60 ml cold whole milk or a barista-style alternative

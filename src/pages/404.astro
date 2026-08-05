@@ -56,7 +56,9 @@ const popular = recipes.filter((r) => r.data.popular).slice(0, 3);
             title={recipe.data.title}
             image={recipe.data.image}
             category={recipe.data.category}
-            time={recipe.data.time}
+            activeTime={recipe.data.activeTime}
+          totalTime={recipe.data.totalTime}
+          totalTimeLabel={recipe.data.totalTimeLabel}
             difficulty={recipe.data.difficulty}
           />
         ))}

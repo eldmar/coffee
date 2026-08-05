@@ -3,12 +3,18 @@ title: Espresso Tonic
 description: A bright and refreshing iced coffee made with a double espresso, chilled tonic water and plenty of ice.
 seoDescription: Make a refreshing espresso tonic with a double espresso, chilled tonic water, ice and optional citrus. Includes ratios, coffee tips and variations.
 image: /images/recipes/espresso-tonic.jpg
-category: cold
+category: iced-coffee
 brewMethod: espresso
 temperature: iced
 milk: black
 difficulty: easy
-time: 5
+prepTime: 2
+brewTime: 3
+activeTime: 5
+totalTime: 5
+yield: "1 drink"
+datePublished: 2026-07-18
+dateModified: 2026-08-03
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 120–150 ml chilled tonic water

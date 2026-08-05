@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { formatTimeShort } from "../lib/recipes";
 
 export interface FinderRecipe {
   slug: string;
@@ -8,7 +9,9 @@ export interface FinderRecipe {
   brewMethod: string;
   temperature: string;
   milk: string;
-  time: number;
+  activeTime: number;
+  totalTime: number;
+  totalTimeLabel?: string;
   difficulty: string;
 }
 
@@ -180,7 +183,7 @@ export default function RecipeFinder({ recipes }: Props) {
                     <span className="min-w-0">
                       <span className="block truncate font-medium">{r.title}</span>
                       <span className="block text-xs text-ink-soft">
-                        {r.time} min · {r.difficulty}
+                        {formatTimeShort(r)} · {r.difficulty}
                       </span>
                     </span>
                     <span className="ml-auto text-accent transition-transform group-hover:translate-x-0.5" aria-hidden="true">

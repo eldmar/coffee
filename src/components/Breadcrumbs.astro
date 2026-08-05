@@ -1,0 +1,48 @@
+---
+import JsonLd from './JsonLd.astro';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  trail: Crumb[];
+}
+
+const { trail } = Astro.props;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+
+const items = [{ label: 'Home', href: '/' }, ...trail];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: items.map((crumb, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: crumb.label,
+    ...(crumb.href ? { item: `${site}${crumb.href}` } : {}),
+  })),
+};
+---
+
+<JsonLd schema={schema} />
+<nav aria-label="Breadcrumb" class="text-sm text-ink-soft print:hidden">
+  <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+    {
+      items.map((crumb, index) => (
+        <li class="flex items-center gap-2">
+          {index > 0 && <span aria-hidden="true">/</span>}
+          {crumb.href ? (
+            <a href={crumb.href} class="hover:text-ink hover:underline">
+              {crumb.label}
+            </a>
+          ) : (
+            <span aria-current="page">{crumb.label}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

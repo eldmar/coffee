@@ -2,12 +2,18 @@
 title: Daily AeroPress
 description: The forgiving everyday brewer — rich like a French press, clean like a filter, ready in six minutes.
 image: /images/recipes/aeropress-daily.svg
-category: filter
+category: filter-coffee
 brewMethod: aeropress
 temperature: hot
 milk: black
 difficulty: easy
-time: 6
+prepTime: 2
+brewTime: 4
+activeTime: 6
+totalTime: 6
+yield: "1 cup"
+datePublished: 2026-07-18
+dateModified: 2026-07-18
 ingredients:
   - 15 g medium ground coffee
   - 220 ml water at 90 °C

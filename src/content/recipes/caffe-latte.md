@@ -3,12 +3,18 @@ title: Caffè Latte
 description: A smooth double espresso topped with silky steamed milk and a thin layer of microfoam.
 seoDescription: Learn how to make a smooth caffè latte with double espresso, silky steamed milk and a thin layer of microfoam.
 image: /images/recipes/caffe-latte.jpg
-category: milk-based
+category: milk-drinks
 brewMethod: espresso
 temperature: hot
 milk: milk
 difficulty: easy
-time: 8
+prepTime: 3
+brewTime: 5
+activeTime: 8
+totalTime: 8
+yield: "1 drink"
+datePublished: 2026-08-03
+dateModified: 2026-08-03
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 180–220 ml cold whole milk or a barista-style alternative

@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
+import { categoryLabel, formatTimeShort } from "../lib/recipes";
 
 interface CatalogRecipe {
   slug: string;
@@ -9,7 +10,9 @@ interface CatalogRecipe {
   brewMethod: string;
   temperature: string;
   milk: string;
-  time: number;
+  activeTime: number;
+  totalTime: number;
+  totalTimeLabel?: string;
   difficulty: string;
   ingredients: string[];
 }
@@ -17,13 +20,6 @@ interface CatalogRecipe {
 interface Props {
   recipes: CatalogRecipe[];
 }
-
-const categoryLabels: Record<string, string> = {
-  espresso: 'Espresso',
-  'milk-based': 'Milk-based',
-  filter: 'Filter',
-  cold: 'Cold',
-};
 
 const methodOptions = [
   ['any', 'Any method'],
@@ -125,14 +121,14 @@ export default function RecipeFilters({ recipes }: Props) {
               >
                 <img src={r.image} alt="" className="aspect-[4/3] w-full object-cover" width="400" height="300" loading="lazy" />
                 <span className="flex flex-1 flex-col gap-1.5 p-5">
-                  <span className="eyebrow">{categoryLabels[r.category] ?? r.category}</span>
+                  <span className="eyebrow">{categoryLabel(r.category)}</span>
                   <span className="font-display text-xl font-medium">{r.title}</span>
                   <span className="mt-auto flex items-center gap-2 pt-2 text-sm text-ink-soft">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                       <circle cx="12" cy="12" r="9" />
                       <path d="M12 7v5l3 2" />
                     </svg>
-                    {r.time} min
+                    {formatTimeShort(r)}
                     <span aria-hidden="true">·</span>
                     <span className="capitalize">{r.difficulty}</span>
                     <span className="ml-auto text-accent transition-transform group-hover:translate-x-1" aria-hidden="true">

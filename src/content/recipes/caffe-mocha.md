@@ -3,12 +3,18 @@ title: Caffè Mocha
 description: A rich combination of double espresso, chocolate and silky steamed milk, finished with optional cocoa.
 seoDescription: Make a rich caffè mocha with double espresso, dark chocolate and silky steamed milk, with tips for controlling sweetness.
 image: /images/recipes/caffe-mocha.jpg
-category: milk-based
+category: milk-drinks
 brewMethod: espresso
 temperature: hot
 milk: milk
 difficulty: easy
-time: 10
+prepTime: 4
+brewTime: 6
+activeTime: 10
+totalTime: 10
+yield: "1 drink"
+datePublished: 2026-08-03
+dateModified: 2026-08-03
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 20 g dark chocolate or 20 ml chocolate sauce

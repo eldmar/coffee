@@ -2,12 +2,18 @@
 title: Moka Pot Classic
 description: Strong, syrupy stovetop coffee the Italian way — with the two details that keep it from turning bitter.
 image: /images/recipes/moka-pot-classic.svg
-category: espresso
+category: brewing-methods
 brewMethod: moka-pot
 temperature: hot
 milk: black
 difficulty: easy
-time: 7
+prepTime: 2
+brewTime: 5
+activeTime: 4
+totalTime: 7
+yield: "2 small cups"
+datePublished: 2026-07-18
+dateModified: 2026-07-18
 ingredients:
   - 18 g medium-fine ground coffee (for a 3-cup pot)
   - Hot water to the safety valve

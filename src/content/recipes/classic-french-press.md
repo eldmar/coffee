@@ -2,12 +2,18 @@
 title: Classic French Press
 description: Heavy body, rich flavor, zero technique anxiety — the four-minute immersion brew that always delivers.
 image: /images/recipes/classic-french-press.svg
-category: filter
+category: filter-coffee
 brewMethod: french-press
 temperature: hot
 milk: black
 difficulty: easy
-time: 8
+prepTime: 2
+brewTime: 6
+activeTime: 4
+totalTime: 8
+yield: "2 cups"
+datePublished: 2026-07-18
+dateModified: 2026-07-18
 ingredients:
   - 30 g coarsely ground coffee
   - 500 ml water at 94 °C

@@ -1,34 +1,53 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import RecipeCard from '../../components/RecipeCard.astro';
+import RecipeSchema from '../../components/RecipeSchema.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { categoryLabel, categoryPath, formatTime, humanDuration } from '../../lib/recipes';
 
 export async function getStaticPaths() {
   const recipes = await getCollection('recipes');
   return recipes.map((recipe) => ({
     params: { slug: recipe.id },
-    props: { recipe },
+    props: { recipe, all: recipes },
   }));
 }
 
-const { recipe } = Astro.props;
+const { recipe, all } = Astro.props;
 const { Content } = await render(recipe);
 const { data } = recipe;
 
-const methodLabels: Record<string, string> = {
-  espresso: 'Espresso machine',
-  aeropress: 'AeroPress',
-  v60: 'V60 pour over',
-  'french-press': 'French press',
-  'moka-pot': 'Moka pot',
-  'cold-brew': 'Cold brew',
+const difficultyLabels: Record<string, string> = {
+  easy: 'Easy',
+  medium: 'Medium',
+  hard: 'Hard',
 };
 
+// The dose is the first ingredient; the yield comes from frontmatter.
 const facts = [
-  ['Method', methodLabels[data.brewMethod] ?? data.brewMethod],
-  ['Time', `${data.time} min`],
-  ['Difficulty', data.difficulty],
-  ['Serve', data.temperature === 'iced' ? 'Iced' : 'Hot'],
+  ['Dose', data.ingredients[0]],
+  ['Yield', data.yield],
+  ['Time', formatTime(data)],
+  ['Difficulty', difficultyLabels[data.difficulty] ?? data.difficulty],
 ];
+
+const guides = await getCollection('guides');
+const guide = guides.find((g) => g.data.method === data.brewMethod);
+
+// Related: same category first, then same brew method, never itself.
+const related = [
+  ...all.filter((r) => r.id !== recipe.id && r.data.category === data.category),
+  ...all.filter(
+    (r) =>
+      r.id !== recipe.id &&
+      r.data.category !== data.category &&
+      r.data.brewMethod === data.brewMethod,
+  ),
+].slice(0, 3);
+
+const dateFmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 
 <Layout
@@ -37,10 +56,35 @@ const facts = [
   ogImage={data.image}
 >
   <article class="mx-auto max-w-3xl px-5 py-12">
-    <a href="/recipes/" class="text-sm font-medium text-accent hover:underline">&#8592; All recipes</a>
-    <span class="eyebrow mt-6 block">{data.category.replace('-', ' ')}</span>
+    <RecipeSchema recipe={recipe} />
+    <Breadcrumbs
+      trail={[
+        { label: 'Recipes', href: '/recipes/' },
+        { label: categoryLabel(data.category), href: categoryPath(data.category) },
+        { label: data.title },
+      ]}
+    />
+
+    <span class="eyebrow mt-6 block">
+      <a href={categoryPath(data.category)} class="hover:underline">{categoryLabel(data.category)}</a>
+    </span>
     <h1 class="mt-2 font-display text-4xl font-medium text-balance">{data.title}</h1>
     <p class="mt-4 text-lg text-ink-soft">{data.description}</p>
+
+    <div class="mt-4 flex flex-wrap items-center gap-x-2 gap-y-2 text-sm text-ink-soft">
+      <span>By {data.author}</span>
+      <span aria-hidden="true">·</span>
+      <span>
+        Updated <time datetime={data.dateModified.toISOString()}>{dateFmt(data.dateModified)}</time>
+      </span>
+      <button
+        type="button"
+        data-print
+        class="ml-auto rounded-md border border-line px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-accent print:hidden"
+      >
+        Print recipe
+      </button>
+    </div>
 
     <img
       src={data.image}
@@ -54,10 +98,18 @@ const facts = [
       {facts.map(([label, value]) => (
         <div>
           <dt class="eyebrow">{label}</dt>
-          <dd class="mt-1 text-sm font-medium capitalize">{value}</dd>
+          <dd class="mt-1 text-sm font-medium">{value}</dd>
         </div>
       ))}
     </dl>
+
+    {
+      data.totalTimeLabel && (
+        <p class="mt-3 text-sm text-ink-soft">
+          Hands-on {humanDuration(data.activeTime)}; the rest is unattended brewing.
+        </p>
+      )
+    }
 
     <div class="mt-10 grid gap-8 sm:grid-cols-2">
       <section>
@@ -79,9 +131,126 @@ const facts = [
     </div>
 
     <div
+      id="recipe-body"
       class="prose-recipe mt-10 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-medium [&_h2]:mt-8 [&_h2]:mb-3 [&_h3]:font-display [&_h3]:text-lg [&_h3]:font-medium [&_h3]:mt-6 [&_h3]:mb-2 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:flex [&_ol]:flex-col [&_ol]:gap-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:flex [&_ul]:flex-col [&_ul]:gap-2 [&_li]:text-ink-soft [&_p]:mt-4 [&_p]:text-ink-soft [&_p]:leading-relaxed [&_strong]:font-medium [&_strong]:text-ink"
     >
       <Content />
     </div>
+
+    {
+      guide && (
+        <aside class="mt-10 rounded-lg border border-line bg-card p-5 print:hidden">
+          <p class="text-sm text-ink-soft">
+            New to this method? The
+            <a href={`/guides/${guide.id}/`} class="font-medium text-accent hover:underline">
+              {guide.data.title} brew guide
+            </a>
+            covers the technique behind this recipe.
+          </p>
+        </aside>
+      )
+    }
+
+    {
+      related.length > 0 && (
+        <section class="mt-12 border-t border-line pt-8 print:hidden">
+          <h2 class="font-display text-2xl font-medium">Related recipes</h2>
+          <div class="mt-6 grid gap-6 sm:grid-cols-3">
+            {related.map((r) => (
+              <RecipeCard
+                slug={r.id}
+                title={r.data.title}
+                image={r.data.image}
+                category={r.data.category}
+                activeTime={r.data.activeTime}
+                totalTime={r.data.totalTime}
+                totalTimeLabel={r.data.totalTimeLabel}
+                difficulty={r.data.difficulty}
+              />
+            ))}
+          </div>
+        </section>
+      )
+    }
   </article>
 </Layout>
+
+<style is:global>
+  /* Numbered steps double as a checklist you can tick while brewing. */
+  #recipe-body ol {
+    counter-reset: step;
+    padding-left: 0;
+  }
+  #recipe-body ol > li {
+    list-style: none;
+    counter-increment: step;
+    position: relative;
+    padding-left: 2.25rem;
+    cursor: pointer;
+  }
+  #recipe-body ol > li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 0.05em;
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line);
+    background: var(--color-card);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-ink-soft);
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+  #recipe-body ol > li[data-done='true'] {
+    opacity: 0.55;
+    text-decoration: line-through;
+  }
+  #recipe-body ol > li[data-done='true']::before {
+    content: '✓';
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: var(--color-ivory);
+    text-decoration: none;
+  }
+
+  @media print {
+    #recipe-body ol > li::before {
+      border-color: #999;
+    }
+  }
+</style>
+
+<script>
+  const body = document.getElementById('recipe-body');
+
+  body?.querySelectorAll('ol > li').forEach((li) => {
+    const item = li as HTMLElement;
+    item.setAttribute('role', 'button');
+    item.setAttribute('tabindex', '0');
+    item.setAttribute('aria-pressed', 'false');
+
+    const toggle = () => {
+      const done = item.dataset.done === 'true';
+      item.dataset.done = done ? 'false' : 'true';
+      item.setAttribute('aria-pressed', done ? 'false' : 'true');
+    };
+
+    item.addEventListener('click', toggle);
+    item.addEventListener('keydown', (event) => {
+      const key = (event as KeyboardEvent).key;
+      if (key === 'Enter' || key === ' ') {
+        event.preventDefault();
+        toggle();
+      }
+    });
+  });
+
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+</script>

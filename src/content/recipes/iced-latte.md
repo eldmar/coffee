@@ -4,12 +4,18 @@ description: A refreshing double espresso poured over cold milk and ice, with a 
 seoTitle: Easy Iced Latte Recipe — KAVOVO
 seoDescription: Make a refreshing iced latte at home with double espresso, cold milk and plenty of ice, plus simple vanilla and honey variations.
 image: /images/recipes/iced-latte.jpg
-category: cold
+category: iced-coffee
 brewMethod: espresso
 temperature: iced
 milk: milk
 difficulty: easy
-time: 5
+prepTime: 2
+brewTime: 3
+activeTime: 5
+totalTime: 5
+yield: "1 drink"
+datePublished: 2026-08-03
+dateModified: 2026-08-05
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 150–180 ml cold whole milk or a barista-style alternative

@@ -7,12 +7,16 @@ category: iced-coffee
 brewMethod: espresso
 temperature: iced
 milk: black
-difficulty: easy
 prepTime: 2
 brewTime: 3
 activeTime: 5
 totalTime: 5
 yield: "1 drink"
+dose: "18 g"
+drinkYield: "300 ml"
+vessel:
+  name: "Highball glass"
+  capacity: "300–350 ml"
 datePublished: 2026-07-18
 dateModified: 2026-08-03
 ingredients:
@@ -20,11 +24,9 @@ ingredients:
   - 120–150 ml chilled tonic water
   - Plenty of ice cubes
   - Orange or grapefruit peel (optional)
-equipment:
-  - Espresso machine
-  - Small pitcher or espresso cup
-  - 300 ml highball glass
-  - Bar spoon (optional)
+equipmentSet: espresso
+equipmentOptional:
+  - Bar spoon
 popular: true
 ---
 

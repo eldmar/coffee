@@ -8,22 +8,22 @@ category: milk-drinks
 brewMethod: espresso
 temperature: hot
 milk: milk
-difficulty: easy
 prepTime: 3
 brewTime: 4
 activeTime: 7
 totalTime: 7
 yield: "1 drink"
+dose: "18 g"
+drinkYield: "130 ml"
+vessel:
+  name: "Cortado glass"
+  capacity: "120–150 ml"
 datePublished: 2026-08-03
 dateModified: 2026-08-05
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 40–60 ml cold whole milk or a barista-style alternative
-equipment:
-  - Espresso machine with a steam wand
-  - Coffee grinder
-  - Small milk pitcher
-  - 100–130 ml glass or cup
+equipmentSet: milk
 ---
 
 A cortado is made with approximately equal parts espresso and warm milk. It softens the intensity and acidity of espresso while preserving much more coffee flavour than a latte or cappuccino.

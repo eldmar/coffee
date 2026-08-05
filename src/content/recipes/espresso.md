@@ -8,23 +8,24 @@ category: espresso-drinks
 brewMethod: espresso
 temperature: hot
 milk: black
-difficulty: medium
 prepTime: 3
 brewTime: 2
 activeTime: 5
 totalTime: 5
 yield: "1 double shot"
+dose: "18 g"
+drinkYield: "36 g"
+vessel:
+  name: "Demitasse"
+  capacity: "60–90 ml"
 datePublished: 2026-08-03
 dateModified: 2026-08-05
 ingredients:
   - 18 g freshly roasted coffee beans
-equipment:
-  - Espresso machine
-  - Burr grinder
-  - Digital scale
-  - Tamper
-  - Portafilter
-  - Espresso cup
+equipmentSet: espresso
+equipmentOptional:
+  - Dosing funnel
+  - Distribution tool
 ---
 
 Espresso is the foundation of drinks such as the latte, cappuccino, flat white and Americano. This recipe uses a simple 1:2 brew ratio as a reliable starting point, but the final result should always be adjusted by taste.

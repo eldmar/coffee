@@ -8,22 +8,22 @@ category: espresso-drinks
 brewMethod: espresso
 temperature: hot
 milk: black
-difficulty: easy
 prepTime: 2
 brewTime: 3
 activeTime: 5
 totalTime: 5
 yield: "1 drink"
+dose: "18 g"
+drinkYield: "200 ml"
+vessel:
+  name: "Americano cup"
+  capacity: "200–250 ml"
 datePublished: 2026-08-03
 dateModified: 2026-08-05
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 120–180 ml fresh hot water
-equipment:
-  - Espresso machine
-  - Coffee grinder
-  - Kettle or hot-water dispenser
-  - 200–250 ml cup
+equipmentSet: americano
 ---
 
 An Americano is made by adding hot water to espresso. It keeps the flavour of espresso while creating a longer, lighter drink that is closer in strength to filter coffee.

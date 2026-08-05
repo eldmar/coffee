@@ -6,7 +6,15 @@ import Layout from '../../layouts/Layout.astro';
 import RecipeCard from '../../components/RecipeCard.astro';
 import RecipeSchema from '../../components/RecipeSchema.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import { categoryLabel, categoryPath, formatTime, humanDuration } from '../../lib/recipes';
+import {
+  categoryLabel,
+  categoryPath,
+  extractSteps,
+  humanDuration,
+  recipeFacts,
+  shareText,
+} from '../../lib/recipes';
+import { equipmentFor } from '../../lib/equipment';
 
 export async function getStaticPaths() {
   const recipes = await getCollection('recipes');
@@ -20,19 +28,8 @@ const { recipe, all } = Astro.props;
 const { Content } = await render(recipe);
 const { data } = recipe;
 
-const difficultyLabels: Record<string, string> = {
-  easy: 'Easy',
-  medium: 'Medium',
-  hard: 'Hard',
-};
-
-// The dose is the first ingredient; the yield comes from frontmatter.
-const facts = [
-  ['Dose', data.ingredients[0]],
-  ['Yield', data.yield],
-  ['Time', formatTime(data)],
-  ['Difficulty', difficultyLabels[data.difficulty] ?? data.difficulty],
-];
+const facts = recipeFacts(data);
+const equipment = equipmentFor(data.equipmentSet);
 
 const guides = await getCollection('guides');
 const guide = guides.find((g) => g.data.method === data.brewMethod);
@@ -53,6 +50,11 @@ const ogImagePath = photo(data.image).src;
 
 const dateFmt = (d: Date) =>
   d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const recipeUrl = `${site}/recipes/${recipe.id}/`;
+const shortUrl = recipeUrl.replace(/^https?:\/\//, '');
+const share = shareText(data, extractSteps(recipe.body ?? ''), recipeUrl);
 ---
 
 <Layout
@@ -60,8 +62,12 @@ const dateFmt = (d: Date) =>
   description={data.seoDescription ?? data.description}
   ogImage={ogImagePath}
 >
-  <article class="mx-auto max-w-3xl px-5 py-12">
+  <article class="recipe mx-auto max-w-3xl px-5 py-12">
     <RecipeSchema recipe={recipe} />
+
+    <div class="hidden print:mb-6 print:block">
+      <img src="/images/kavovo-lockup.svg" alt="KAVOVO" width="1191" height="156" class="h-5 w-auto" />
+    </div>
     <Breadcrumbs
       trail={[
         { label: 'Recipes', href: '/recipes/' },
@@ -82,20 +88,32 @@ const dateFmt = (d: Date) =>
       <span>
         Updated <time datetime={data.dateModified.toISOString()}>{dateFmt(data.dateModified)}</time>
       </span>
-      <button
-        type="button"
-        data-print
-        class="ml-auto rounded-md border border-line px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-accent print:hidden"
-      >
-        Print recipe
-      </button>
+      <span class="ml-auto flex items-center gap-2 print:hidden">
+        <button
+          type="button"
+          data-share
+          data-share-text={share}
+          data-share-url={recipeUrl}
+          class="rounded-md border border-line px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-accent"
+        >
+          Share recipe
+        </button>
+        <button
+          type="button"
+          data-print
+          class="rounded-md border border-line px-3 py-1.5 text-xs font-medium text-ink transition-colors hover:border-accent"
+        >
+          Print recipe
+        </button>
+        <span data-share-status role="status" aria-live="polite" class="text-xs text-accent"></span>
+      </span>
     </div>
 
     <Photo
       name={data.image}
       alt={data.title}
       sizes="(min-width: 768px) 768px, 100vw"
-      class="mt-8 aspect-[16/9] w-full rounded-lg object-cover"
+      class="mt-8 aspect-[16/9] w-full rounded-lg object-cover print:hidden"
       loading="eager"
       fetchpriority="high"
     />
@@ -118,7 +136,7 @@ const dateFmt = (d: Date) =>
     }
 
     <div class="mt-10 grid gap-8 sm:grid-cols-2">
-      <section>
+      <section class="recipe-block">
         <h2 class="font-display text-xl font-medium">Ingredients</h2>
         <ul class="mt-3 flex flex-col gap-2 text-sm text-ink-soft">
           {data.ingredients.map((item) => (
@@ -126,15 +144,31 @@ const dateFmt = (d: Date) =>
           ))}
         </ul>
       </section>
-      <section>
+      <section class="recipe-block">
         <h2 class="font-display text-xl font-medium">Equipment</h2>
         <ul class="mt-3 flex flex-col gap-2 text-sm text-ink-soft">
-          {data.equipment.map((item) => (
+          {equipment.map((item) => (
             <li class="border-b border-line pb-2">{item}</li>
           ))}
         </ul>
+        {
+          data.equipmentOptional.length > 0 && (
+            <>
+              <h3 class="eyebrow mt-4">Optional</h3>
+              <ul class="mt-2 flex flex-col gap-2 text-sm text-ink-soft">
+                {data.equipmentOptional.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </>
+          )
+        }
       </section>
     </div>
+
+    <p class="mt-6 hidden text-sm text-ink-soft print:block">
+      Serve in a {data.vessel.name.toLowerCase()} ({data.vessel.capacity}). Full recipe: {shortUrl}
+    </p>
 
     <div
       id="recipe-body"
@@ -171,7 +205,6 @@ const dateFmt = (d: Date) =>
                 activeTime={r.data.activeTime}
                 totalTime={r.data.totalTime}
                 totalTimeLabel={r.data.totalTimeLabel}
-                difficulty={r.data.difficulty}
               />
             ))}
           </div>
@@ -227,8 +260,47 @@ const dateFmt = (d: Date) =>
   }
 
   @media print {
+    /* Everything that is navigation, promotion or decoration goes away:
+       what prints is the recipe you stand in the kitchen with. */
+    header,
+    footer,
+    nav,
+    form[role='search'],
+    .print-hide {
+      display: none !important;
+    }
+
+    body {
+      background: #fff;
+      color: #000;
+    }
+
+    .recipe {
+      max-width: none;
+      padding: 0;
+    }
+
+    /* Keep a block on one page rather than splitting it across two. */
+    .recipe-block,
+    #recipe-body li,
+    #recipe-body h2,
+    #recipe-body h3 {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    #recipe-body h2,
+    #recipe-body h3 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
     #recipe-body ol > li::before {
       border-color: #999;
+    }
+
+    a[href]::after {
+      content: '';
     }
   }
 </style>
@@ -259,4 +331,38 @@ const dateFmt = (d: Date) =>
   });
 
   document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+
+  // Share: the system sheet where it exists, clipboard everywhere else.
+  const shareButton = document.querySelector<HTMLButtonElement>('[data-share]');
+  const shareStatus = document.querySelector<HTMLElement>('[data-share-status]');
+
+  function announce(message: string) {
+    if (!shareStatus) return;
+    shareStatus.textContent = message;
+    window.setTimeout(() => {
+      shareStatus.textContent = '';
+    }, 3000);
+  }
+
+  shareButton?.addEventListener('click', async () => {
+    const text = shareButton.dataset.shareText ?? '';
+    const url = shareButton.dataset.shareUrl ?? window.location.href;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: document.title, text, url });
+        return;
+      } catch (error) {
+        // Cancelling the sheet is not a failure; anything else falls through.
+        if ((error as DOMException)?.name === 'AbortError') return;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(text);
+      announce('Recipe copied!');
+    } catch {
+      announce('Could not copy — select and copy the page instead.');
+    }
+  });
 </script>

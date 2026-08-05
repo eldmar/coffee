@@ -6,20 +6,24 @@ category: milk-drinks
 brewMethod: espresso
 temperature: hot
 milk: milk
-difficulty: easy
 prepTime: 4
 brewTime: 6
 activeTime: 10
 totalTime: 10
 yield: "1 drink"
+dose: "18 g"
+drinkYield: "170 ml"
+vessel:
+  name: "Cappuccino cup"
+  capacity: "150–180 ml"
 datePublished: 2026-07-18
 dateModified: 2026-07-18
 ingredients:
   - 18 g finely ground coffee (double shot)
   - 150 ml whole milk
-equipment:
-  - Espresso machine
-  - Milk pitcher
+equipmentSet: milk
+equipmentOptional:
+  - Milk thermometer
 ---
 
 ## Steps

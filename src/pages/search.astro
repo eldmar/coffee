@@ -4,6 +4,7 @@ import Layout from '../layouts/Layout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import SearchResults, { type SearchDoc } from '../components/SearchResults';
 import { categoryLabel, formatTimeShort } from '../lib/recipes';
+import { equipmentFor } from '../lib/equipment';
 import { LEARN_PATHS } from '../lib/learn';
 
 /** Strip markdown syntax so the index holds words, not punctuation. */
@@ -34,7 +35,9 @@ const docs: SearchDoc[] = [
       r.data.brewMethod,
       r.data.temperature,
       ...r.data.ingredients,
-      ...r.data.equipment,
+      ...equipmentFor(r.data.equipmentSet),
+      ...r.data.equipmentOptional,
+      r.data.vessel.name,
       plain(r.body ?? ''),
     ]
       .join(' ')

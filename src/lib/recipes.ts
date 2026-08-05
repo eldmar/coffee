@@ -112,3 +112,65 @@ export function isoDuration(minutes: number): string {
   const rest = minutes % 60;
   return `PT${hours ? `${hours}H` : ''}${rest || !hours ? `${rest}M` : ''}`;
 }
+
+export interface RecipeFactData {
+  dose: string;
+  drinkYield: string;
+  water?: string;
+  brewerSize?: string;
+  brewTime: number;
+  vessel: { name: string; capacity: string };
+  activeTime: number;
+  totalTime: number;
+  totalTimeLabel?: string;
+}
+
+/**
+ * Espresso drinks are judged by what goes in and what lands in the cup;
+ * brew-method recipes by their coffee-to-water ratio. Difficulty is
+ * deliberately absent — on this catalogue it only ever said "easy".
+ */
+export function recipeFacts(data: RecipeFactData): [string, string][] {
+  if (data.water) {
+    return [
+      ['Coffee', data.dose],
+      ['Water', data.water],
+      ['Brew time', humanDuration(data.brewTime)],
+      ['Brewer size', data.brewerSize ?? '—'],
+    ];
+  }
+  return [
+    ['Dose', data.dose],
+    ['Yield', data.drinkYield],
+    ['Time', formatTime(data)],
+    ['Vessel', `${data.vessel.name}, ${data.vessel.capacity}`],
+  ];
+}
+
+/**
+ * Short enough to paste into a message: the numbers, a few condensed steps
+ * and the link. Not the whole article.
+ */
+export function shareText(
+  data: { title: string; dose: string; water?: string; drinkYield: string; totalTime: number; totalTimeLabel?: string; vessel: { name: string; capacity: string } },
+  steps: string[],
+  url: string,
+): string {
+  const measures = [data.dose, data.water ?? data.drinkYield, data.totalTimeLabel ?? humanDuration(data.totalTime)];
+  const shortSteps = steps.slice(0, 6).map((step, i) => {
+    const sentence = step.split(/(?<=\.)\s/)[0];
+    const trimmed = sentence.length > 90 ? `${sentence.slice(0, 87).trimEnd()}…` : sentence;
+    return `${i + 1}. ${trimmed}`;
+  });
+
+  return [
+    `${data.title} — KAVOVO`,
+    measures.join(' · '),
+    `Vessel: ${data.vessel.name}, ${data.vessel.capacity}`,
+    '',
+    ...shortSteps,
+    '',
+    'Full recipe:',
+    url,
+  ].join('\n');
+}

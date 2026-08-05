@@ -54,7 +54,6 @@ const finderRecipes = recipes.map((r) => ({
   activeTime: r.data.activeTime,
   totalTime: r.data.totalTime,
   totalTimeLabel: r.data.totalTimeLabel,
-    difficulty: r.data.difficulty,
 }));
 ---
 
@@ -84,7 +83,6 @@ const finderRecipes = recipes.map((r) => ({
           activeTime={recipe.data.activeTime}
           totalTime={recipe.data.totalTime}
           totalTimeLabel={recipe.data.totalTimeLabel}
-          difficulty={recipe.data.difficulty}
         />
       ))}
     </div>

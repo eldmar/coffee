@@ -6,21 +6,26 @@ category: filter-coffee
 brewMethod: aeropress
 temperature: hot
 milk: black
-difficulty: easy
 prepTime: 2
 brewTime: 4
 activeTime: 6
 totalTime: 6
 yield: "1 cup"
+dose: "15 g"
+water: "220 ml"
+drinkYield: "220 ml"
+brewerSize: "AeroPress, standard"
+vessel:
+  name: "Sturdy mug"
+  capacity: "300 ml"
 datePublished: 2026-07-18
 dateModified: 2026-07-18
 ingredients:
   - 15 g medium ground coffee
   - 220 ml water at 90 °C
-equipment:
-  - AeroPress with paper filter
-  - Kettle
-  - Scale
+equipmentSet: aeropress
+equipmentOptional:
+  - Metal filter for more body
 ---
 
 ## Steps

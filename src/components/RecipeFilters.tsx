@@ -14,7 +14,6 @@ interface CatalogRecipe {
   activeTime: number;
   totalTime: number;
   totalTimeLabel?: string;
-  difficulty: string;
   ingredients: string[];
 }
 
@@ -140,8 +139,6 @@ export default function RecipeFilters({ recipes }: Props) {
                       <path d="M12 7v5l3 2" />
                     </svg>
                     {formatTimeShort(r)}
-                    <span aria-hidden="true">·</span>
-                    <span className="capitalize">{r.difficulty}</span>
                     <span className="ml-auto text-accent transition-transform group-hover:translate-x-1" aria-hidden="true">
                       &#8594;
                     </span>

@@ -7,12 +7,16 @@ category: milk-drinks
 brewMethod: espresso
 temperature: hot
 milk: milk
-difficulty: easy
 prepTime: 4
 brewTime: 6
 activeTime: 10
 totalTime: 10
 yield: "1 drink"
+dose: "18 g"
+drinkYield: "280 ml"
+vessel:
+  name: "Latte cup"
+  capacity: "250–300 ml"
 datePublished: 2026-08-03
 dateModified: 2026-08-03
 ingredients:
@@ -21,12 +25,9 @@ ingredients:
   - 160–180 ml cold whole milk or a barista-style alternative
   - Cocoa powder or grated chocolate (optional)
   - Whipped cream (optional)
-equipment:
-  - Espresso machine with a steam wand
-  - Coffee grinder
-  - Milk pitcher
-  - 250–300 ml cup
-  - Spoon
+equipmentSet: milk
+equipmentOptional:
+  - Milk thermometer
 ---
 
 A caffè mocha brings together espresso, chocolate and steamed milk. The best version still tastes clearly of coffee, with enough chocolate to add sweetness and depth without turning the drink into hot chocolate.

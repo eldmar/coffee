@@ -6,21 +6,27 @@ category: iced-coffee
 brewMethod: cold-brew
 temperature: iced
 milk: black
-difficulty: easy
 prepTime: 5
 brewTime: 960
 activeTime: 5
 totalTime: 965
 totalTimeLabel: "12–18 hr"
 yield: "4 servings"
+dose: "60 g"
+water: "600 ml"
+drinkYield: "550 ml concentrate"
+brewerSize: "1 L jar"
+vessel:
+  name: "Tall glass"
+  capacity: "300–350 ml"
 datePublished: 2026-07-18
 dateModified: 2026-07-18
 ingredients:
   - 60 g coarsely ground coffee
   - 600 ml cold filtered water
-equipment:
-  - Large jar or cold brew bottle
-  - Fine strainer or paper filter
+equipmentSet: cold-brew
+equipmentOptional:
+  - Paper filter for a cleaner cup
 ---
 
 ## Steps

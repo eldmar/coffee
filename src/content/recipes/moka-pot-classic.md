@@ -6,20 +6,24 @@ category: brewing-methods
 brewMethod: moka-pot
 temperature: hot
 milk: black
-difficulty: easy
 prepTime: 2
 brewTime: 5
 activeTime: 4
 totalTime: 7
 yield: "2 small cups"
+dose: "18 g"
+water: "To the safety valve"
+drinkYield: "120 ml"
+brewerSize: "3-cup moka pot"
+vessel:
+  name: "Small cup"
+  capacity: "80–120 ml"
 datePublished: 2026-07-18
 dateModified: 2026-07-18
 ingredients:
   - 18 g medium-fine ground coffee (for a 3-cup pot)
   - Hot water to the safety valve
-equipment:
-  - Moka pot (3-cup)
-  - Stove
+equipmentSet: moka-pot
 ---
 
 ## Steps

@@ -6,21 +6,24 @@ category: filter-coffee
 brewMethod: french-press
 temperature: hot
 milk: black
-difficulty: easy
 prepTime: 2
 brewTime: 6
 activeTime: 4
 totalTime: 8
 yield: "2 cups"
+dose: "30 g"
+water: "500 ml"
+drinkYield: "460 ml"
+brewerSize: "1 L French press"
+vessel:
+  name: "Mug"
+  capacity: "250–300 ml"
 datePublished: 2026-07-18
 dateModified: 2026-07-18
 ingredients:
   - 30 g coarsely ground coffee
   - 500 ml water at 94 °C
-equipment:
-  - French press
-  - Kettle
-  - Scale
+equipmentSet: french-press
 ---
 
 ## Steps

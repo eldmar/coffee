@@ -13,7 +13,6 @@ export interface FinderRecipe {
   activeTime: number;
   totalTime: number;
   totalTimeLabel?: string;
-  difficulty: string;
 }
 
 interface Props {
@@ -194,7 +193,7 @@ export default function RecipeFinder({ recipes }: Props) {
                     <span className="min-w-0">
                       <span className="block truncate font-medium">{r.title}</span>
                       <span className="block text-xs text-ink-soft">
-                        {formatTimeShort(r)} · {r.difficulty}
+                        {formatTimeShort(r)}
                       </span>
                     </span>
                     <span className="ml-auto text-accent transition-transform group-hover:translate-x-0.5" aria-hidden="true">

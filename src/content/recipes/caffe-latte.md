@@ -7,22 +7,24 @@ category: milk-drinks
 brewMethod: espresso
 temperature: hot
 milk: milk
-difficulty: easy
 prepTime: 3
 brewTime: 5
 activeTime: 8
 totalTime: 8
 yield: "1 drink"
+dose: "18 g"
+drinkYield: "280 ml"
+vessel:
+  name: "Latte cup"
+  capacity: "250–300 ml"
 datePublished: 2026-08-03
 dateModified: 2026-08-03
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 180–220 ml cold whole milk or a barista-style alternative
-equipment:
-  - Espresso machine with a steam wand
-  - Coffee grinder
-  - Milk pitcher
-  - 250–300 ml cup
+equipmentSet: milk
+equipmentOptional:
+  - Milk thermometer
 ---
 
 A caffè latte combines a double espresso with plenty of steamed milk and only a thin layer of microfoam. It is milder and more milk-forward than a cappuccino or flat white.

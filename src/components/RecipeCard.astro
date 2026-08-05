@@ -10,17 +10,9 @@ interface Props {
   activeTime: number;
   totalTime: number;
   totalTimeLabel?: string;
-  difficulty: string;
 }
 
-const { slug, title, image, category, activeTime, totalTime, totalTimeLabel, difficulty } =
-  Astro.props;
-
-const difficultyLabels: Record<string, string> = {
-  easy: 'Easy',
-  medium: 'Medium',
-  hard: 'Hard',
-};
+const { slug, title, image, category, activeTime, totalTime, totalTimeLabel } = Astro.props;
 
 const timeLabel = formatTimeShort({ activeTime, totalTime, totalTimeLabel });
 ---
@@ -45,10 +37,6 @@ const timeLabel = formatTimeShort({ activeTime, totalTime, totalTimeLabel });
         <path d="M12 7v5l3 2" />
       </svg>
       <span>{timeLabel}</span>
-      <span aria-hidden="true">·</span>
-      <span class:list={[difficulty === 'medium' && 'text-accent', difficulty === 'hard' && 'text-accent']}>
-        {difficultyLabels[difficulty] ?? difficulty}
-      </span>
       <span
         class="ml-auto text-accent transition-transform group-hover:translate-x-1"
         aria-hidden="true"

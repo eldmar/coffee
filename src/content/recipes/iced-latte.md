@@ -8,12 +8,16 @@ category: iced-coffee
 brewMethod: espresso
 temperature: iced
 milk: milk
-difficulty: easy
 prepTime: 2
 brewTime: 3
 activeTime: 5
 totalTime: 5
 yield: "1 drink"
+dose: "18 g"
+drinkYield: "380 ml"
+vessel:
+  name: "Tall glass"
+  capacity: "350–450 ml"
 datePublished: 2026-08-03
 dateModified: 2026-08-05
 ingredients:
@@ -21,10 +25,8 @@ ingredients:
   - 150–180 ml cold whole milk or a barista-style alternative
   - Plenty of ice cubes
   - 5–10 ml simple syrup (optional)
-equipment:
-  - Espresso machine
-  - Coffee grinder
-  - 300 ml highball glass
+equipmentSet: espresso
+equipmentOptional:
   - Long spoon
 ---
 

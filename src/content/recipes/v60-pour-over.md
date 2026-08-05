@@ -6,22 +6,27 @@ category: filter-coffee
 brewMethod: v60
 temperature: hot
 milk: black
-difficulty: medium
 prepTime: 3
 brewTime: 4
 activeTime: 7
 totalTime: 12
 yield: "1 large cup"
+dose: "15 g"
+water: "250 ml"
+drinkYield: "230 ml"
+brewerSize: "V60 size 02"
+vessel:
+  name: "Mug"
+  capacity: "300 ml"
 datePublished: 2026-07-18
 dateModified: 2026-07-18
 popular: true
 ingredients:
   - 15 g medium-fine ground coffee
   - 250 ml water at 93 °C
-equipment:
-  - V60 dripper and paper filter
-  - Gooseneck kettle
-  - Scale with timer
+equipmentSet: pour-over
+equipmentOptional:
+  - Brew scale with timer
 ---
 
 ## Steps

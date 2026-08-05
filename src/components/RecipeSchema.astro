@@ -3,6 +3,7 @@ import { photo } from '../lib/photos';
 import type { CollectionEntry } from 'astro:content';
 import JsonLd from './JsonLd.astro';
 import { categoryLabel, extractSteps, isoDuration } from '../lib/recipes';
+import { equipmentFor } from '../lib/equipment';
 
 interface Props {
   recipe: CollectionEntry<'recipes'>;
@@ -30,10 +31,14 @@ const schema = {
   prepTime: isoDuration(data.prepTime),
   cookTime: isoDuration(data.brewTime),
   totalTime: isoDuration(data.totalTime),
-  recipeYield: data.yield,
+  recipeYield: `${data.yield} (${data.drinkYield})`,
   recipeCategory: categoryLabel(data.category),
   recipeCuisine: 'Coffee',
   recipeIngredient: data.ingredients,
+  tool: [...equipmentFor(data.equipmentSet), ...data.equipmentOptional].map((name) => ({
+    '@type': 'HowToTool',
+    name,
+  })),
   ...(steps.length
     ? {
         recipeInstructions: steps.map((text, index) => ({

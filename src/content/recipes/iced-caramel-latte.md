@@ -6,12 +6,16 @@ category: iced-coffee
 brewMethod: espresso
 temperature: iced
 milk: milk
-difficulty: easy
 prepTime: 2
 brewTime: 3
 activeTime: 5
 totalTime: 5
 yield: "1 drink"
+dose: "18 g"
+drinkYield: "380 ml"
+vessel:
+  name: "Tall glass"
+  capacity: "350–450 ml"
 datePublished: 2026-07-18
 dateModified: 2026-07-18
 popular: true
@@ -20,9 +24,9 @@ ingredients:
   - 180 ml cold milk
   - 20 g caramel sauce
   - Ice cubes
-equipment:
-  - Espresso machine
-  - Tall glass
+equipmentSet: espresso
+equipmentOptional:
+  - Long spoon
 ---
 
 ## Steps

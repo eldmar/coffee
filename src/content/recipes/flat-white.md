@@ -6,22 +6,25 @@ category: milk-drinks
 brewMethod: espresso
 temperature: hot
 milk: milk
-difficulty: easy
 prepTime: 3
 brewTime: 5
 activeTime: 8
 totalTime: 8
 yield: "1 drink"
+dose: "18 g"
+drinkYield: "180 ml"
+vessel:
+  name: "Flat white cup"
+  capacity: "160–200 ml"
 datePublished: 2026-07-18
 dateModified: 2026-07-18
 popular: true
 ingredients:
   - 18 g finely ground coffee (double shot)
   - 120 ml whole milk
-equipment:
-  - Espresso machine
-  - Milk pitcher
-  - Scale
+equipmentSet: milk
+equipmentOptional:
+  - Milk thermometer
 ---
 
 ## Steps

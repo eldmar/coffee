@@ -67,7 +67,7 @@ export default function SearchResults({ docs }: Props) {
       <form role="search" onSubmit={(e) => e.preventDefault()} className="max-w-xl">
         <label
           htmlFor="site-search"
-          className="flex items-center gap-2 rounded-md border border-line bg-card px-4 py-3 focus-within:border-accent"
+          className="flex items-center gap-2 field-shell rounded-md border border-line bg-card px-4 py-3 transition-shadow"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
             <circle cx="11" cy="11" r="7" />
@@ -81,7 +81,7 @@ export default function SearchResults({ docs }: Props) {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search KAVOVO"
             aria-label="Search recipes, guides, learning paths and journal articles"
-            className="w-full bg-transparent text-base outline-none placeholder:text-ink-soft/70"
+            className="w-full bg-transparent text-base placeholder:text-ink-soft/70"
           />
         </label>
       </form>

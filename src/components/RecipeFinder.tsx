@@ -45,7 +45,7 @@ const milkOptions = [
 ] as const;
 
 const selectClass =
-  'w-full appearance-none rounded-md border border-line bg-card px-3.5 py-2.5 pr-9 text-sm text-ink outline-none transition-colors focus:border-accent';
+  'w-full appearance-none rounded-md border border-line bg-card px-3.5 py-2.5 pr-9 text-sm text-ink transition-colors';
 
 function Field({
   label,

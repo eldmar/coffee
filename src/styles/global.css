@@ -29,6 +29,13 @@
   --color-accent-dark: #86302a;
   --color-accent-ink: var(--color-ivory);
 
+  /* Focus and validation. Kalyna is reserved for real errors, so focus is
+     sage — inside a form a red ring reads as "you typed something wrong". */
+  --color-focus: var(--color-sage);
+  --color-focus-ring: rgb(110 116 85 / 14%);
+  --color-invalid: var(--color-kalyna);
+  --color-invalid-ring: rgb(164 59 50 / 14%);
+
   /* Radii */
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
@@ -67,9 +74,53 @@ body {
   color: var(--color-accent);
 }
 
-/* Visible keyboard focus on every interactive element. */
+/* Visible keyboard focus on every interactive element. Never replaced by
+   `outline: none` anywhere — that only looks tidy until someone uses a keyboard. */
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+/* Fields also answer to the mouse, so they use :focus as well as :focus-visible.
+   The ring is drawn with box-shadow so it follows the field's own radius. */
+:where(input, select, textarea):focus,
+:where(input, select, textarea):focus-visible {
+  border-color: var(--color-focus);
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+/* A borderless input inside a bordered wrapper (the header search pill):
+   the wrapper carries the focus state, the input stays invisible. */
+.field-shell:focus-within {
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+
+.field-shell:focus-within :where(input):focus,
+.field-shell:focus-within :where(input):focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Kalyna now means one thing only: this input is actually wrong. */
+:where(input, select, textarea)[aria-invalid='true'] {
+  border-color: var(--color-invalid);
+}
+
+:where(input, select, textarea)[aria-invalid='true']:focus,
+:where(input, select, textarea)[aria-invalid='true']:focus-visible {
+  border-color: var(--color-invalid);
+  outline-color: var(--color-invalid);
+  box-shadow: 0 0 0 3px var(--color-invalid-ring);
+}
+
+/* Sage on a sage panel is no focus indicator at all. Any dark brand surface
+   flips the focus tokens to ivory. */
+.on-brand {
+  --color-focus: var(--color-ivory);
+  --color-focus-ring: rgb(243 235 221 / 30%);
+  --color-invalid-ring: rgb(243 235 221 / 30%);
 }

@@ -36,7 +36,7 @@ const { pathname } = Astro.url;
     </nav>
 
     <form action="/search/" method="get" class="hidden items-center lg:flex" role="search">
-      <label class="flex items-center gap-2 rounded-full border border-line bg-card px-3.5 py-1.5 text-sm text-ink-soft focus-within:border-accent">
+      <label class="flex items-center gap-2 field-shell rounded-full border border-line bg-card px-3.5 py-1.5 text-sm text-ink-soft transition-shadow">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <circle cx="11" cy="11" r="7" />
           <path d="m20 20-3.5-3.5" />
@@ -46,7 +46,7 @@ const { pathname } = Astro.url;
           name="q"
           placeholder="Search KAVOVO"
           aria-label="Search recipes, guides, learning paths and journal articles"
-          class="w-40 bg-transparent outline-none placeholder:text-ink-soft/70"
+          class="w-40 bg-transparent placeholder:text-ink-soft/70"
         />
       </label>
       <button type="submit" class="sr-only">Search</button>
@@ -79,7 +79,7 @@ const { pathname } = Astro.url;
     <div class="menu-clip">
       <div class="menu-inner mx-auto flex max-w-6xl flex-col gap-1 border-t border-line px-5 py-4">
       <form action="/search/" method="get" role="search" class="mb-3">
-        <label class="flex items-center gap-2 rounded-md border border-line bg-card px-3.5 py-2.5 text-sm text-ink-soft focus-within:border-accent">
+        <label class="field-shell flex items-center gap-2 rounded-md border border-line bg-card px-3.5 py-2.5 text-sm text-ink-soft transition-shadow">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <circle cx="11" cy="11" r="7" />
             <path d="m20 20-3.5-3.5" />
@@ -89,7 +89,7 @@ const { pathname } = Astro.url;
             name="q"
             placeholder="Search KAVOVO"
           aria-label="Search recipes, guides, learning paths and journal articles"
-            class="w-full bg-transparent outline-none placeholder:text-ink-soft/70"
+            class="w-full bg-transparent placeholder:text-ink-soft/70"
           />
         </label>
         <button type="submit" class="sr-only">Search</button>

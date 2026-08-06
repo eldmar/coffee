@@ -1,9 +1,10 @@
 ---
 title: Iced Americano
-description: Espresso, cold water and plenty of ice — the cleanest cold coffee you can make in two minutes.
+description: Espresso, cold water and plenty of ice — a crisp black coffee for warm days, without syrup or fuss.
 seoTitle: Iced Americano Recipe — KAVOVO
-seoDescription: Make an iced americano with a double espresso, cold water and ice, including the ratio that keeps it from tasting watery.
+seoDescription: Make a crisp iced Americano with espresso, cold filtered water and plenty of ice.
 image: iced-americano
+imageAlt: Iced Americano in a tall glass with ice and condensation.
 category: iced-coffee
 brewMethod: espresso
 temperature: iced
@@ -12,40 +13,41 @@ prepTime: 2
 brewTime: 3
 activeTime: 5
 totalTime: 5
-yield: "1 drink"
+yield: "1 glass"
 dose: "18 g"
-drinkYield: "300 ml"
+drinkYield: "1 glass"
 vessel:
-  name: "Tall glass"
+  name: "Highball glass"
   capacity: "300–350 ml"
 datePublished: 2026-08-05
-dateModified: 2026-08-05
+dateModified: 2026-08-06
 ingredients:
-  - 18 g freshly ground coffee, brewed as 36–40 g espresso
-  - 150–180 ml cold water
-  - Plenty of ice cubes
+  - 18 g freshly ground coffee
+  - 120 g cold filtered water
+  - 100–120 g ice
 equipmentSet: espresso
-equipmentOptional:
-  - Long spoon
 ---
 
-An iced americano is the fastest cold coffee worth drinking: no steeping, no overnight wait, and nothing to hide behind. Get the ratio right and it tastes clean and sweet; get it wrong and it tastes like cold water that met a coffee once.
+An iced americano is the fastest cold coffee worth drinking: no steeping, no overnight wait, and nothing to hide behind. Get the ratio right and it tastes clean and sweet.
 
 ## Steps
 
-1. Fill a 300–350 ml glass to the top with ice.
-2. Pour in 150–180 ml of cold water.
-3. Grind 18 g of coffee and brew a double espresso, 36–40 g.
-4. Pour the shot straight over the ice.
-5. Stir once and drink while the ice is still mostly whole.
+1. Fill the glass with 100–120 g of ice.
+2. Add 120 g of cold filtered water.
+3. Grind and dose 18 g of coffee into the portafilter.
+4. Distribute evenly and tamp level.
+5. Pull 36 g of espresso in approximately 25–30 seconds.
+6. Pour the espresso over the water and ice.
+7. Stir two or three times and serve.
 
-## Recommended ratio
+## Barista tip
 
-About one part espresso to four parts water, before the ice melts. Start at the strong end — the ice will do the diluting for you within a few minutes.
+Use plenty of solid ice. A full glass melts more slowly than a few cubes and keeps the drink strong for longer. Coffee ice cubes keep the last third as good as the first.
 
-## Tips
+## Troubleshooting
 
-- Use cold water, not room temperature: warm water melts the ice immediately and thins the drink twice over.
-- Fill the glass properly. A half-filled glass of ice melts far faster than a full one.
-- Coffee ice cubes keep the last third of the drink as good as the first.
-- A fruit-forward light roast shines here; the cold mutes bitterness and lets acidity read as sweetness.
+**The drink becomes watery.** Use more ice or reduce the water to 90–100 g.
+
+**It tastes too intense.** Increase the water in 20 g increments.
+
+**It tastes harsh.** Use a sweeter coffee or adjust the espresso extraction before changing the dilution.

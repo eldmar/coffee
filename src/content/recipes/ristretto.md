@@ -1,9 +1,10 @@
 ---
 title: Ristretto
-description: The same dose as espresso stopped early — shorter, sweeter and rounder, with the harsh tail left behind.
+description: A shorter, more concentrated expression of espresso — dense, sweet and intense, with less final liquid in the cup.
 seoTitle: Ristretto Recipe — KAVOVO
-seoDescription: Pull a ristretto with an 18 g dose and a 1:1.2 ratio, and learn what changes in the cup when you stop the shot early.
+seoDescription: Learn how to pull a balanced ristretto using an 18 g dose and a short 22–25 g yield.
 image: ristretto
+imageAlt: Short ristretto in a small speckled ceramic demitasse.
 category: espresso-drinks
 brewMethod: espresso
 temperature: hot
@@ -14,43 +15,49 @@ activeTime: 5
 totalTime: 5
 yield: "1 double ristretto"
 dose: "18 g"
-drinkYield: "22 g"
+drinkYield: "22–25 g"
 vessel:
   name: "Demitasse"
-  capacity: "60–90 ml"
+  capacity: "50–60 ml"
 datePublished: 2026-08-05
-dateModified: 2026-08-05
+dateModified: 2026-08-06
 ingredients:
-  - 18 g freshly roasted coffee beans
+  - 18 g freshly ground coffee
 equipmentSet: espresso
 equipmentOptional:
   - Dosing funnel
 ---
 
-A ristretto is not a smaller espresso — it is the same dose of coffee with the extraction stopped early. Because sweetness and body come out before the drying, bitter compounds, cutting the shot short keeps the good part and leaves the tail in the basket.
+A ristretto is a shorter, denser expression of espresso: the same dose of coffee, a smaller yield, and a grind adjusted so the extraction still finishes in balance.
 
 ## Starting recipe
 
 - **Dose:** 18 g of ground coffee
-- **Yield:** 22 g of espresso
-- **Time:** approximately 25–30 seconds
-- **Brew ratio:** 1:1.2
+- **Yield:** 22–25 g
+- **Time:** approximately 22–28 seconds
+- **Brew ratio:** roughly 1:1.3
 
 ## Steps
 
-1. Heat the machine and portafilter fully, and preheat the cup.
-2. Grind 18 g of coffee into a dry basket and level the bed.
-3. Tamp flat with even pressure.
-4. Lock in, put the cup on a scale and start the shot and timer together.
-5. Stop at about 22 g. Aim for the same 25–30 seconds you would use for espresso.
-6. Swirl and drink promptly — a ristretto cools fast.
+1. Preheat the demitasse with hot water, then dry it.
+2. Grind the coffee slightly finer than for a standard espresso.
+3. Dose 18 g into the portafilter.
+4. Distribute evenly and tamp level.
+5. Pull 22–25 g of ristretto in approximately 22–28 seconds.
+6. Stop the extraction by weight, stir once and serve immediately.
+
+## Barista tip
+
+A ristretto is not simply an espresso stopped early. Adjust the grind so the shorter yield is reached within a balanced extraction time — otherwise you are serving the first half of an under-extracted shot.
+
+## Troubleshooting
+
+**It tastes sharp or sour.** Increase the yield to 26–28 g or raise the brewing temperature slightly.
+
+**It tastes dry or bitter.** Grind slightly coarser or lower the temperature by 1–2 °C.
+
+**The shot runs too quickly.** Grind finer and check that the coffee bed is evenly distributed.
 
 ## What changes in the cup
 
-Expect more sweetness and a thicker body, with acidity that reads as fruit rather than sharpness. Expect less of everything bitter. Some coffees, especially light roasts, can taste under-developed this short — that is information about the beans, not a mistake.
-
-## Tips
-
-- Keep the dose the same as your espresso and change only the yield. That is the entire experiment.
-- If a ristretto tastes sour rather than sweet, grind finer so the shot still takes 25–30 seconds.
-- Two ristrettos make an excellent base for a cortado or piccolo, where milk would otherwise flatten the coffee.
+Expect more sweetness and a thicker body, with acidity that reads as fruit rather than sharpness. Two ristrettos also make an excellent base for a cortado or piccolo, where a longer shot would be flattened by the milk.

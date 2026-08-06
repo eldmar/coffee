@@ -9,6 +9,7 @@ const recipes = defineCollection({
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional(),
     image: z.string(),
+    imageAlt: z.string().optional(),
     category: z.enum([
       'espresso-drinks',
       'milk-drinks',
@@ -54,6 +55,8 @@ const recipes = defineCollection({
       'moka-pot',
       'cold-brew',
     ]),
+    // Essential but specific to one recipe, e.g. a teaspoon for a macchiato.
+    equipmentExtra: z.array(z.string()).default([]),
     equipmentOptional: z.array(z.string()).default([]),
     popular: z.boolean().default(false),
   }),

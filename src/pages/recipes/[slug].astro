@@ -29,7 +29,7 @@ const { Content } = await render(recipe);
 const { data } = recipe;
 
 const facts = recipeFacts(data);
-const equipment = equipmentFor(data.equipmentSet);
+const equipment = [...equipmentFor(data.equipmentSet), ...data.equipmentExtra];
 
 const guides = await getCollection('guides');
 const guide = guides.find((g) => g.data.method === data.brewMethod);
@@ -112,7 +112,7 @@ const share = shareText(data, extractSteps(recipe.body ?? ''), recipeUrl);
 
     <Photo
       name={data.image}
-      alt={data.title}
+      alt={data.imageAlt ?? data.title}
       sizes="(min-width: 768px) 768px, 100vw"
       class="mt-8 aspect-[16/9] w-full rounded-lg object-cover print:hidden"
       loading="eager"

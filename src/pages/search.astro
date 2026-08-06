@@ -36,6 +36,7 @@ const docs: SearchDoc[] = [
       r.data.temperature,
       ...r.data.ingredients,
       ...equipmentFor(r.data.equipmentSet),
+      ...r.data.equipmentExtra,
       ...r.data.equipmentOptional,
       r.data.vessel.name,
       plain(r.body ?? ''),

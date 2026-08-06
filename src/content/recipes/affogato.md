@@ -1,9 +1,10 @@
 ---
 title: Affogato
-description: A scoop of cold vanilla gelato drowned in hot espresso — dessert and coffee in the same spoon.
+description: One scoop of vanilla gelato drowned with fresh espresso — the simplest possible coffee dessert, and one of the best.
 seoTitle: Affogato Recipe — KAVOVO
-seoDescription: Make an affogato with good vanilla gelato and a fresh double espresso, including the ratio and how to keep it from turning into soup.
+seoDescription: Make a classic affogato with vanilla gelato and freshly pulled espresso in five minutes.
 image: affogato
+imageAlt: Vanilla gelato topped with espresso in a clear dessert glass.
 category: coffee-desserts
 brewMethod: espresso
 temperature: hot
@@ -14,42 +15,41 @@ activeTime: 5
 totalTime: 5
 yield: "1 serving"
 dose: "18 g"
-drinkYield: "36 g espresso over 2 scoops"
+drinkYield: "1 serving"
 vessel:
-  name: "Small glass or bowl"
+  name: "Dessert glass or bowl"
   capacity: "150–200 ml"
 datePublished: 2026-08-05
-dateModified: 2026-08-05
+dateModified: 2026-08-06
 ingredients:
-  - 18 g freshly ground coffee, brewed as 36–40 g espresso
-  - 2 small scoops vanilla gelato or ice cream, about 80 g
-  - Grated dark chocolate or toasted nuts (optional)
+  - 70–90 g vanilla gelato
+  - 18 g freshly ground coffee
 equipmentSet: espresso
-equipmentOptional:
+equipmentExtra:
   - Ice cream scoop
+  - Dessert spoon
 ---
 
-*Affogato* means "drowned", and that is the whole method: hot espresso poured over cold gelato. It works because of contrast — temperature, texture and sweetness all pulling against each other — so both halves have to be good. Cheap ice cream and a stale shot make a sweet brown puddle.
+*Affogato* means "drowned", and that is the whole method: hot espresso poured over cold gelato. It works because of contrast — temperature, texture and sweetness all pulling against each other — so both halves have to be good.
 
 ## Steps
 
-1. Chill the serving glass in the freezer for a few minutes.
-2. Put two small scoops of gelato into the glass and return it to the freezer while you brew.
-3. Grind 18 g of coffee and pull a double espresso, 36–40 g.
-4. Take the glass out and pour the shot over the gelato immediately.
-5. Add grated chocolate or nuts if you like, and serve with a spoon while the centre is still frozen.
+1. Chill the serving glass or bowl.
+2. Place one firm scoop of vanilla gelato in the centre.
+3. Grind and dose 18 g of coffee into the portafilter.
+4. Distribute evenly and tamp level.
+5. Pull 30–36 g of espresso in approximately 25–30 seconds.
+6. Pour the espresso over the gelato immediately before serving.
+7. Serve at once with a dessert spoon.
 
-## Recommended ratio
+## Barista tip
 
-One double espresso to roughly two small scoops. Any more coffee and the gelato melts before it reaches the table.
+Dense gelato works better than airy ice cream because it melts more slowly and creates a richer texture. Plain vanilla with a short ingredients list is best — the coffee is the flavour.
 
-## Choosing the gelato
+## Troubleshooting
 
-Plain vanilla with a short ingredients list works best — the coffee is the flavour. Dense gelato holds up better than airy ice cream, which collapses on contact. Fior di latte is excellent if you want the coffee even more forward.
+**The gelato melts too quickly.** Chill the vessel and keep the gelato frozen until the espresso is ready.
 
-## Tips
+**The dessert tastes too bitter.** Use a sweeter medium roast or pull a slightly shorter shot.
 
-- Everything cold should be very cold, and the espresso should go straight from the machine to the glass.
-- Serve it the moment you pour. An affogato does not wait.
-- For a less sweet version, use a ristretto instead of a full espresso.
-- A dark, chocolatey roast suits this better than a delicate floral one.
+**The coffee flavour disappears.** Use one large scoop rather than several smaller scoops.

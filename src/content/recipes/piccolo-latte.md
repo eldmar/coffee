@@ -1,52 +1,56 @@
 ---
 title: Piccolo Latte
-description: A ristretto topped with warm milk in a small glass — a latte's flavour at a quarter of the volume.
+description: A ristretto topped with silky steamed milk in a small glass — stronger than a latte, softer than a macchiato.
 seoTitle: Piccolo Latte Recipe — KAVOVO
-seoDescription: Make a piccolo latte with a ristretto and lightly steamed milk, and see how it differs from a cortado and a flat white.
+seoDescription: Make a piccolo latte with ristretto and silky steamed milk in a small 90–120 ml glass.
 image: piccolo-latte
+imageAlt: Piccolo latte with a small heart in a compact clear glass.
 category: milk-drinks
 brewMethod: espresso
 temperature: hot
 milk: milk
 prepTime: 3
-brewTime: 4
-activeTime: 7
-totalTime: 7
+brewTime: 5
+activeTime: 8
+totalTime: 8
 yield: "1 drink"
 dose: "18 g"
-drinkYield: "100 ml"
+drinkYield: "≈90 ml"
 vessel:
   name: "Piccolo glass"
   capacity: "90–120 ml"
 datePublished: 2026-08-05
-dateModified: 2026-08-05
+dateModified: 2026-08-06
 ingredients:
-  - 18 g freshly ground coffee, brewed as a 22 g ristretto
-  - 60–70 ml cold whole milk or a barista-style alternative
+  - 18 g freshly ground coffee
+  - 100 g cold whole milk or barista oat milk for steaming — you will use about 65–70 g
 equipmentSet: milk
 ---
 
-A piccolo is a small milk coffee built on a ristretto rather than a full shot. Because the coffee is short and sweet and the milk barely dilutes it, you get the comfort of a latte without losing the espresso underneath. It is the drink baristas make for themselves between orders.
+A piccolo is a small milk coffee built on a ristretto rather than a full shot. Because the coffee is short and sweet and the milk barely dilutes it, you get the comfort of a latte without losing the espresso underneath.
 
 ## Steps
 
-1. Preheat a 90–120 ml glass.
-2. Grind 18 g of coffee and pull a ristretto — about 22 g in 25–30 seconds — straight into the glass.
-3. Pour 60–70 ml of cold milk into a small pitcher.
-4. Steam to roughly 55–60 °C with very little air, aiming for a smooth, wet texture.
-5. Swirl and pour steadily, finishing with a thin layer of microfoam.
-6. Serve at once; at this size the drink cools quickly.
+1. Preheat the piccolo glass.
+2. Grind and dose 18 g of coffee into the portafilter.
+3. Distribute evenly and tamp level.
+4. Pull a 22–25 g ristretto in approximately 22–28 seconds.
+5. Steam the milk to glossy, thin microfoam, stopping at 55–60 °C.
+6. Swirl the pitcher and pour approximately 65–70 g of milk into the ristretto.
+7. Keep the foam layer thin and serve immediately.
 
-## Recommended ratio
+## Barista tip
 
-Roughly one part coffee to three parts milk. Keep the total under 120 ml — the whole point is that it stays small.
+The piccolo should remain espresso-forward. Use a small glass — adding more milk quickly turns it into a regular small latte. A small pitcher matters more here than anywhere else.
+
+## Troubleshooting
+
+**It tastes too milky.** Reduce the milk or use a smaller glass.
+
+**The foam is too thick.** Introduce less air at the beginning of steaming.
+
+**The espresso disappears beneath the milk.** Pull a shorter ristretto or use a more developed roast.
 
 ## Piccolo vs cortado vs flat white
 
 A cortado is close to equal parts espresso and milk, usually on a full shot. A piccolo uses a ristretto and slightly more milk, so it tastes sweeter and rounder at a similar size. A flat white is bigger again, around 160–200 ml, with finer microfoam.
-
-## Tips
-
-- A small pitcher matters more here than anywhere else; 60 ml will not texture in a large one.
-- If the coffee disappears, pull the ristretto shorter rather than adding less milk.
-- Medium roasts with chocolate or caramel notes suit this best.

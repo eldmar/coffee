@@ -1,28 +1,29 @@
 ---
 title: Long Black
-description: Espresso poured over hot water so the crema survives — the antipodean answer to the Americano.
+description: Hot water first, espresso second — a clean, aromatic black coffee with more crema and less dilution than a typical Americano.
 seoTitle: Long Black Recipe — KAVOVO
-seoDescription: Make a long black by pouring espresso over hot water, and understand exactly how it differs from an Americano.
+seoDescription: Make a long black with hot water and espresso while preserving crema, aroma and a clean finish.
 image: long-black
+imageAlt: Long black with a golden crema layer in a speckled ceramic cup.
 category: espresso-drinks
 brewMethod: espresso
 temperature: hot
 milk: black
-prepTime: 2
+prepTime: 3
 brewTime: 3
-activeTime: 5
-totalTime: 5
+activeTime: 6
+totalTime: 6
 yield: "1 drink"
 dose: "18 g"
-drinkYield: "180 ml"
+drinkYield: "155–160 ml"
 vessel:
-  name: "Long black cup"
-  capacity: "200–250 ml"
+  name: "Ceramic cup"
+  capacity: "180–220 ml"
 datePublished: 2026-08-05
-dateModified: 2026-08-05
+dateModified: 2026-08-06
 ingredients:
-  - 18 g freshly ground coffee, brewed as 36–40 g espresso
-  - 120–140 ml fresh hot water
+  - 18 g freshly ground coffee
+  - 120 g filtered water
 equipmentSet: americano
 ---
 
@@ -30,20 +31,25 @@ A long black is espresso poured over hot water. That order is the whole point: t
 
 ## Steps
 
-1. Preheat a 200–250 ml cup.
-2. Pour 120–140 ml of fresh hot water into the cup first.
-3. Grind 18 g of coffee and brew a double espresso, 36–40 g in 25–30 seconds.
-4. Pour the shot gently over the water, aiming for the centre.
-5. Serve without stirring, so the crema stays where it is.
+1. Heat the filtered water to 90–95 °C.
+2. Preheat the serving cup, then add 120 g of hot water.
+3. Grind and dose 18 g of coffee into the portafilter.
+4. Distribute evenly and tamp level.
+5. Pull 36 g of espresso in approximately 25–30 seconds directly over the water.
+6. Serve without aggressive stirring.
+
+## Barista tip
+
+Adding the water first helps preserve the crema and aromatic top layer. Start with 120 g of water and reduce it if you prefer a stronger cup.
+
+## Troubleshooting
+
+**The coffee tastes thin.** Reduce the amount of water to 90–100 g.
+
+**The finish is harsh.** Adjust the espresso grind rather than adding more water.
+
+**The crema disappears immediately.** Pour the espresso more gently over the water.
 
 ## Long black vs Americano
 
-Same two ingredients, opposite order. An Americano is espresso with water added on top, which disperses the crema and gives a softer, longer drink. A long black keeps the crema and reads as more intense, even at the same strength.
-
-Long blacks are also usually shorter — around 180 ml against 200–250 ml for an Americano.
-
-## Tips
-
-- Use water just off the boil rather than boiling; the shot is already hot.
-- Keep the water volume down if the cup tastes thin. Strength here is a ratio, not a preference you fix later.
-- A light or medium roast rewards this drink: with the crema intact, aroma does much of the work.
+Same two ingredients, opposite order. An Americano is espresso with water added on top, which disperses the crema and gives a softer, longer drink. A long black keeps the crema and reads as more intense at the same strength — and is usually shorter.

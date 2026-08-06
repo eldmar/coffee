@@ -31,11 +31,16 @@ const schema = {
   prepTime: isoDuration(data.prepTime),
   cookTime: isoDuration(data.brewTime),
   totalTime: isoDuration(data.totalTime),
-  recipeYield: `${data.yield} (${data.drinkYield})`,
+  recipeYield:
+    data.drinkYield === data.yield ? data.yield : `${data.yield} (${data.drinkYield})`,
   recipeCategory: categoryLabel(data.category),
   recipeCuisine: 'Coffee',
   recipeIngredient: data.ingredients,
-  tool: [...equipmentFor(data.equipmentSet), ...data.equipmentOptional].map((name) => ({
+  tool: [
+    ...equipmentFor(data.equipmentSet),
+    ...data.equipmentExtra,
+    ...data.equipmentOptional,
+  ].map((name) => ({
     '@type': 'HowToTool',
     name,
   })),

@@ -33,16 +33,15 @@
     "espresso-macchiato": "espresso-macchiato.png",
     "piccolo-latte": "piccolo-latte.png",
     "affogato": "affogato.png",
-    "freddo-espresso": "iced-americano.png",
-    "cafe-au-lait": "caffe-latte.png",
-    "cafe-cubano": "espresso.png",
-    "vietnamese-iced-coffee": "iced-latte.png",
-    "irish-coffee": "caffe-latte.png",
-    "turkish-coffee": "espresso.png"
+    "freddo-espresso": "freddo-espresso.png",
+    "cafe-au-lait": "cafe-au-lait.png",
+    "cafe-cubano": "cafe-cubano.png",
+    "vietnamese-iced-coffee": "vietnamese-iced-coffee.png",
+    "irish-coffee": "irish-coffee.png",
+    "turkish-coffee": "turkish-coffee.png"
   },
   "wide": [
     "hero",
     "shop-teaser"
-  ],
-  "_temporary": "These six borrow the closest existing shot until real photography exists. irish-coffee and turkish-coffee are the ones that genuinely misrepresent their recipe."
+  ]
 }

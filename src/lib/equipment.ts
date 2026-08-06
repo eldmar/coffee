@@ -25,6 +25,16 @@ export const EQUIPMENT_SETS = {
   'pour-over': ['Dripper', 'Paper filter', 'Coffee grinder', 'Digital scale', 'Gooseneck kettle', 'Timer'],
   'moka-pot': ['Moka pot', 'Coffee grinder', 'Digital scale', 'Heat source'],
   'cold-brew': ['Jar or pitcher', 'Coffee grinder', 'Digital scale', 'Filter', 'Refrigerator'],
+  filter: [
+    'Filter coffee brewer',
+    'Compatible filter',
+    'Coffee grinder',
+    'Digital scale',
+    'Kettle',
+    'Timer',
+  ],
+  phin: ['Vietnamese phin filter', 'Coffee grinder', 'Digital scale', 'Kettle', 'Timer'],
+  cezve: ['Cezve', 'Coffee grinder', 'Digital scale', 'Low heat source'],
 } as const;
 
 export type EquipmentSet = keyof typeof EQUIPMENT_SETS;

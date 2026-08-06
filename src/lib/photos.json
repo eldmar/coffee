@@ -1022,5 +1022,239 @@
       }
     ],
     "src": "/img/affogato.67607eb9-800.jpg"
+  },
+  "freddo-espresso": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/freddo-espresso.f6aeb90a-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/freddo-espresso.f6aeb90a-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/freddo-espresso.f6aeb90a-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/freddo-espresso.f6aeb90a-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/freddo-espresso.f6aeb90a-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/freddo-espresso.f6aeb90a-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/freddo-espresso.f6aeb90a-800.jpg"
+  },
+  "cafe-au-lait": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/cafe-au-lait.f7cc5d7f-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/cafe-au-lait.f7cc5d7f-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/cafe-au-lait.f7cc5d7f-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/cafe-au-lait.f7cc5d7f-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/cafe-au-lait.f7cc5d7f-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/cafe-au-lait.f7cc5d7f-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/cafe-au-lait.f7cc5d7f-800.jpg"
+  },
+  "cafe-cubano": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/cafe-cubano.63f352b9-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/cafe-cubano.63f352b9-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/cafe-cubano.63f352b9-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/cafe-cubano.63f352b9-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/cafe-cubano.63f352b9-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/cafe-cubano.63f352b9-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/cafe-cubano.63f352b9-800.jpg"
+  },
+  "vietnamese-iced-coffee": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/vietnamese-iced-coffee.5e8b9d18-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/vietnamese-iced-coffee.5e8b9d18-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/vietnamese-iced-coffee.5e8b9d18-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/vietnamese-iced-coffee.5e8b9d18-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/vietnamese-iced-coffee.5e8b9d18-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/vietnamese-iced-coffee.5e8b9d18-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/vietnamese-iced-coffee.5e8b9d18-800.jpg"
+  },
+  "irish-coffee": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/irish-coffee.f7cc5d7f-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/irish-coffee.f7cc5d7f-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/irish-coffee.f7cc5d7f-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/irish-coffee.f7cc5d7f-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/irish-coffee.f7cc5d7f-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/irish-coffee.f7cc5d7f-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/irish-coffee.f7cc5d7f-800.jpg"
+  },
+  "turkish-coffee": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/turkish-coffee.63f352b9-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/turkish-coffee.63f352b9-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/turkish-coffee.63f352b9-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/turkish-coffee.63f352b9-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/turkish-coffee.63f352b9-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/turkish-coffee.63f352b9-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/turkish-coffee.63f352b9-800.jpg"
   }
 }

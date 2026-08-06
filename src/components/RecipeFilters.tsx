@@ -29,6 +29,9 @@ const methodOptions = [
   ['french-press', 'French press'],
   ['moka-pot', 'Moka pot'],
   ['cold-brew', 'Cold brew'],
+  ['filter', 'Filter brewer'],
+  ['phin', 'Vietnamese phin'],
+  ['cezve', 'Cezve'],
 ] as const;
 
 const selectClass =

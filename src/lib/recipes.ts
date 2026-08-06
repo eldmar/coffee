@@ -44,6 +44,14 @@ export const CATEGORIES = [
       'Coffee served as pudding rather than a drink — starting with the one that needs nothing but espresso and good gelato.',
   },
   {
+    id: 'coffee-cocktails',
+    label: 'Coffee cocktails',
+    slug: 'coffee-cocktails',
+    title: 'Coffee cocktail recipes',
+    description:
+      'Coffee with a measure of something stronger, built so the drink still tastes of coffee. For adults only.',
+  },
+  {
     id: 'brewing-methods',
     label: 'Brewing methods',
     slug: 'brewing-methods',

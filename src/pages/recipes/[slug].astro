@@ -110,6 +110,14 @@ const share = shareText(data, extractSteps(recipe.body ?? ''), recipeUrl);
       </span>
     </div>
 
+    {
+      data.notice && (
+        <p class="mt-6 rounded-md border border-accent/40 bg-accent/5 px-4 py-3 text-sm font-medium text-ink">
+          {data.notice}
+        </p>
+      )
+    }
+
     <Photo
       name={data.image}
       alt={data.imageAlt ?? data.title}

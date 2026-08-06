@@ -27,16 +27,15 @@
     "learn-beans": "roast-levels.png",
     "hero": "hero-latte-v60.png",
     "shop-teaser": "shop-teaser-kavovo.jpg",
-    "long-black": "americano.png",
-    "ristretto": "espresso.png",
-    "iced-americano": "cold-brew.png",
-    "espresso-macchiato": "cortado.png",
-    "piccolo-latte": "cortado.png",
-    "affogato": "espresso.png"
+    "long-black": "long-black.png",
+    "ristretto": "ristretto.png",
+    "iced-americano": "iced-americano.png",
+    "espresso-macchiato": "espresso-macchiato.png",
+    "piccolo-latte": "piccolo-latte.png",
+    "affogato": "affogato.png"
   },
   "wide": [
     "hero",
     "shop-teaser"
-  ],
-  "_temporary": "These six borrow the closest existing photo until real ones exist. affogato is the one that genuinely misrepresents its recipe — replace first."
+  ]
 }

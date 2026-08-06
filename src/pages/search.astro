@@ -5,7 +5,7 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import SearchResults, { type SearchDoc } from '../components/SearchResults';
 import { categoryLabel, formatTimeShort } from '../lib/recipes';
 import { equipmentFor } from '../lib/equipment';
-import { LEARN_PATHS } from '../lib/learn';
+import { LEARN_PATHS, pathHref } from '../lib/learn';
 
 /** Strip markdown syntax so the index holds words, not punctuation. */
 const plain = (body: string) =>
@@ -15,11 +15,15 @@ const plain = (body: string) =>
     .replace(/\s+/g, ' ')
     .trim();
 
-const [recipes, guides, journal] = await Promise.all([
+const [recipes, guides, journal, lessons] = await Promise.all([
   getCollection('recipes'),
   getCollection('guides'),
   getCollection('journal'),
+  getCollection('lessons'),
 ]);
+
+const pathTitle = (slug: string) =>
+  LEARN_PATHS.find((p) => p.slug === slug)?.title ?? slug;
 
 const docs: SearchDoc[] = [
   ...recipes.map((r) => ({
@@ -58,9 +62,19 @@ const docs: SearchDoc[] = [
     type: 'learn' as const,
     title: p.title,
     description: p.description,
-    url: `/learn/#${p.id}`,
+    url: pathHref(p),
     meta: 'Learning path',
     text: [p.title, p.description, p.short].join(' ').toLowerCase(),
+  })),
+  ...lessons.map((l) => ({
+    type: 'learn' as const,
+    title: l.data.title,
+    description: l.data.excerpt,
+    url: `/learn/${l.id}/`,
+    meta: `${pathTitle(l.data.path)} \u00b7 Lesson ${l.data.order}`,
+    text: [l.data.title, l.data.excerpt, l.data.seoDescription, plain(l.body ?? '')]
+      .join(' ')
+      .toLowerCase(),
   })),
   ...journal.map((p) => ({
     type: 'journal' as const,

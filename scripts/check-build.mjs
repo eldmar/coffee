@@ -61,6 +61,23 @@ for (const page of pages) {
 
 for (const asset of missingAssets) problems.push(`referenced but not emitted: ${asset}`);
 
+// Internal links. Lessons hand-pick their "put it into practice" links, and a
+// typo there is invisible until someone clicks it.
+const deadLinks = new Map();
+for (const page of pages) {
+  const html = readFileSync(page, 'utf8');
+  for (const match of html.matchAll(/<a\s[^>]*href="(\/[^"]*)"/g)) {
+    const href = match[1].split(/[?#]/)[0];
+    if (!href || href.startsWith('/api/')) continue;
+    if (/\.[a-z0-9]{2,5}$/i.test(href)) continue; // a file, covered by the asset check
+    const target = join(DIST, href, 'index.html');
+    if (!existsSync(target)) {
+      if (!deadLinks.has(href)) deadLinks.set(href, relative(DIST, page));
+    }
+  }
+}
+for (const [href, from] of deadLinks) problems.push(`dead internal link ${href} (from ${from})`);
+
 if (problems.length > 0) {
   console.error(`\nBuild check ${warnOnly ? 'WARNING' : 'failed'}:\n`);
   for (const problem of problems.slice(0, 15)) console.error('  •', problem);
@@ -72,8 +89,6 @@ if (problems.length > 0) {
     );
   }
   if (!warnOnly) process.exit(1);
-} else {
-  const variants2 = 0;
 }
 
 const variants = existsSync(join(DIST, 'img'))

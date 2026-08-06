@@ -1,0 +1,122 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import JsonLd from '../../../components/JsonLd.astro';
+import { LEARN_PATHS, readingMinutes } from '../../../lib/learn';
+
+export async function getStaticPaths() {
+  const lessons = await getCollection('lessons');
+  return LEARN_PATHS.filter((p) => p.status === 'published').map((path) => ({
+    params: { path: path.slug },
+    props: {
+      path,
+      index: LEARN_PATHS.indexOf(path) + 1,
+      lessons: lessons
+        .filter((l) => l.data.path === path.slug)
+        .sort((a, b) => a.data.order - b.data.order),
+    },
+  }));
+}
+
+const { path, index, lessons } = Astro.props;
+
+const totalMinutes = lessons.reduce((sum, l) => sum + l.data.readingTime, 0);
+const first = lessons[0];
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const url = `${site}/learn/${path.slug}/`;
+const lessonUrl = (id: string) => `/learn/${id}/`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  '@id': url,
+  url,
+  name: path.title,
+  description: path.description,
+  provider: { '@type': 'Organization', name: 'KAVOVO', url: `${site}/about/` },
+  inLanguage: 'en',
+  isAccessibleForFree: true,
+  numberOfCredits: lessons.length,
+  hasPart: lessons.map((lesson) => ({
+    '@type': 'LearningResource',
+    position: lesson.data.order,
+    name: lesson.data.title,
+    description: lesson.data.excerpt,
+    url: `${site}${lessonUrl(lesson.id)}`,
+    timeRequired: `PT${lesson.data.readingTime}M`,
+  })),
+};
+---
+
+<Layout title={path.seoTitle ?? `${path.title} — KAVOVO`} description={path.seoDescription ?? path.description}>
+  <section class="mx-auto max-w-3xl px-5 py-14">
+    <JsonLd schema={schema} />
+    <Breadcrumbs trail={[{ label: 'Learn', href: '/learn/' }, { label: path.title }]} />
+
+    <span class="eyebrow mt-6 block">Path {index}</span>
+    <h1 class="mt-2 font-display text-4xl font-medium text-balance">{path.title}</h1>
+    <p class="mt-4 text-sm text-ink-soft">
+      {lessons.length} lessons · {readingMinutes(totalMinutes)} of reading
+    </p>
+
+    {path.intro?.map((paragraph) => <p class="mt-5 text-lg text-ink-soft leading-relaxed">{paragraph}</p>)}
+
+    {
+      path.outcomes && (
+        <>
+          <p class="mt-6 font-medium">By the end of the path, you will be able to:</p>
+          <ul class="mt-3 flex list-disc flex-col gap-1.5 pl-5 text-ink-soft">
+            {path.outcomes.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </>
+      )
+    }
+
+    {path.closing && <p class="mt-5 text-ink-soft">{path.closing}</p>}
+
+    <div class="mt-8 flex flex-wrap items-center gap-3">
+      <a
+        href={lessonUrl(first.id)}
+        class="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-accent-ink transition-colors hover:bg-accent-dark"
+      >
+        Start lesson 1
+      </a>
+      <a
+        href="/recipes/"
+        class="rounded-md border border-ink/25 px-5 py-2.5 text-sm font-medium transition-colors hover:border-ink/50"
+      >
+        Browse coffee recipes
+      </a>
+    </div>
+
+    <ol class="mt-12 flex flex-col gap-3 border-t border-line pt-8">
+      {
+        lessons.map((lesson) => (
+          <li>
+            <a
+              href={lessonUrl(lesson.id)}
+              class="group flex gap-4 rounded-lg border border-line bg-card p-5 transition-shadow hover:shadow-md"
+            >
+              <span class="eyebrow mt-1 shrink-0" aria-hidden="true">
+                {String(lesson.data.order).padStart(2, '0')}
+              </span>
+              <span class="flex flex-col">
+                <span class="font-display text-xl font-medium group-hover:underline">
+                  {lesson.data.title}
+                </span>
+                <span class="mt-1.5 text-sm text-ink-soft">{lesson.data.excerpt}</span>
+                <span class="mt-2 text-xs text-ink-soft">
+                  {readingMinutes(lesson.data.readingTime)}
+                </span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</Layout>

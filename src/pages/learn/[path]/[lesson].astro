@@ -1,0 +1,137 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import JsonLd from '../../../components/JsonLd.astro';
+import { pathBySlug, readingMinutes } from '../../../lib/learn';
+
+export async function getStaticPaths() {
+  const lessons = await getCollection('lessons');
+  return lessons.map((lesson) => {
+    const siblings = lessons
+      .filter((l) => l.data.path === lesson.data.path)
+      .sort((a, b) => a.data.order - b.data.order);
+    const position = siblings.findIndex((l) => l.id === lesson.id);
+    // The lesson id already carries its folder, e.g. "coffee-basics/grind-size".
+    const [pathSlug, lessonSlug] = lesson.id.split('/');
+    return {
+      params: { path: pathSlug, lesson: lessonSlug },
+      props: {
+        lesson,
+        total: siblings.length,
+        previous: siblings[position - 1],
+        next: siblings[position + 1],
+      },
+    };
+  });
+}
+
+const { lesson, total, previous, next } = Astro.props;
+const { Content } = await render(lesson);
+const { data } = lesson;
+
+const path = pathBySlug(data.path);
+const pathTitle = path?.title ?? data.path;
+const pathHome = `/learn/${data.path}/`;
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const url = `${site}/learn/${lesson.id}/`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'LearningResource',
+  '@id': url,
+  url,
+  name: data.title,
+  headline: data.title,
+  description: data.excerpt,
+  learningResourceType: 'Lesson',
+  educationalLevel: 'Beginner',
+  timeRequired: `PT${data.readingTime}M`,
+  inLanguage: 'en',
+  isPartOf: { '@type': 'Course', name: pathTitle, url: `${site}${pathHome}` },
+  position: data.order,
+  author: { '@type': 'Organization', name: 'KAVOVO', url: `${site}/about/` },
+  publisher: { '@type': 'Organization', name: 'KAVOVO' },
+  mainEntityOfPage: url,
+};
+---
+
+<Layout
+  title={data.seoTitle ?? `${data.title} — KAVOVO`}
+  description={data.seoDescription}
+  ogType="article"
+>
+  <article class="mx-auto max-w-3xl px-5 py-12">
+    <JsonLd schema={schema} />
+    <Breadcrumbs
+      trail={[
+        { label: 'Learn', href: '/learn/' },
+        { label: pathTitle, href: pathHome },
+        { label: data.title },
+      ]}
+    />
+
+    <span class="eyebrow mt-6 block">
+      <a href={pathHome} class="hover:underline">{pathTitle}</a>
+      &#183; Lesson {data.order} of {total}
+    </span>
+    <h1 class="mt-2 font-display text-4xl font-medium text-balance">{data.title}</h1>
+    <p class="mt-4 text-lg text-ink-soft">{data.excerpt}</p>
+    <p class="mt-3 text-sm text-ink-soft">{readingMinutes(data.readingTime)} read</p>
+
+    <div class="lesson-body mt-10">
+      <Content />
+    </div>
+
+    {
+      data.related.length > 0 && (
+        <aside class="mt-12 rounded-lg border border-line bg-card p-5">
+          <h2 class="font-display text-xl font-medium">Put it into practice</h2>
+          <ul class="mt-3 flex flex-col gap-2 text-sm">
+            {data.related.map((link) => (
+              <li>
+                <a href={link.href} class="font-medium text-accent hover:underline">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )
+    }
+
+    <nav class="mt-12 grid gap-4 border-t border-line pt-8 sm:grid-cols-2" aria-label="Lesson">
+      {
+        previous ? (
+          <a href={`/learn/${previous.id}/`} class="rounded-lg border border-line bg-card p-4 transition-shadow hover:shadow-md">
+            <span class="eyebrow">Previous lesson</span>
+            <span class="mt-1.5 block font-medium">{previous.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next ? (
+          <a href={`/learn/${next.id}/`} class="rounded-lg border border-line bg-card p-4 text-right transition-shadow hover:shadow-md sm:col-start-2">
+            <span class="eyebrow">Next lesson</span>
+            <span class="mt-1.5 block font-medium">{next.data.title}</span>
+          </a>
+        ) : (
+          <div class="rounded-lg border border-line bg-card p-4 sm:col-start-2">
+            <span class="eyebrow">Path complete</span>
+            <p class="mt-1.5 text-sm text-ink-soft">
+              {pathTitle} complete — explore the&#32;
+              <a href="/learn/#espresso" class="font-medium text-accent hover:underline">
+                other learning paths
+              </a>
+              &#32;or browse the&#32;
+              <a href="/guides/" class="font-medium text-accent hover:underline">brew guides</a>.
+            </p>
+          </div>
+        )
+      }
+    </nav>
+  </article>
+</Layout>

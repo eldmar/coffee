@@ -1,6 +1,6 @@
 ---
 import Photo from './Photo.astro';
-import { LEARN_PATHS } from '../lib/learn';
+import { LEARN_PATHS, pathHref } from '../lib/learn';
 ---
 
 <section class="mx-auto grid max-w-6xl items-start gap-10 px-5 py-16 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.6fr)]">
@@ -28,7 +28,7 @@ import { LEARN_PATHS } from '../lib/learn';
     <div class="grid gap-4 sm:grid-cols-3">
       {LEARN_PATHS.map((path) => (
         <a
-          href={`/learn/#${path.id}`}
+          href={pathHref(path)}
           class="group flex flex-col overflow-hidden rounded-lg border border-line bg-card transition-shadow hover:shadow-md"
         >
           <Photo

@@ -98,4 +98,31 @@ const journal = defineCollection({
   }),
 });
 
-export const collections = { recipes, guides, journal };
+/**
+ * Learn lessons. The file path carries the routing: a lesson living at
+ * `coffee-basics/grind-size.md` is served from `/learn/coffee-basics/grind-size/`,
+ * so `path` and the folder name must agree.
+ */
+const lessons = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/lessons' }),
+  schema: z.object({
+    path: z.enum(['coffee-basics', 'dial-in-espresso', 'understand-your-beans']),
+    order: z.number().int().positive(),
+    title: z.string(),
+    seoTitle: z.string().optional(),
+    seoDescription: z.string(),
+    excerpt: z.string(),
+    readingTime: z.number().int().positive(),
+    // Photography for the Learn section does not exist yet. The brief records
+    // what to shoot; the alt text is ready for the day the photo lands.
+    imageBrief: z.string().optional(),
+    imageAlt: z.string().optional(),
+    // Where to go next once the lesson makes sense. Hand-picked per lesson;
+    // hrefs are site-relative and checked by scripts/check-build.mjs.
+    related: z
+      .array(z.object({ label: z.string(), href: z.string().startsWith('/') }))
+      .default([]),
+  }),
+});
+
+export const collections = { recipes, guides, journal, lessons };

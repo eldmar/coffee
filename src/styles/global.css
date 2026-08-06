@@ -117,6 +117,147 @@ body {
   box-shadow: 0 0 0 3px var(--color-invalid-ring);
 }
 
+/* Learn lesson prose. Long-form teaching copy, so it gets real typographic
+   rules rather than a wall of arbitrary variants in the template. */
+.lesson-body h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
+  scroll-margin-top: 6rem;
+}
+
+.lesson-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-top: 1.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.lesson-body p {
+  margin-top: 1rem;
+  color: var(--color-ink-soft);
+  line-height: 1.7;
+}
+
+.lesson-body ul,
+.lesson-body ol {
+  margin-top: 1rem;
+  padding-left: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: var(--color-ink-soft);
+}
+
+.lesson-body ul {
+  list-style: disc;
+}
+
+.lesson-body ol {
+  list-style: decimal;
+}
+
+.lesson-body strong {
+  font-weight: 500;
+  color: var(--color-ink);
+}
+
+.lesson-body code {
+  font-size: 0.9em;
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-line);
+}
+
+.lesson-body blockquote {
+  margin-top: 1.25rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--color-line);
+  color: var(--color-ink-soft);
+}
+
+/* Tables carry the reference data in these lessons, so they must stay readable
+   on a phone. Astro 7's default Markdown processor takes no rehype plugins, so
+   there is no wrapper element to scroll: the table becomes its own scroll box
+   and the page never scrolls sideways. */
+.lesson-body table {
+  display: block;
+  overflow-x: auto;
+  max-width: 100%;
+  margin-top: 1.25rem;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.lesson-body th,
+.lesson-body td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--color-line);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.lesson-body th {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.lesson-body td {
+  color: var(--color-ink-soft);
+}
+
+/* The three recurring lesson callouts: the short answer up top, the exercise
+   and the takeaway at the end. */
+.lesson-body .callout {
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-line);
+  background-color: var(--color-card);
+  border-left-width: 3px;
+}
+
+.lesson-body .callout > h2 {
+  margin-top: 0;
+  font-size: 0.6875rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.lesson-body .callout > :nth-child(2) {
+  margin-top: 0.5rem;
+}
+
+.lesson-body .callout--answer {
+  border-left-color: var(--color-sage);
+}
+
+.lesson-body .callout--answer > h2 {
+  color: var(--color-sage);
+}
+
+.lesson-body .callout--exercise {
+  border-left-color: var(--color-ink-soft);
+}
+
+.lesson-body .callout--exercise > h2 {
+  color: var(--color-ink-soft);
+}
+
+.lesson-body .callout--takeaway {
+  border-left-color: var(--color-accent);
+}
+
+.lesson-body .callout--takeaway > h2 {
+  color: var(--color-accent);
+}
+
 /* Sage on a sage panel is no focus indicator at all. Any dark brand surface
    flips the focus tokens to ivory. */
 .on-brand {

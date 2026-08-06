@@ -14,6 +14,7 @@ const recipes = defineCollection({
       'milk-drinks',
       'filter-coffee',
       'iced-coffee',
+      'coffee-desserts',
       'brewing-methods',
     ]),
     brewMethod: z.enum(['espresso', 'aeropress', 'v60', 'french-press', 'moka-pot', 'cold-brew']),

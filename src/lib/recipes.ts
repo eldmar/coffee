@@ -36,6 +36,14 @@ export const CATEGORIES = [
     description: 'Cold coffee that stays strong: iced lattes, cold brew and sparkling espresso tonic.',
   },
   {
+    id: 'coffee-desserts',
+    label: 'Coffee desserts',
+    slug: 'coffee-desserts',
+    title: 'Coffee dessert recipes',
+    description:
+      'Coffee served as pudding rather than a drink — starting with the one that needs nothing but espresso and good gelato.',
+  },
+  {
     id: 'brewing-methods',
     label: 'Brewing methods',
     slug: 'brewing-methods',

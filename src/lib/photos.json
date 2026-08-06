@@ -788,5 +788,239 @@
       }
     ],
     "src": "/img/shop-teaser.24987a70-800.jpg"
+  },
+  "long-black": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/long-black.204af1d2-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/long-black.204af1d2-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/long-black.204af1d2-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/long-black.204af1d2-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/long-black.204af1d2-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/long-black.204af1d2-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/long-black.204af1d2-800.jpg"
+  },
+  "ristretto": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/ristretto.63f352b9-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/ristretto.63f352b9-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/ristretto.63f352b9-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/ristretto.63f352b9-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/ristretto.63f352b9-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/ristretto.63f352b9-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/ristretto.63f352b9-800.jpg"
+  },
+  "iced-americano": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/iced-americano.5815400c-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/iced-americano.5815400c-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/iced-americano.5815400c-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/iced-americano.5815400c-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/iced-americano.5815400c-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/iced-americano.5815400c-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/iced-americano.5815400c-800.jpg"
+  },
+  "espresso-macchiato": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/espresso-macchiato.268662ec-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/espresso-macchiato.268662ec-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/espresso-macchiato.268662ec-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/espresso-macchiato.268662ec-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/espresso-macchiato.268662ec-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/espresso-macchiato.268662ec-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/espresso-macchiato.268662ec-800.jpg"
+  },
+  "piccolo-latte": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/piccolo-latte.268662ec-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/piccolo-latte.268662ec-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/piccolo-latte.268662ec-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/piccolo-latte.268662ec-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/piccolo-latte.268662ec-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/piccolo-latte.268662ec-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/piccolo-latte.268662ec-800.jpg"
+  },
+  "affogato": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/affogato.63f352b9-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/affogato.63f352b9-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/affogato.63f352b9-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/affogato.63f352b9-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/affogato.63f352b9-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/affogato.63f352b9-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/affogato.63f352b9-800.jpg"
   }
 }

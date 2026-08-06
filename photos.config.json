@@ -1,6 +1,11 @@
 {
   "_comment": "Maps each photo key used on the site to its original file in photos-src/. Recipe keys must match the `image` field in src/content/recipes/*.md. After editing, run `npm run images`.",
-  "crop": { "aspect": [4, 3] },
+  "crop": {
+    "aspect": [
+      4,
+      3
+    ]
+  },
   "photos": {
     "aeropress-daily": "aeropress-daily.png",
     "americano": "americano.png",
@@ -21,7 +26,17 @@
     "learn-espresso": "espresso-pull.png",
     "learn-beans": "roast-levels.png",
     "hero": "hero-latte-v60.png",
-    "shop-teaser": "shop-teaser-kavovo.jpg"
+    "shop-teaser": "shop-teaser-kavovo.jpg",
+    "long-black": "americano.png",
+    "ristretto": "espresso.png",
+    "iced-americano": "cold-brew.png",
+    "espresso-macchiato": "cortado.png",
+    "piccolo-latte": "cortado.png",
+    "affogato": "espresso.png"
   },
-  "wide": ["hero", "shop-teaser"]
+  "wide": [
+    "hero",
+    "shop-teaser"
+  ],
+  "_temporary": "These six borrow the closest existing photo until real ones exist. affogato is the one that genuinely misrepresents its recipe — replace first."
 }

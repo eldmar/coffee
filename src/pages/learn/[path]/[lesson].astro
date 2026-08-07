@@ -132,7 +132,7 @@ const schema = {
       )
     }
 
-    <div class="lesson-body mt-10">
+    <div class="prose-body mt-10">
       <Content />
     </div>
 
@@ -207,7 +207,7 @@ const schema = {
    * Copy each table's column headings onto its cells. CSS uses them to turn
    * rows into cards on narrow screens, where a wide table is unreadable.
    */
-  for (const table of document.querySelectorAll('.lesson-body table')) {
+  for (const table of document.querySelectorAll('.prose-body table')) {
     const labels = [...table.querySelectorAll('thead th')].map((th) => th.textContent.trim());
     if (labels.length === 0) continue;
     for (const row of table.querySelectorAll('tbody tr')) {

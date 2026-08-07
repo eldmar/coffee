@@ -92,9 +92,15 @@ const journal = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/journal' }),
   schema: z.object({
     title: z.string(),
+    // description is the meta description; excerpt is the lede on the page.
     description: z.string(),
+    excerpt: z.string().optional(),
     date: z.coerce.date(),
+    category: z.string().optional(),
+    readingTime: z.number().int().positive().optional(),
+    // Manifest key in src/lib/photos.json, like every other photo on the site.
     image: z.string().optional(),
+    imageAlt: z.string().optional(),
   }),
 });
 

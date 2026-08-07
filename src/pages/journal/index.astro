@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import { readingMinutes } from '../../lib/learn';
 
 const posts = (await getCollection('journal')).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -23,11 +24,23 @@ const formatDate = (date: Date) =>
           href={`/journal/${post.id}/`}
           class="group rounded-lg border border-line bg-card p-6 transition-shadow hover:shadow-md"
         >
-          <time datetime={post.data.date.toISOString()} class="text-sm text-ink-soft">
-            {formatDate(post.data.date)}
-          </time>
+          <span class="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-ink-soft">
+            {post.data.category && (
+              <>
+                <span class="eyebrow">{post.data.category}</span>
+                <span aria-hidden="true">·</span>
+              </>
+            )}
+            <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+            {post.data.readingTime && (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>{readingMinutes(post.data.readingTime)} read</span>
+              </>
+            )}
+          </span>
           <h2 class="mt-2 font-display text-2xl font-medium text-balance">{post.data.title}</h2>
-          <p class="mt-2 text-sm text-ink-soft">{post.data.description}</p>
+          <p class="mt-2 text-sm text-ink-soft">{post.data.excerpt ?? post.data.description}</p>
           <span class="mt-4 inline-block text-sm font-medium text-accent">
             Read the story
             <span class="inline-block transition-transform group-hover:translate-x-1" aria-hidden="true">&#8594;</span>

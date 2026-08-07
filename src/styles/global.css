@@ -117,9 +117,9 @@ body {
   box-shadow: 0 0 0 3px var(--color-invalid-ring);
 }
 
-/* Learn lesson prose. Long-form teaching copy, so it gets real typographic
-   rules rather than a wall of arbitrary variants in the template. */
-.lesson-body h2 {
+/* Long-form prose, shared by Learn lessons and Journal articles. Real
+   typographic rules rather than a wall of arbitrary variants in the template. */
+.prose-body h2 {
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 500;
@@ -128,7 +128,7 @@ body {
   scroll-margin-top: 6rem;
 }
 
-.lesson-body h3 {
+.prose-body h3 {
   font-family: var(--font-display);
   font-size: 1.125rem;
   font-weight: 500;
@@ -136,14 +136,14 @@ body {
   margin-bottom: 0.25rem;
 }
 
-.lesson-body p {
+.prose-body p {
   margin-top: 1rem;
   color: var(--color-ink-soft);
   line-height: 1.7;
 }
 
-.lesson-body ul,
-.lesson-body ol {
+.prose-body ul,
+.prose-body ol {
   margin-top: 1rem;
   padding-left: 1.35rem;
   display: flex;
@@ -152,20 +152,20 @@ body {
   color: var(--color-ink-soft);
 }
 
-.lesson-body ul {
+.prose-body ul {
   list-style: disc;
 }
 
-.lesson-body ol {
+.prose-body ol {
   list-style: decimal;
 }
 
-.lesson-body strong {
+.prose-body strong {
   font-weight: 500;
   color: var(--color-ink);
 }
 
-.lesson-body code {
+.prose-body code {
   font-size: 0.9em;
   padding: 0.15em 0.4em;
   border-radius: 0.25rem;
@@ -173,19 +173,19 @@ body {
   border: 1px solid var(--color-line);
 }
 
-.lesson-body blockquote {
+.prose-body blockquote {
   margin-top: 1.25rem;
   padding-left: 1rem;
   border-left: 2px solid var(--color-line);
   color: var(--color-ink-soft);
 }
 
-/* Tables carry the reference data in these lessons. Cells wrap, so a table of
+/* Tables carry the reference data in the lessons. Cells wrap, so a table of
    prose fits the text column instead of scrolling; the scroll box stays as the
    fallback for genuinely wide tables on a phone. Astro 7's default Markdown
    processor takes no rehype plugins, so the table is its own scroll container
    and the page never scrolls sideways. */
-.lesson-body table {
+.prose-body table {
   display: block;
   overflow-x: auto;
   max-width: 100%;
@@ -194,8 +194,8 @@ body {
   font-size: 0.9375rem;
 }
 
-.lesson-body th,
-.lesson-body td {
+.prose-body th,
+.prose-body td {
   padding: 0.6rem 0.75rem;
   border-bottom: 1px solid var(--color-line);
   text-align: left;
@@ -204,12 +204,12 @@ body {
   min-width: 6rem;
 }
 
-.lesson-body th {
+.prose-body th {
   font-weight: 600;
   color: var(--color-ink);
 }
 
-.lesson-body td {
+.prose-body td {
   color: var(--color-ink-soft);
 }
 
@@ -217,13 +217,13 @@ body {
    so each row becomes a card and every cell carries its own column heading.
    The labels are filled in by script; without it the plain table still works. */
 @media (max-width: 40rem) {
-  .lesson-body table:has(td[data-label]) {
+  .prose-body table:has(td[data-label]) {
     display: block;
     overflow: visible;
     font-size: 1rem;
   }
 
-  .lesson-body table:has(td[data-label]) thead {
+  .prose-body table:has(td[data-label]) thead {
     /* Visually hidden: the headings now live on each cell. */
     position: absolute;
     width: 1px;
@@ -232,13 +232,13 @@ body {
     clip-path: inset(50%);
   }
 
-  .lesson-body table:has(td[data-label]) tbody,
-  .lesson-body table:has(td[data-label]) tr,
-  .lesson-body table:has(td[data-label]) td {
+  .prose-body table:has(td[data-label]) tbody,
+  .prose-body table:has(td[data-label]) tr,
+  .prose-body table:has(td[data-label]) td {
     display: block;
   }
 
-  .lesson-body table:has(td[data-label]) tr {
+  .prose-body table:has(td[data-label]) tr {
     margin-top: 0.75rem;
     padding: 0.25rem 1rem 0.75rem;
     border: 1px solid var(--color-line);
@@ -246,13 +246,13 @@ body {
     background-color: var(--color-card);
   }
 
-  .lesson-body table:has(td[data-label]) td {
+  .prose-body table:has(td[data-label]) td {
     padding: 0.75rem 0 0;
     border-bottom: 0;
     min-width: 0;
   }
 
-  .lesson-body table:has(td[data-label]) td::before {
+  .prose-body table:has(td[data-label]) td::before {
     content: attr(data-label);
     display: block;
     margin-bottom: 0.15rem;
@@ -264,19 +264,19 @@ body {
   }
 
   /* The first cell is the row's subject, so it reads as the card title. */
-  .lesson-body table:has(td[data-label]) td:first-child {
+  .prose-body table:has(td[data-label]) td:first-child {
     color: var(--color-ink);
     font-weight: 500;
   }
 
-  .lesson-body table:has(td[data-label]) td:first-child::before {
+  .prose-body table:has(td[data-label]) td:first-child::before {
     color: var(--color-ink-soft);
   }
 }
 
 /* The three recurring lesson callouts: the short answer up top, the exercise
-   and the takeaway at the end. */
-.lesson-body .callout {
+   and the takeaway at the end. Journal articles do not use them. */
+.prose-body .callout {
   margin-top: 2rem;
   padding: 1.25rem 1.5rem;
   border-radius: var(--radius-lg);
@@ -285,7 +285,7 @@ body {
   border-left-width: 3px;
 }
 
-.lesson-body .callout > h2 {
+.prose-body .callout > h2 {
   margin-top: 0;
   font-size: 0.6875rem;
   font-family: var(--font-sans);
@@ -294,31 +294,31 @@ body {
   text-transform: uppercase;
 }
 
-.lesson-body .callout > :nth-child(2) {
+.prose-body .callout > :nth-child(2) {
   margin-top: 0.5rem;
 }
 
-.lesson-body .callout--answer {
+.prose-body .callout--answer {
   border-left-color: var(--color-sage);
 }
 
-.lesson-body .callout--answer > h2 {
+.prose-body .callout--answer > h2 {
   color: var(--color-sage);
 }
 
-.lesson-body .callout--exercise {
+.prose-body .callout--exercise {
   border-left-color: var(--color-ink-soft);
 }
 
-.lesson-body .callout--exercise > h2 {
+.prose-body .callout--exercise > h2 {
   color: var(--color-ink-soft);
 }
 
-.lesson-body .callout--takeaway {
+.prose-body .callout--takeaway {
   border-left-color: var(--color-accent);
 }
 
-.lesson-body .callout--takeaway > h2 {
+.prose-body .callout--takeaway > h2 {
   color: var(--color-accent);
 }
 

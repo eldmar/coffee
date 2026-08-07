@@ -7,6 +7,12 @@ interface Props {
   alt: string;
   sizes: string;
   class?: string;
+  /**
+   * Styles the <picture> rather than the <img>. Needed whenever the photo is a
+   * flex or grid item: the <picture> is the item that gets sized, so a width on
+   * the <img> alone is ignored and the thumbnail sizes itself.
+   */
+  pictureClass?: string;
   loading?: 'eager' | 'lazy';
   fetchpriority?: 'high' | 'auto' | 'low';
 }
@@ -16,6 +22,7 @@ const {
   alt,
   sizes,
   class: className,
+  pictureClass,
   loading = 'lazy',
   fetchpriority = 'auto',
 } = Astro.props;
@@ -23,7 +30,7 @@ const {
 const entry = photo(name);
 ---
 
-<picture>
+<picture class={pictureClass}>
   <source type="image/avif" srcset={srcset(entry.avif)} sizes={sizes} />
   <source type="image/webp" srcset={srcset(entry.webp)} sizes={sizes} />
   <img

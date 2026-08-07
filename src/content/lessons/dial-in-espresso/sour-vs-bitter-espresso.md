@@ -6,6 +6,7 @@ seoTitle: Sour vs Bitter Espresso — KAVOVO
 seoDescription: Learn how sourness, acidity, bitterness and astringency differ—and what each taste can tell you about an espresso shot.
 excerpt: "Sourness, bitterness and dryness are different clues. Learn what each one says about extraction."
 readingTime: 6
+image: lesson-sour-vs-bitter-espresso
 imageBrief: "KAVOVO-style editorial tasting scene with exactly two small ceramic espresso cups side by side, one small neutral notebook and a pencil. A few coffee beans may be present, but no lemon, chocolate or literal flavour props. Warm cream plaster surface, natural linen, light wood accent, soft leaf shadows and warm side sunlight. Realistic liquid and crema, no logos, labels or text. Landscape 4:3 with symmetrical crop-safe composition."
 imageAlt: Two small cups of espresso being compared side by side on a warm neutral worktop.
 related:

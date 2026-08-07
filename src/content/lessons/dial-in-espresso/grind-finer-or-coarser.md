@@ -6,6 +6,7 @@ seoTitle: "Grind Finer or Coarser? A Simple Guide — KAVOVO"
 seoDescription: Use shot speed, flavour and flow to decide which way to move your espresso grinder—and avoid changing three things at once.
 excerpt: "Finer slows the shot; coarser speeds it up. Taste tells you whether the change helped."
 readingTime: 5
+image: lesson-grind-finer-or-coarser
 imageBrief: "KAVOVO-style macro editorial photograph showing two clearly different but both espresso-range grind samples on a warm cream plaster surface: finer on the left and slightly coarser on the right, with the base of a compact unbranded burr grinder in the background. Natural linen, light wood detail, soft leaf shadows, warm side sunlight. No labels, arrows, typography or exaggerated powder. Landscape 4:3, subjects centred and crop-safe."
 imageAlt: Fine and slightly coarser espresso grounds arranged beside an espresso grinder.
 related:

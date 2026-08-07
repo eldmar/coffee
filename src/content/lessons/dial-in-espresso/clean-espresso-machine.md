@@ -6,6 +6,7 @@ seoTitle: How to Clean an Espresso Machine — KAVOVO
 seoDescription: A practical after-each-use, daily and periodic cleaning routine for better-tasting espresso and reliable home equipment.
 excerpt: Clean coffee and milk residue before it hardens, and follow the machine manual for internal cleaning.
 readingTime: 7
+image: lesson-clean-espresso-machine
 imageBrief: "KAVOVO-style realistic editorial photograph of routine espresso-machine cleaning. An unbranded home espresso machine group head is being cleaned with a small dedicated group brush; clean portafilter basket, folded damp cloth and shallow drip tray arranged naturally nearby. Warm cream plaster, pale wood counter, natural linen, soft leaf shadows and side sunlight. No detergent branding, no loose water near electrical controls, no impossible parts, no text. Landscape 4:3 with centred crop-safe composition."
 imageAlt: An espresso machine group head being cleaned with a small brush and cloth.
 related:

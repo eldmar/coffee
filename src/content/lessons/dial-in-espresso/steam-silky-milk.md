@@ -6,6 +6,7 @@ seoTitle: How to Steam Silky Milk — KAVOVO
 seoDescription: Learn a simple two-stage milk-steaming technique for glossy microfoam that pours cleanly into lattes, flat whites and cappuccinos.
 excerpt: Glossy microfoam comes from adding a little air while milk is cold, then integrating it with a whirlpool.
 readingTime: 7
+image: lesson-steam-silky-milk
 imageBrief: "KAVOVO-style realistic close-up of milk steaming at a home espresso machine. A stainless-steel pitcher is held correctly with the steam-wand tip just below the milk surface, positioned off-centre to create a natural whirlpool; a finished ceramic flat white nearby shows subtle simple latte art. Warm cream plaster wall, light wood counter, natural linen, soft leaf shadows and side sunlight. Physically accurate wand, pitcher and hand placement, no visible brand, no floating equipment, no added text. Landscape 4:3 and centred crop-safe."
 imageAlt: Cold milk being textured into glossy microfoam with an espresso machine steam wand.
 related:

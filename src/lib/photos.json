@@ -1599,5 +1599,348 @@
       }
     ],
     "src": "/img/lesson-store-coffee-beans.ded5194d-800.jpg"
+  },
+  "lesson-espresso-basics-dose-yield-time": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-espresso-basics-dose-yield-time.220e830d-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-espresso-basics-dose-yield-time.220e830d-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-espresso-basics-dose-yield-time.220e830d-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-espresso-basics-dose-yield-time.220e830d-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-espresso-basics-dose-yield-time.220e830d-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-espresso-basics-dose-yield-time.220e830d-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-espresso-basics-dose-yield-time.220e830d-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-espresso-basics-dose-yield-time.220e830d-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-espresso-basics-dose-yield-time.220e830d-800.jpg"
+  },
+  "lesson-dial-in-espresso-step-by-step": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-dial-in-espresso-step-by-step.11a0beb8-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-dial-in-espresso-step-by-step.11a0beb8-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-dial-in-espresso-step-by-step.11a0beb8-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-dial-in-espresso-step-by-step.11a0beb8-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-dial-in-espresso-step-by-step.11a0beb8-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-dial-in-espresso-step-by-step.11a0beb8-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-dial-in-espresso-step-by-step.11a0beb8-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-dial-in-espresso-step-by-step.11a0beb8-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-dial-in-espresso-step-by-step.11a0beb8-800.jpg"
+  },
+  "lesson-sour-vs-bitter-espresso": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-sour-vs-bitter-espresso.2b84a827-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-sour-vs-bitter-espresso.2b84a827-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-sour-vs-bitter-espresso.2b84a827-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-sour-vs-bitter-espresso.2b84a827-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-sour-vs-bitter-espresso.2b84a827-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-sour-vs-bitter-espresso.2b84a827-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-sour-vs-bitter-espresso.2b84a827-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-sour-vs-bitter-espresso.2b84a827-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-sour-vs-bitter-espresso.2b84a827-800.jpg"
+  },
+  "lesson-grind-finer-or-coarser": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-grind-finer-or-coarser.4fbaf11e-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-grind-finer-or-coarser.4fbaf11e-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-grind-finer-or-coarser.4fbaf11e-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-grind-finer-or-coarser.4fbaf11e-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-grind-finer-or-coarser.4fbaf11e-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-grind-finer-or-coarser.4fbaf11e-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-grind-finer-or-coarser.4fbaf11e-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-grind-finer-or-coarser.4fbaf11e-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-grind-finer-or-coarser.4fbaf11e-800.jpg"
+  },
+  "lesson-distribution-tamping-channeling": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-distribution-tamping-channeling.55a1bc50-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-distribution-tamping-channeling.55a1bc50-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-distribution-tamping-channeling.55a1bc50-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-distribution-tamping-channeling.55a1bc50-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-distribution-tamping-channeling.55a1bc50-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-distribution-tamping-channeling.55a1bc50-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-distribution-tamping-channeling.55a1bc50-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-distribution-tamping-channeling.55a1bc50-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-distribution-tamping-channeling.55a1bc50-800.jpg"
+  },
+  "lesson-steam-silky-milk": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-steam-silky-milk.e6b85264-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-steam-silky-milk.e6b85264-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-steam-silky-milk.e6b85264-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-steam-silky-milk.e6b85264-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-steam-silky-milk.e6b85264-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-steam-silky-milk.e6b85264-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-steam-silky-milk.e6b85264-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-steam-silky-milk.e6b85264-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-steam-silky-milk.e6b85264-800.jpg"
+  },
+  "lesson-clean-espresso-machine": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-clean-espresso-machine.f0fac8b8-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-clean-espresso-machine.f0fac8b8-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-clean-espresso-machine.f0fac8b8-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-clean-espresso-machine.f0fac8b8-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-clean-espresso-machine.f0fac8b8-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-clean-espresso-machine.f0fac8b8-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-clean-espresso-machine.f0fac8b8-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-clean-espresso-machine.f0fac8b8-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-clean-espresso-machine.f0fac8b8-800.jpg"
   }
 }

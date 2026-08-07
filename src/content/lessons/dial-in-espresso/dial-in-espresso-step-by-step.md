@@ -6,6 +6,7 @@ seoTitle: How to Dial In Espresso, Step by Step — KAVOVO
 seoDescription: A repeatable workflow for dialing in a new coffee using dose, yield, shot time and taste—one deliberate adjustment at a time.
 excerpt: Dial in a new coffee by fixing dose and yield, adjusting grind in small steps and tasting every shot.
 readingTime: 7
+image: lesson-dial-in-espresso-step-by-step
 imageBrief: "KAVOVO-style realistic editorial photograph of a home espresso dial-in workflow. A person's hand makes a small adjustment to a compact espresso grinder while a ceramic espresso cup sits naturally on a digital scale beneath the machine; portafilter and a small open notebook nearby. Warm cream plaster, light wood, natural linen, soft botanical shadows and side sunlight. No brand marks, no staged floating parts, no added text, no impossible machine geometry. Landscape 4:3, centred crop-safe composition."
 imageAlt: A home barista adjusting an espresso grinder beside a weighed espresso shot.
 related:

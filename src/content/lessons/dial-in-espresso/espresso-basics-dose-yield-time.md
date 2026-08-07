@@ -6,6 +6,7 @@ seoTitle: "Espresso Basics: Dose, Yield and Time — KAVOVO"
 seoDescription: "Learn the three numbers behind a repeatable espresso recipe: how much dry coffee you use, how much espresso you make and how long the shot takes."
 excerpt: "A repeatable espresso recipe begins with three numbers: dose, yield and time."
 readingTime: 6
+image: lesson-espresso-basics-dose-yield-time
 imageBrief: "KAVOVO-style editorial coffee photograph showing the three parts of an espresso recipe: a filled portafilter on a compact digital scale, a small ceramic espresso cup on a second scale beneath a home espresso machine, and a subtle timer visible without requiring readable text. Warm cream plaster, natural linen, light wood, soft leaf shadows and warm side sunlight. Realistic home setup, restrained composition, no logos, no floating equipment, no captions or added typography. Landscape 4:3 with all important objects inside a centred safe area."
 imageAlt: A portafilter of ground coffee and an espresso cup being measured on digital scales.
 related:

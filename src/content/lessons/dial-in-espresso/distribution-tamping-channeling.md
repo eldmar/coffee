@@ -6,6 +6,7 @@ seoTitle: Distribution, Tamping and Channeling — KAVOVO
 seoDescription: Prepare a level, even espresso puck and learn how poor distribution, tilted tamping and cracks cause channeling and inconsistent shots.
 excerpt: Even distribution and a level tamp help water move through the whole puck instead of weak channels.
 readingTime: 7
+image: lesson-distribution-tamping-channeling
 imageBrief: "KAVOVO-style realistic editorial close-up of espresso puck preparation. A person's hand holds a simple flat tamper level over a portafilter resting securely on a small dark tamping mat; a slim needle distribution tool and compact grinder nearby. Warm cream plaster, light wood, natural linen, soft leaf shadows and side sunlight. Correct hand and tool geometry, no floating portafilter, no logos or text. Landscape 4:3, central safe composition."
 imageAlt: A level coffee bed being tamped in an espresso portafilter on a work mat.
 related:

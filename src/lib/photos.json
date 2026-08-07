@@ -1942,5 +1942,348 @@
       }
     ],
     "src": "/img/lesson-clean-espresso-machine.f0fac8b8-800.jpg"
+  },
+  "lesson-arabica-vs-robusta": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-arabica-vs-robusta.65770b78-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-arabica-vs-robusta.65770b78-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-arabica-vs-robusta.65770b78-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-arabica-vs-robusta.65770b78-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-arabica-vs-robusta.65770b78-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-arabica-vs-robusta.65770b78-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-arabica-vs-robusta.65770b78-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-arabica-vs-robusta.65770b78-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-arabica-vs-robusta.65770b78-800.jpg"
+  },
+  "lesson-origin-changes-flavour": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-origin-changes-flavour.8d18781c-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-origin-changes-flavour.8d18781c-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-origin-changes-flavour.8d18781c-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-origin-changes-flavour.8d18781c-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-origin-changes-flavour.8d18781c-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-origin-changes-flavour.8d18781c-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-origin-changes-flavour.8d18781c-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-origin-changes-flavour.8d18781c-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-origin-changes-flavour.8d18781c-800.jpg"
+  },
+  "lesson-coffee-processing-methods": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-coffee-processing-methods.34781de8-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-coffee-processing-methods.34781de8-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-coffee-processing-methods.34781de8-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-coffee-processing-methods.34781de8-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-coffee-processing-methods.34781de8-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-coffee-processing-methods.34781de8-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-coffee-processing-methods.34781de8-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-coffee-processing-methods.34781de8-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-coffee-processing-methods.34781de8-800.jpg"
+  },
+  "lesson-roast-levels-explained": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-roast-levels-explained.943c0e3c-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-roast-levels-explained.943c0e3c-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-roast-levels-explained.943c0e3c-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-roast-levels-explained.943c0e3c-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-roast-levels-explained.943c0e3c-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-roast-levels-explained.943c0e3c-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-roast-levels-explained.943c0e3c-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-roast-levels-explained.943c0e3c-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-roast-levels-explained.943c0e3c-800.jpg"
+  },
+  "lesson-read-a-coffee-bag": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-read-a-coffee-bag.5df02391-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-read-a-coffee-bag.5df02391-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-read-a-coffee-bag.5df02391-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-read-a-coffee-bag.5df02391-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-read-a-coffee-bag.5df02391-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-read-a-coffee-bag.5df02391-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-read-a-coffee-bag.5df02391-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-read-a-coffee-bag.5df02391-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-read-a-coffee-bag.5df02391-800.jpg"
+  },
+  "lesson-coffee-flavour-notes": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-coffee-flavour-notes.f0c48e92-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-coffee-flavour-notes.f0c48e92-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-coffee-flavour-notes.f0c48e92-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-coffee-flavour-notes.f0c48e92-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-coffee-flavour-notes.f0c48e92-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-coffee-flavour-notes.f0c48e92-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-coffee-flavour-notes.f0c48e92-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-coffee-flavour-notes.f0c48e92-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-coffee-flavour-notes.f0c48e92-800.jpg"
+  },
+  "lesson-coffee-freshness-roast-dates": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-coffee-freshness-roast-dates.b6ec2a55-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-coffee-freshness-roast-dates.b6ec2a55-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-coffee-freshness-roast-dates.b6ec2a55-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-coffee-freshness-roast-dates.b6ec2a55-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-coffee-freshness-roast-dates.b6ec2a55-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-coffee-freshness-roast-dates.b6ec2a55-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-coffee-freshness-roast-dates.b6ec2a55-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-coffee-freshness-roast-dates.b6ec2a55-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-coffee-freshness-roast-dates.b6ec2a55-800.jpg"
   }
 }

@@ -6,6 +6,7 @@ seoTitle: How Coffee Origin Changes Flavour — KAVOVO
 seoDescription: Learn how country, region, variety, climate, altitude and processing work together to shape coffee flavour—without reducing origins to stereotypes.
 excerpt: "Country is only the start: region, variety, climate, process and roast all shape flavour."
 readingTime: 7
+image: lesson-origin-changes-flavour
 imageBrief: "KAVOVO-style editorial flat lay suggesting coffee origin without readable cartography: three small ceramic bowls of distinct roasted coffees arranged around a subtle unlabelled contour map on warm cream paper, with a few ripe coffee cherries, green leaves and a simple wooden scoop. Warm cream plaster surface, natural linen, pale wood, soft leaf shadows and side sunlight. No flags, country names, labels, logos or text. Landscape 4:3, centred crop-safe composition."
 imageAlt: Several coffee samples and coffee cherries arranged around a simple unlabelled map.
 related:

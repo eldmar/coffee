@@ -6,6 +6,7 @@ seoTitle: Coffee Freshness and Roast Dates — KAVOVO
 seoDescription: Understand degassing, staling and practical resting windows so you can use roast dates without treating coffee like it expires overnight.
 excerpt: "Freshness balances two processes: helpful degassing and gradual aroma loss."
 readingTime: 6
+image: lesson-coffee-freshness-roast-dates
 imageBrief: "KAVOVO-style editorial storage photograph with one unbranded sealed kraft coffee bag featuring a visible one-way valve, a small ceramic dish of freshly roasted beans and a simple blank date card partly tucked beneath the bag. Warm cream plaster, pale wood shelf or board, natural linen, soft leaf shadows and side sunlight. No readable dates, logos or text. Landscape 4:3, centred crop-safe composition."
 imageAlt: Fresh roasted coffee beans beside a sealed coffee bag with a one-way valve.
 related:

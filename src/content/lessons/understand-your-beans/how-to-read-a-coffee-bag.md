@@ -6,6 +6,7 @@ seoTitle: How to Read a Coffee Bag — KAVOVO
 seoDescription: Decode origin, producer, variety, process, roast, flavour notes and dates so you can choose coffee by useful information rather than packaging alone.
 excerpt: A coffee bag becomes useful when you separate origin, process, roast and dates from marketing.
 readingTime: 6
+image: lesson-read-a-coffee-bag
 imageBrief: "KAVOVO-style realistic editorial photograph of one pair of natural hands holding and examining a minimal unbranded kraft coffee bag with a clean structured information panel. The panel may contain understated lines and small generic marks but no brand name or required readable copy. A few beans, a ceramic cup and natural linen rest on the warm cream worktop. Pale wood, soft leaf shadows and side sunlight. No logos or marketing slogans. Landscape 4:3, centred crop-safe composition."
 imageAlt: A person examining the information panel on an unbranded coffee bag.
 related:

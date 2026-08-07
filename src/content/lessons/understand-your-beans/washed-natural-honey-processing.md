@@ -6,6 +6,7 @@ seoTitle: Washed, Natural and Honey Processing — KAVOVO
 seoDescription: See how removing or drying the coffee fruit changes flavour, body and consistency—and why honey-processed coffee contains no honey.
 excerpt: The way coffee fruit is removed and dried can shift clarity, fruit intensity, sweetness and body.
 readingTime: 7
+image: lesson-coffee-processing-methods
 imageBrief: "KAVOVO-style educational editorial flat lay with exactly three shallow natural trays: clean pale parchment coffee representing washed process, whole dark-red dried coffee cherries representing natural process, and amber mucilage-coated parchment representing honey process. Add only a few green coffee leaves and a fold of oatmeal linen. Warm cream plaster, pale wood, soft leaf shadows and warm side sunlight. Realistic agricultural materials, no liquid honey, no labels, logos or text. Landscape 4:3, centred crop-safe composition."
 imageAlt: Washed coffee parchment, dried coffee cherries and honey-process coffee drying in three small trays.
 related:

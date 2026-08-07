@@ -6,6 +6,7 @@ seoTitle: Arabica vs Robusta — KAVOVO
 seoDescription: Understand how Arabica and Robusta differ in the plant, the cup and the coffee bag—and why species alone does not decide quality.
 excerpt: Arabica and Robusta are different species with common tendencies—not automatic quality grades.
 readingTime: 6
+image: lesson-arabica-vs-robusta
 imageBrief: "KAVOVO-style editorial coffee photograph with two shallow cream ceramic dishes of roasted coffee beans side by side: one sample slightly more elongated with a curved centre crease, the other somewhat smaller and rounder. Include a few coffee leaves and ripe cherries as quiet botanical context, not a scientific diagram. Warm cream plaster, pale wood, natural linen, soft leaf shadows and side sunlight. No labels, logos or text. Landscape 4:3, centred crop-safe composition."
 imageAlt: Two small dishes of Arabica and Robusta coffee beans arranged side by side.
 related:

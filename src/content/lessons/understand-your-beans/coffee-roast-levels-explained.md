@@ -6,6 +6,7 @@ seoTitle: Coffee Roast Levels Explained — KAVOVO
 seoDescription: Understand light, medium and dark roast labels, how roasting changes flavour and why colour alone does not tell the whole story.
 excerpt: Light, medium and dark describe a spectrum, and each roaster draws the boundaries differently.
 readingTime: 6
+image: lesson-roast-levels-explained
 imageBrief: "KAVOVO-style editorial flat lay with exactly three neat, equal samples of roasted coffee beans progressing naturally from light brown to medium brown to deep dark brown. Beans should look realistic, with only the darkest sample showing a subtle possible surface sheen, not burnt black. Warm cream plaster surface, pale wood, natural linen, soft leaf shadows and side sunlight. No labels, arrows, logos or text. Landscape 4:3, centred crop-safe composition."
 imageAlt: Light, medium and dark roasted coffee beans arranged in three distinct samples.
 related:

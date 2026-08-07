@@ -6,6 +6,7 @@ seoTitle: What Coffee Flavour Notes Actually Mean — KAVOVO
 seoDescription: Learn why coffee bags mention berries, chocolate or flowers, how tasters choose those words and what to do when your coffee still tastes like coffee.
 excerpt: Flavour notes are sensory comparisons, not a list of ingredients hidden inside the beans.
 readingTime: 6
+image: lesson-coffee-flavour-notes
 imageBrief: "KAVOVO-style editorial coffee tasting scene with exactly two small ceramic cups of black coffee, an open blank tasting notebook and a wooden pencil. Add a restrained botanical element and only two or three distant, subtle aroma references such as one berry, a curl of citrus peel and a small cocoa piece, clearly separated from the coffee so they read as comparisons rather than ingredients. Warm cream plaster, linen, pale wood, soft leaf shadows and side sunlight. No flavour wheel reproduction, labels, logos or text. Landscape 4:3, centred crop-safe composition."
 imageAlt: Two cups of coffee being compared beside a blank tasting notebook.
 related:

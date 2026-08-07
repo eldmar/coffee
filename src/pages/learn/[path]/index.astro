@@ -3,6 +3,8 @@ import { getCollection } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import JsonLd from '../../../components/JsonLd.astro';
+import Photo from '../../../components/Photo.astro';
+import { photo } from '../../../lib/photos';
 import { LEARN_PATHS, readingMinutes } from '../../../lib/learn';
 
 export async function getStaticPaths() {
@@ -23,6 +25,7 @@ const { path, index, lessons } = Astro.props;
 
 const totalMinutes = lessons.reduce((sum, l) => sum + l.data.readingTime, 0);
 const first = lessons[0];
+const ogImagePath = photo(first.data.image).src;
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const url = `${site}/learn/${path.slug}/`;
@@ -35,6 +38,7 @@ const schema = {
   url,
   name: path.title,
   description: path.description,
+  image: `${site}${ogImagePath}`,
   provider: { '@type': 'Organization', name: 'KAVOVO', url: `${site}/about/` },
   inLanguage: 'en',
   isAccessibleForFree: true,
@@ -50,7 +54,11 @@ const schema = {
 };
 ---
 
-<Layout title={path.seoTitle ?? `${path.title} — KAVOVO`} description={path.seoDescription ?? path.description}>
+<Layout
+  title={path.seoTitle ?? `${path.title} — KAVOVO`}
+  description={path.seoDescription ?? path.description}
+  ogImage={ogImagePath}
+>
   <section class="mx-auto max-w-3xl px-5 py-14">
     <JsonLd schema={schema} />
     <Breadcrumbs trail={[{ label: 'Learn', href: '/learn/' }, { label: path.title }]} />
@@ -99,13 +107,20 @@ const schema = {
           <li>
             <a
               href={lessonUrl(lesson.id)}
-              class="group flex gap-4 rounded-lg border border-line bg-card p-5 transition-shadow hover:shadow-md"
+              class="group flex gap-4 overflow-hidden rounded-lg border border-line bg-card transition-shadow hover:shadow-md sm:gap-5"
             >
-              <span class="eyebrow mt-1 shrink-0" aria-hidden="true">
-                {String(lesson.data.order).padStart(2, '0')}
-              </span>
-              <span class="flex flex-col">
-                <span class="font-display text-xl font-medium group-hover:underline">
+              <Photo
+                name={lesson.data.image}
+                alt=""
+                sizes="(min-width: 640px) 176px, 112px"
+                class="aspect-[4/3] w-28 shrink-0 self-stretch object-cover sm:w-44"
+                loading="lazy"
+              />
+              <span class="flex flex-col py-4 pr-4 sm:py-5 sm:pr-5">
+                <span class="eyebrow" aria-hidden="true">
+                  Lesson {lesson.data.order}
+                </span>
+                <span class="mt-1 font-display text-xl font-medium group-hover:underline">
                   {lesson.data.title}
                 </span>
                 <span class="mt-1.5 text-sm text-ink-soft">{lesson.data.excerpt}</span>

@@ -113,10 +113,11 @@ const lessons = defineCollection({
     seoDescription: z.string(),
     excerpt: z.string(),
     readingTime: z.number().int().positive(),
-    // Photography for the Learn section does not exist yet. The brief records
-    // what to shoot; the alt text is ready for the day the photo lands.
+    // Manifest key in src/lib/photos.json. The brief is kept as the record of
+    // what the shot was meant to be, in case it ever needs reshooting.
+    image: z.string(),
+    imageAlt: z.string(),
     imageBrief: z.string().optional(),
-    imageAlt: z.string().optional(),
     // Where to go next once the lesson makes sense. Hand-picked per lesson;
     // hrefs are site-relative and checked by scripts/check-build.mjs.
     related: z

@@ -6,6 +6,7 @@ seoTitle: Coffee-to-Water Ratio, Explained — KAVOVO
 seoDescription: Learn how coffee-to-water ratios work, where to start and how to scale a recipe for any cup or brewing method.
 excerpt: A ratio turns "some coffee and some water" into a recipe you can repeat, scale and adjust.
 readingTime: 6
+image: lesson-coffee-to-water-ratio
 imageBrief: Ground coffee on a digital scale beside a glass server and measured water, photographed in the KAVOVO visual style.
 imageAlt: Ground coffee and brewing water being measured with a digital scale.
 related:

@@ -38,7 +38,14 @@
     "cafe-cubano": "cafe-cubano.png",
     "vietnamese-iced-coffee": "vietnamese-iced-coffee.png",
     "irish-coffee": "irish-coffee.png",
-    "turkish-coffee": "turkish-coffee.png"
+    "turkish-coffee": "turkish-coffee.png",
+    "lesson-why-water-matters": "lesson-why-water-matters.png",
+    "lesson-what-you-actually-need": "lesson-what-you-actually-need.png",
+    "lesson-brewing-temperature": "lesson-brewing-temperature.png",
+    "lesson-coffee-to-water-ratio": "lesson-coffee-to-water-ratio.png",
+    "lesson-grind-size": "lesson-grind-size.png",
+    "lesson-how-to-taste-coffee": "lesson-how-to-taste-coffee.png",
+    "lesson-store-coffee-beans": "lesson-store-coffee-beans.png"
   },
   "wide": [
     "hero",

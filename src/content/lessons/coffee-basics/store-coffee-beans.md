@@ -6,6 +6,7 @@ seoTitle: How to Store Coffee Beans Properly — KAVOVO
 seoDescription: Keep coffee beans fresher by protecting them from air, heat, light and moisture, and learn when freezing makes sense.
 excerpt: "Air, heat, light and moisture make roasted coffee lose aroma faster. Good storage is simple: keep beans sealed, cool, dry and dark."
 readingTime: 5
+image: lesson-store-coffee-beans
 imageBrief: An unbranded resealable coffee bag and opaque airtight canister in a cool pantry-style KAVOVO scene.
 imageAlt: Roasted coffee beans stored in a sealed opaque container and resealable bag.
 related:

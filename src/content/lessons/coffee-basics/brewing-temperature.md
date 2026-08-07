@@ -6,6 +6,7 @@ seoTitle: Coffee Brewing Temperature, Explained — KAVOVO
 seoDescription: Learn which water temperature to use for coffee and how to adjust it for light, medium and dark roasts.
 excerpt: There is no single perfect temperature for every coffee. Start with a sensible range and adjust only when taste gives you a reason.
 readingTime: 5
+image: lesson-brewing-temperature
 imageBrief: A kettle pouring hot water into a filter brewer, with a small readable thermometer and no other text.
 imageAlt: Hot water being poured from a kettle into a filter coffee brewer.
 related:

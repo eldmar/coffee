@@ -6,6 +6,7 @@ seoTitle: What You Need to Make Better Coffee — KAVOVO
 seoDescription: Build a practical home coffee setup with the equipment that genuinely improves consistency, without filling your kitchen with gadgets.
 excerpt: Better coffee needs fewer tools than most equipment lists suggest. Start with fresh beans, a burr grinder, a scale and one brewer you enjoy using.
 readingTime: 6
+image: lesson-what-you-actually-need
 imageBrief: A restrained KAVOVO-style flat lay containing a bag of coffee, compact burr grinder, digital scale, kettle and simple brewer on a warm cream surface.
 imageAlt: Essential home coffee equipment arranged on a warm neutral worktop.
 related:

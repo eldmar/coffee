@@ -6,6 +6,7 @@ seoTitle: Why Water Matters in Coffee — KAVOVO
 seoDescription: Learn how chlorine, hardness, alkalinity and filtration affect coffee flavour and brewing equipment.
 excerpt: Water is both an ingredient and an extraction tool. Its taste and mineral balance shape what reaches the cup.
 readingTime: 5
+image: lesson-why-water-matters
 imageBrief: Clear water in a glass carafe beside a filter brewer and coffee cup, with warm sunlight and restrained KAVOVO styling.
 imageAlt: Filtered water in a glass carafe beside a home coffee brewer.
 related:

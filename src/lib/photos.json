@@ -1256,5 +1256,348 @@
       }
     ],
     "src": "/img/turkish-coffee.6061d86f-800.jpg"
+  },
+  "lesson-why-water-matters": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-why-water-matters.122456d0-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-why-water-matters.122456d0-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-why-water-matters.122456d0-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-why-water-matters.122456d0-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-why-water-matters.122456d0-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-why-water-matters.122456d0-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-why-water-matters.122456d0-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-why-water-matters.122456d0-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-why-water-matters.122456d0-800.jpg"
+  },
+  "lesson-what-you-actually-need": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-what-you-actually-need.5d5ee8ce-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-what-you-actually-need.5d5ee8ce-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-what-you-actually-need.5d5ee8ce-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-what-you-actually-need.5d5ee8ce-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-what-you-actually-need.5d5ee8ce-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-what-you-actually-need.5d5ee8ce-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-what-you-actually-need.5d5ee8ce-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-what-you-actually-need.5d5ee8ce-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-what-you-actually-need.5d5ee8ce-800.jpg"
+  },
+  "lesson-brewing-temperature": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-brewing-temperature.ef716d6f-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-brewing-temperature.ef716d6f-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-brewing-temperature.ef716d6f-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-brewing-temperature.ef716d6f-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-brewing-temperature.ef716d6f-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-brewing-temperature.ef716d6f-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-brewing-temperature.ef716d6f-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-brewing-temperature.ef716d6f-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-brewing-temperature.ef716d6f-800.jpg"
+  },
+  "lesson-coffee-to-water-ratio": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-coffee-to-water-ratio.daaa2d66-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-coffee-to-water-ratio.daaa2d66-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-coffee-to-water-ratio.daaa2d66-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-coffee-to-water-ratio.daaa2d66-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-coffee-to-water-ratio.daaa2d66-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-coffee-to-water-ratio.daaa2d66-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-coffee-to-water-ratio.daaa2d66-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-coffee-to-water-ratio.daaa2d66-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-coffee-to-water-ratio.daaa2d66-800.jpg"
+  },
+  "lesson-grind-size": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-grind-size.b2216de3-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-grind-size.b2216de3-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-grind-size.b2216de3-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-grind-size.b2216de3-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-grind-size.b2216de3-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-grind-size.b2216de3-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-grind-size.b2216de3-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-grind-size.b2216de3-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-grind-size.b2216de3-800.jpg"
+  },
+  "lesson-how-to-taste-coffee": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-how-to-taste-coffee.deee4730-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-how-to-taste-coffee.deee4730-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-how-to-taste-coffee.deee4730-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-how-to-taste-coffee.deee4730-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-how-to-taste-coffee.deee4730-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-how-to-taste-coffee.deee4730-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-how-to-taste-coffee.deee4730-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-how-to-taste-coffee.deee4730-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-how-to-taste-coffee.deee4730-800.jpg"
+  },
+  "lesson-store-coffee-beans": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-store-coffee-beans.ded5194d-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-store-coffee-beans.ded5194d-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-store-coffee-beans.ded5194d-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-store-coffee-beans.ded5194d-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-store-coffee-beans.ded5194d-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-store-coffee-beans.ded5194d-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-store-coffee-beans.ded5194d-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-store-coffee-beans.ded5194d-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-store-coffee-beans.ded5194d-800.jpg"
   }
 }

@@ -2,7 +2,9 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import Photo from '../../../components/Photo.astro';
 import JsonLd from '../../../components/JsonLd.astro';
+import { photo } from '../../../lib/photos';
 import { pathBySlug, readingMinutes } from '../../../lib/learn';
 
 export async function getStaticPaths() {
@@ -36,6 +38,7 @@ const pathHome = `/learn/${data.path}/`;
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const url = `${site}/learn/${lesson.id}/`;
+const ogImagePath = photo(data.image).src;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -44,6 +47,7 @@ const schema = {
   url,
   name: data.title,
   headline: data.title,
+  image: `${site}${ogImagePath}`,
   description: data.excerpt,
   learningResourceType: 'Lesson',
   educationalLevel: 'Beginner',
@@ -60,6 +64,7 @@ const schema = {
 <Layout
   title={data.seoTitle ?? `${data.title} — KAVOVO`}
   description={data.seoDescription}
+  ogImage={ogImagePath}
   ogType="article"
 >
   <article class="mx-auto max-w-3xl px-5 py-12">
@@ -79,6 +84,17 @@ const schema = {
     <h1 class="mt-2 font-display text-4xl font-medium text-balance">{data.title}</h1>
     <p class="mt-4 text-lg text-ink-soft">{data.excerpt}</p>
     <p class="mt-3 text-sm text-ink-soft">{readingMinutes(data.readingTime)} read</p>
+
+    {/* Native 4:3, uncropped. These photos teach: a 16:9 crop cut the
+        thermometer reading off the temperature lesson. */}
+    <Photo
+      name={data.image}
+      alt={data.imageAlt}
+      sizes="(min-width: 768px) 768px, 100vw"
+      class="mt-8 aspect-[4/3] w-full rounded-lg object-cover"
+      loading="eager"
+      fetchpriority="high"
+    />
 
     <div class="lesson-body mt-10">
       <Content />

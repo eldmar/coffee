@@ -6,6 +6,7 @@ seoTitle: Coffee Grind Size Guide — KAVOVO
 seoDescription: Understand coffee grind sizes from Turkish coffee and espresso to pour-over, French press and cold brew.
 excerpt: Grind size controls how quickly water can extract flavour from coffee. Finer is faster; coarser is slower.
 readingTime: 6
+image: lesson-grind-size
 imageBrief: A clean row of coffee grounds progressing from powder-fine to coarse, photographed on a warm neutral surface.
 imageAlt: Coffee grounds arranged from extra-fine to coarse grind sizes.
 related:

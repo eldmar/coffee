@@ -6,6 +6,7 @@ seoTitle: How to Taste Coffee Without Overcomplicating It — KAVOVO
 seoDescription: Learn a simple way to taste coffee using sweetness, acidity, bitterness, body and aftertaste—no expert vocabulary required.
 excerpt: You do not need to identify elderflower at twenty paces. Start with sweetness, acidity, bitterness, body and aftertaste.
 readingTime: 5
+image: lesson-how-to-taste-coffee
 imageBrief: Two small cups of black coffee placed side by side with a simple notebook and pencil in the KAVOVO style.
 imageAlt: Two cups of coffee being compared beside a tasting notebook.
 related:

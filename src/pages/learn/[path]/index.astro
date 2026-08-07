@@ -25,7 +25,8 @@ const { path, index, lessons } = Astro.props;
 
 const totalMinutes = lessons.reduce((sum, l) => sum + l.data.readingTime, 0);
 const first = lessons[0];
-const ogImagePath = photo(first.data.image).src;
+// Lesson 1's photo doubles as the path's social card, until it has one.
+const ogImagePath = photo(first.data.image ?? 'hero').src;
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const url = `${site}/learn/${path.slug}/`;
@@ -94,10 +95,10 @@ const schema = {
         Start lesson 1
       </a>
       <a
-        href="/recipes/"
+        href={path.secondaryCta.href}
         class="rounded-md border border-ink/25 px-5 py-2.5 text-sm font-medium transition-colors hover:border-ink/50"
       >
-        Browse coffee recipes
+        {path.secondaryCta.label}
       </a>
     </div>
 
@@ -109,14 +110,16 @@ const schema = {
               href={lessonUrl(lesson.id)}
               class="group flex gap-4 rounded-lg border border-line bg-card p-4 transition-shadow hover:shadow-md sm:gap-5 sm:p-5"
             >
-              <Photo
-                name={lesson.data.image}
-                alt=""
-                sizes="(min-width: 640px) 176px, 112px"
-                pictureClass="block aspect-[4/3] w-28 shrink-0 self-start overflow-hidden rounded-md sm:w-44"
-                class="h-full w-full object-cover"
-                loading="lazy"
-              />
+              {lesson.data.image && (
+                <Photo
+                  name={lesson.data.image}
+                  alt=""
+                  sizes="(min-width: 640px) 176px, 112px"
+                  pictureClass="block aspect-[4/3] w-28 shrink-0 self-start overflow-hidden rounded-md sm:w-44"
+                  class="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              )}
               <span class="flex flex-col">
                 <span class="eyebrow" aria-hidden="true">
                   Lesson {lesson.data.order}

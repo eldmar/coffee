@@ -113,10 +113,11 @@ const lessons = defineCollection({
     seoDescription: z.string(),
     excerpt: z.string(),
     readingTime: z.number().int().positive(),
-    // Manifest key in src/lib/photos.json. The brief is kept as the record of
-    // what the shot was meant to be, in case it ever needs reshooting.
-    image: z.string(),
-    imageAlt: z.string(),
+    // Manifest key in src/lib/photos.json, set once the photo exists. The brief
+    // is the record of what to shoot; the alt text is written ahead of it so a
+    // new photo only needs the `image` line adding.
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
     imageBrief: z.string().optional(),
     // Where to go next once the lesson makes sense. Hand-picked per lesson;
     // hrefs are site-relative and checked by scripts/check-build.mjs.

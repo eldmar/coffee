@@ -38,7 +38,8 @@ const pathHome = `/learn/${data.path}/`;
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const url = `${site}/learn/${lesson.id}/`;
-const ogImagePath = photo(data.image).src;
+// Lessons without their own photo fall back to the site hero for social cards.
+const ogImagePath = photo(data.image ?? 'hero').src;
 
 const schema = {
   '@context': 'https://schema.org',
@@ -78,8 +79,7 @@ const schema = {
     />
 
     <span class="eyebrow mt-6 block">
-      <a href={pathHome} class="hover:underline">{pathTitle}</a>
-      &#183; Lesson {data.order} of {total}
+      <a href={pathHome} class="hover:underline">{pathTitle}</a>&#32;&#183; Lesson {data.order} of {total}
     </span>
     <h1 class="mt-2 font-display text-4xl font-medium text-balance">{data.title}</h1>
     <p class="mt-4 text-lg text-ink-soft">{data.excerpt}</p>
@@ -87,14 +87,18 @@ const schema = {
 
     {/* Native 4:3, uncropped. These photos teach: a 16:9 crop cut the
         thermometer reading off the temperature lesson. */}
-    <Photo
-      name={data.image}
-      alt={data.imageAlt}
-      sizes="(min-width: 768px) 768px, 100vw"
-      class="mt-8 aspect-[4/3] w-full rounded-lg object-cover"
-      loading="eager"
-      fetchpriority="high"
-    />
+    {
+      data.image && (
+        <Photo
+          name={data.image}
+          alt={data.imageAlt ?? ''}
+          sizes="(min-width: 768px) 768px, 100vw"
+          class="mt-8 aspect-[4/3] w-full rounded-lg object-cover"
+          loading="eager"
+          fetchpriority="high"
+        />
+      )
+    }
 
     <div class="lesson-body mt-10">
       <Content />
@@ -139,7 +143,7 @@ const schema = {
             <span class="eyebrow">Path complete</span>
             <p class="mt-1.5 text-sm text-ink-soft">
               {pathTitle} complete — explore the&#32;
-              <a href="/learn/#espresso" class="font-medium text-accent hover:underline">
+              <a href="/learn/" class="font-medium text-accent hover:underline">
                 other learning paths
               </a>
               &#32;or browse the&#32;

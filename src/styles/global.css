@@ -180,9 +180,10 @@ body {
   color: var(--color-ink-soft);
 }
 
-/* Tables carry the reference data in these lessons, so they must stay readable
-   on a phone. Astro 7's default Markdown processor takes no rehype plugins, so
-   there is no wrapper element to scroll: the table becomes its own scroll box
+/* Tables carry the reference data in these lessons. Cells wrap, so a table of
+   prose fits the text column instead of scrolling; the scroll box stays as the
+   fallback for genuinely wide tables on a phone. Astro 7's default Markdown
+   processor takes no rehype plugins, so the table is its own scroll container
    and the page never scrolls sideways. */
 .lesson-body table {
   display: block;
@@ -198,7 +199,9 @@ body {
   padding: 0.6rem 0.75rem;
   border-bottom: 1px solid var(--color-line);
   text-align: left;
-  white-space: nowrap;
+  vertical-align: top;
+  /* Enough for a short label to stay on one line, not enough to force a scroll. */
+  min-width: 6rem;
 }
 
 .lesson-body th {
@@ -208,6 +211,67 @@ body {
 
 .lesson-body td {
   color: var(--color-ink-soft);
+}
+
+/* On a phone a three-column table of prose collapses into unreadable ribbons,
+   so each row becomes a card and every cell carries its own column heading.
+   The labels are filled in by script; without it the plain table still works. */
+@media (max-width: 40rem) {
+  .lesson-body table:has(td[data-label]) {
+    display: block;
+    overflow: visible;
+    font-size: 1rem;
+  }
+
+  .lesson-body table:has(td[data-label]) thead {
+    /* Visually hidden: the headings now live on each cell. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .lesson-body table:has(td[data-label]) tbody,
+  .lesson-body table:has(td[data-label]) tr,
+  .lesson-body table:has(td[data-label]) td {
+    display: block;
+  }
+
+  .lesson-body table:has(td[data-label]) tr {
+    margin-top: 0.75rem;
+    padding: 0.25rem 1rem 0.75rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background-color: var(--color-card);
+  }
+
+  .lesson-body table:has(td[data-label]) td {
+    padding: 0.75rem 0 0;
+    border-bottom: 0;
+    min-width: 0;
+  }
+
+  .lesson-body table:has(td[data-label]) td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.15rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+
+  /* The first cell is the row's subject, so it reads as the card title. */
+  .lesson-body table:has(td[data-label]) td:first-child {
+    color: var(--color-ink);
+    font-weight: 500;
+  }
+
+  .lesson-body table:has(td[data-label]) td:first-child::before {
+    color: var(--color-ink-soft);
+  }
 }
 
 /* The three recurring lesson callouts: the short answer up top, the exercise
@@ -256,6 +320,72 @@ body {
 
 .lesson-body .callout--takeaway > h2 {
   color: var(--color-accent);
+}
+
+/* Compact next-lesson button, shown once the reader is into a long lesson.
+   It sits above the safe-area inset so it clears the iOS home indicator. */
+.jump-next {
+  position: fixed;
+  right: 1rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: min(20rem, calc(100vw - 2rem));
+  padding: 0.55rem 0.9rem;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-accent);
+  color: var(--color-accent-ink);
+  box-shadow: 0 8px 24px rgb(43 33 27 / 18%);
+  animation: jump-next-in 0.2s ease-out;
+}
+
+.jump-next__text {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.jump-next__label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.jump-next__title {
+  overflow: hidden;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jump-next svg {
+  flex-shrink: 0;
+}
+
+.jump-next[hidden] {
+  display: none;
+}
+
+.jump-next:hover {
+  background-color: var(--color-accent-dark);
+}
+
+@keyframes jump-next-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jump-next {
+    animation: none;
+  }
 }
 
 /* Sage on a sage panel is no focus indicator at all. Any dark brand surface

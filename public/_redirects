@@ -1,0 +1,4 @@
+# /sitemap.xml is the filename crawlers and humans guess first. Astro's sitemap
+# integration emits /sitemap-index.xml, which robots.txt points at, so this only
+# turns a dead guess into the real file.
+/sitemap.xml /sitemap-index.xml 301

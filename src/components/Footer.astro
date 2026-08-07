@@ -1,4 +1,6 @@
 ---
+import { LEARN_PATHS, pathHref } from '../lib/learn';
+
 const year = new Date().getFullYear();
 
 const columns = [
@@ -15,9 +17,9 @@ const columns = [
   {
     heading: 'Learn',
     links: [
-      { label: 'Coffee basics', href: '/learn/#basics' },
-      { label: 'Dial in espresso', href: '/learn/#espresso' },
-      { label: 'Understand your beans', href: '/learn/#beans' },
+      // Titles and destinations follow the paths themselves, so a path that
+      // gets published stops pointing at a hub anchor on its own.
+      ...LEARN_PATHS.map((path) => ({ label: path.title, href: pathHref(path) })),
       { label: 'All learning paths', href: '/learn/' },
     ],
   },

@@ -67,12 +67,30 @@ export const LEARN_PATHS = [
   {
     id: 'beans',
     slug: 'understand-your-beans',
-    title: 'Understand your beans',
+    title: 'Understand Your Beans',
     short: 'Origin, processing, roast, and flavor.',
     description:
       'Origin, processing, roast level, and flavor — how to read a bag of coffee and pick beans you will love.',
     image: '/images/learn-beans.jpg',
-    status: 'planned',
+    status: 'published',
+    seoTitle: 'Understand Your Coffee Beans — KAVOVO',
+    seoDescription:
+      'Learn how coffee species, origin, processing, roast, flavour notes and freshness shape what reaches your cup.',
+    intro: [
+      'A coffee bag can contain a surprising amount of information: species, country, region, variety, process, altitude, roast date and a list of flavours that may sound more like a fruit salad than breakfast.',
+      'Understand Your Beans is a seven-lesson path that turns those details into useful buying and brewing decisions. You will learn what Arabica and Robusta actually mean, why country of origin is only part of the flavour story, how coffee is processed and roasted, and how to judge freshness without treating the roast date like a countdown timer.',
+    ],
+    outcomes: [
+      'explain the practical differences between Arabica and Robusta;',
+      'use origin information without relying on stereotypes;',
+      'recognise washed, natural and honey processing;',
+      'choose a roast level that suits your taste and brewing method;',
+      'read the useful information on a coffee bag;',
+      'interpret flavour notes as sensory comparisons;',
+      'buy, rest and store coffee with a sensible freshness plan.',
+    ],
+    closing:
+      'You do not need to memorise producing regions or identify jasmine from across the kitchen. The aim is simpler: understand which details help you choose coffee you are more likely to enjoy.',
     secondaryCta: { label: 'Browse coffee recipes', href: '/recipes/' },
   },
 ] as const;

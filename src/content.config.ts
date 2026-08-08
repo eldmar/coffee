@@ -100,6 +100,16 @@ const guides = defineCollection({
     // "I want …" — the phrasing someone uses before they know the method name.
     intent: z.string(),
 
+    // Comparison table on /guides/. Difficulty lives here and nowhere else:
+    // on a recipe page it says nothing useful, but between methods it does.
+    serving: z.string(),
+    difficulty: z.enum(['Beginner', 'Intermediate', 'Advanced']),
+    equipmentCost: z.enum(['Low', 'Medium', 'High']),
+    cleaningEffort: z.string(),
+    // The shortcut chip above the table. One per method, so every column is
+    // reachable from the quick links.
+    quickPick: z.string(),
+
     // Quick start reads dose, water, time, brewer and the photo from this
     // recipe, so a recipe change cannot leave the guide quoting stale numbers.
     // Only what the recipe does not hold lives here.

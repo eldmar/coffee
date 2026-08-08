@@ -9,6 +9,11 @@ cupStyle: "Strong & intense"
 brewTime: "5–7 min"
 bestFor: "Stovetop coffee & milk drinks"
 intent: "I want strong coffee without a machine"
+serving: "90–300 ml"
+difficulty: Intermediate
+equipmentCost: Low
+cleaningEffort: "Moderate"
+quickPick: "Best without a machine"
 
 canonicalRecipe: moka-pot-classic
 grind: Medium-fine

@@ -9,6 +9,11 @@ cupStyle: "Clean to full-bodied"
 brewTime: "2–4 min"
 bestFor: "Everyday brewing & travel"
 intent: "I want something fast and forgiving"
+serving: "200–250 ml"
+difficulty: Beginner
+equipmentCost: Low
+cleaningEffort: "Very easy"
+quickPick: "Best for beginners"
 
 canonicalRecipe: aeropress-daily
 grind: Medium-fine

@@ -1,35 +1,230 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { methodIcons } from '../../lib/methodIcons';
 
 const guides = await getCollection('guides');
 const order = ['espresso', 'aeropress', 'v60', 'french-press', 'moka-pot'];
 const sorted = order
   .map((m) => guides.find((g) => g.data.method === m))
   .filter((g) => g !== undefined);
+
+// Each row reads one field off every guide, so the table cannot fall out of step
+// with the guide pages.
+const rows = [
+  { label: 'Cup style', value: (g: (typeof sorted)[number]) => g.data.cupStyle },
+  { label: 'Brew time', value: (g: (typeof sorted)[number]) => g.data.brewTime, footnote: 'espresso' },
+  { label: 'Typical serving', value: (g: (typeof sorted)[number]) => g.data.serving },
+  { label: 'Grind size', value: (g: (typeof sorted)[number]) => g.data.grind },
+  { label: 'Difficulty', value: (g: (typeof sorted)[number]) => g.data.difficulty },
+  { label: 'Equipment cost', value: (g: (typeof sorted)[number]) => g.data.equipmentCost },
+  { label: 'Cleaning', value: (g: (typeof sorted)[number]) => g.data.cleaningEffort },
+  { label: 'Best for', value: (g: (typeof sorted)[number]) => g.data.bestFor },
+];
 ---
 
-<Layout title="Brew Guides — KAVOVO" description="Step-by-step guides for every brew method: espresso, AeroPress, V60, French press, and moka pot.">
-  <section class="mx-auto max-w-6xl px-5 py-14">
-    <span class="eyebrow">Brew Guides</span>
-    <h1 class="mt-3 font-display text-4xl font-medium">Choose your brew method</h1>
-    <p class="mt-3 max-w-lg text-ink-soft">
-      Every method rewards slightly different habits. Pick yours and learn the handful of details that matter.
+<Layout
+  title="Compare Coffee Brewing Methods — KAVOVO"
+  description="Compare espresso, AeroPress, V60, French press and moka pot side by side: cup style, brew time, serving size, grind, difficulty, cost and cleaning."
+>
+  <div class="mx-auto max-w-6xl px-5 py-14" data-compare>
+    <Breadcrumbs trail={[{ label: 'Brew Guides' }]} />
+
+    <span class="eyebrow mt-6 block">Brew guides</span>
+    <h1 class="mt-2 font-display text-4xl font-medium text-balance">
+      Compare coffee brewing methods
+    </h1>
+    <p class="mt-4 max-w-2xl text-lg text-ink-soft">
+      Each method produces a different kind of cup. Compare flavour, brew time, effort and
+      equipment to find the one that fits your routine.
     </p>
-    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {sorted.map((guide) => (
-        <a
-          href={`/guides/${guide.id}/`}
-          class="group rounded-lg border border-line bg-card p-6 transition-shadow hover:shadow-md"
-        >
-          <h2 class="font-display text-2xl font-medium">{guide.data.title}</h2>
-          <p class="mt-2 text-sm text-ink-soft">{guide.data.description}</p>
-          <span class="mt-4 inline-block text-sm font-medium text-accent">
-            Read the guide
-            <span class="inline-block transition-transform group-hover:translate-x-1" aria-hidden="true">&#8594;</span>
-          </span>
-        </a>
-      ))}
+
+    {/* One shortcut per method, so every column in the table is reachable. */}
+    <ul class="mt-6 flex flex-wrap gap-2">
+      {
+        sorted.map((guide) => (
+          <li>
+            <button
+              type="button"
+              data-pick={guide.data.method}
+              aria-pressed="false"
+              class="compare-pick min-h-11 rounded-full border border-line bg-card px-4 text-sm font-medium transition-colors hover:border-ink/30"
+            >
+              {guide.data.quickPick}
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-6 text-sm text-ink-soft sm:hidden" aria-hidden="true">Swipe to compare &#8594;</p>
+
+    <div class="compare-scroll mt-3 sm:mt-8">
+      <table class="compare-table">
+        <caption class="sr-only">
+          Coffee brewing methods compared by cup style, brew time, serving size, grind, difficulty,
+          equipment cost, cleaning and what each suits
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col" class="compare-corner">
+              <span class="sr-only">Property</span>
+            </th>
+            {
+              sorted.map((guide) => (
+                <th scope="col" data-method={guide.data.method}>
+                  <a href={`/guides/${guide.id}/`} class="flex flex-col items-center gap-2">
+                    <span class="flex h-11 w-11 items-center justify-center rounded-full bg-paper">
+                      <svg
+                        width="26"
+                        height="26"
+                        viewBox="0 0 48 48"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linejoin="round"
+                        stroke-linecap="round"
+                        aria-hidden="true"
+                        set:html={methodIcons[guide.data.method]}
+                      />
+                    </span>
+                    <span class="font-display text-lg font-medium">{guide.data.title}</span>
+                  </a>
+                </th>
+              ))
+            }
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((row) => (
+              <tr>
+                <th scope="row" class="compare-corner">{row.label}</th>
+                {sorted.map((guide) => (
+                  <td data-method={guide.data.method}>
+                    {row.value(guide)}
+                    {row.footnote === guide.data.method && (
+                      <a href="#warm-up-note" class="align-super text-xs text-accent">*</a>
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
     </div>
-  </section>
+
+    <p id="warm-up-note" class="mt-3 scroll-mt-24 text-sm text-ink-soft">
+      * Espresso brew time excludes machine warm-up and preparation.
+    </p>
+
+    <section class="mt-12">
+      <h2 class="font-display text-2xl font-medium">Not sure which one to choose?</h2>
+      <ul class="mt-4 flex flex-col gap-2 text-sm">
+        {
+          sorted.map((guide) => (
+            <li>
+              <a
+                href={`/guides/${guide.id}/`}
+                data-pick={guide.data.method}
+                class="compare-hint group flex flex-wrap items-baseline gap-x-2 gap-y-0.5 py-1 text-ink-soft hover:text-ink"
+              >
+                <span>{guide.data.intent}</span>
+                <span aria-hidden="true">&#8594;</span>
+                <span class="font-medium text-accent group-hover:underline">{guide.data.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="mt-12">
+      <h2 class="sr-only">Brewing methods in detail</h2>
+      <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          sorted.map((guide) => (
+            <li
+              class="compare-card flex flex-col rounded-lg border border-line bg-card p-6 transition duration-200"
+              data-method={guide.data.method}
+            >
+              <span class="flex h-14 w-14 items-center justify-center rounded-full bg-paper">
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 48 48"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                  aria-hidden="true"
+                  set:html={methodIcons[guide.data.method]}
+                />
+              </span>
+              <h3 class="mt-4 font-display text-xl font-medium">{guide.data.title}</h3>
+              <p class="mt-1 text-sm font-medium text-ink-soft">{guide.data.cupStyle}</p>
+              <p class="mt-2 text-xs text-ink-soft">
+                {guide.data.brewTime} &#183; {guide.data.difficulty} &#183; {guide.data.serving}
+              </p>
+              <p class="mt-3 flex-1 text-sm text-ink-soft">{guide.data.summary}</p>
+              {/*
+                Two destinations, so the card is not one big link: learning the
+                method and brewing something with it are different intents.
+              */}
+              <div class="mt-5 flex flex-col gap-2 text-sm font-medium">
+                <a href={`/guides/${guide.id}/`} class="compare-cta text-accent">
+                  View {guide.data.title} guide
+                  <span class="compare-cta__arrow inline-block" aria-hidden="true">&#8594;</span>
+                </a>
+                <a href={`/recipes/?method=${guide.data.method}`} class="compare-cta text-accent">
+                  View {guide.data.title} recipes
+                  <span class="compare-cta__arrow inline-block" aria-hidden="true">&#8594;</span>
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
 </Layout>
+
+<script>
+  /**
+   * The quick-pick chips highlight one method across the table and its card.
+   * Pressing the same chip again clears it, so nothing gets stuck highlighted.
+   */
+  const root = document.querySelector<HTMLElement>('[data-compare]');
+  if (root) {
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('.compare-pick')];
+
+    const apply = (method: string | null) => {
+      if (method) root.dataset.highlight = method;
+      else delete root.dataset.highlight;
+      for (const chip of chips) {
+        chip.setAttribute('aria-pressed', String(chip.dataset.pick === method));
+      }
+    };
+
+    for (const chip of chips) {
+      chip.addEventListener('click', () => {
+        apply(root.dataset.highlight === chip.dataset.pick ? null : (chip.dataset.pick ?? null));
+      });
+    }
+
+    // Hovering a suggestion previews the same highlight without committing to it.
+    for (const hint of root.querySelectorAll<HTMLElement>('.compare-hint')) {
+      const preview = (on: boolean) => {
+        if (root.dataset.highlight && !on) return;
+        root.dataset.preview = on ? (hint.dataset.pick ?? '') : '';
+      };
+      hint.addEventListener('mouseenter', () => preview(true));
+      hint.addEventListener('mouseleave', () => preview(false));
+      hint.addEventListener('focus', () => preview(true));
+      hint.addEventListener('blur', () => preview(false));
+    }
+  }
+</script>

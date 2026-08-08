@@ -372,6 +372,124 @@ body {
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Comparison table on /guides/. Five columns do not fit a phone, so the table
+   scrolls sideways inside its own box while the property column stays put.
+   --------------------------------------------------------------------------- */
+.compare-scroll {
+  overflow-x: auto;
+  /* Room for the focus ring on the header links, which would otherwise clip. */
+  padding: 4px;
+  margin: -4px;
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.compare-table th,
+.compare-table td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-line);
+  font-size: 0.9375rem;
+  /* Wide enough to read a two-word value without wrapping every line. */
+  min-width: 11rem;
+}
+
+/* Not sticky vertically: the scroll container is horizontal, so a sticky header
+   would stick inside that box rather than to the viewport — and offsetting it
+   simply pushed it down over the first row. The table is eight rows, so the
+   header stays in view for most of it anyway. */
+.compare-table thead th {
+  background-color: var(--color-paper);
+  padding-block: 1rem;
+  border-bottom-width: 2px;
+}
+
+.compare-table td {
+  color: var(--color-ink-soft);
+  background-color: var(--color-card);
+}
+
+/* The property column stays visible while the methods scroll past it. */
+.compare-table .compare-corner {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 8.5rem;
+  background-color: var(--color-paper);
+  border-right: 1px solid var(--color-line);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+
+.compare-table tbody tr:last-child th,
+.compare-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* A chip, or a hovered suggestion, lifts one method out of the table. */
+[data-highlight='espresso'] [data-method='espresso'],
+[data-highlight='aeropress'] [data-method='aeropress'],
+[data-highlight='v60'] [data-method='v60'],
+[data-highlight='french-press'] [data-method='french-press'],
+[data-highlight='moka-pot'] [data-method='moka-pot'],
+[data-preview='espresso'] [data-method='espresso'],
+[data-preview='aeropress'] [data-method='aeropress'],
+[data-preview='v60'] [data-method='v60'],
+[data-preview='french-press'] [data-method='french-press'],
+[data-preview='moka-pot'] [data-method='moka-pot'] {
+  background-color: rgb(164 59 50 / 6%);
+}
+
+.compare-card[data-method] {
+  border-color: var(--color-line);
+}
+
+[data-highlight] .compare-card[data-method],
+[data-preview] .compare-card[data-method] {
+  border-color: var(--color-line);
+}
+
+[data-highlight='espresso'] .compare-card[data-method='espresso'],
+[data-highlight='aeropress'] .compare-card[data-method='aeropress'],
+[data-highlight='v60'] .compare-card[data-method='v60'],
+[data-highlight='french-press'] .compare-card[data-method='french-press'],
+[data-highlight='moka-pot'] .compare-card[data-method='moka-pot'] {
+  border-color: rgb(164 59 50 / 45%);
+}
+
+.compare-pick[aria-pressed='true'] {
+  border-color: rgb(164 59 50 / 45%);
+  background-color: rgb(164 59 50 / 6%);
+}
+
+/* Hover: a darker edge and a slightly warmer face, per the brief. */
+.compare-card:hover {
+  border-color: rgb(43 33 27 / 25%);
+  background-color: var(--color-paper);
+}
+
+.compare-cta:hover .compare-cta__arrow {
+  transform: translateX(4px);
+}
+
+.compare-cta__arrow {
+  margin-left: 0.25rem;
+  transition: transform 0.15s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .compare-cta__arrow {
+    transition: none;
+  }
+}
+
 /* Compact next-lesson button, shown once the reader is into a long lesson.
    It sits above the safe-area inset so it clears the iOS home indicator. */
 .jump-next {

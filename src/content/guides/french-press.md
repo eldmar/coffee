@@ -9,6 +9,11 @@ cupStyle: "Full-bodied & textured"
 brewTime: "6–8 min"
 bestFor: "Sharing & slow mornings"
 intent: "I want rich coffee with minimal effort"
+serving: "300–1,000 ml"
+difficulty: Beginner
+equipmentCost: Low
+cleaningEffort: "Moderate"
+quickPick: "Best for sharing"
 
 canonicalRecipe: classic-french-press
 grind: Medium-coarse

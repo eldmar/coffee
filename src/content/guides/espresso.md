@@ -9,6 +9,11 @@ cupStyle: "Rich & concentrated"
 brewTime: "25–30 sec"
 bestFor: "Short coffees & milk drinks"
 intent: "I want café-style drinks"
+serving: "25–40 ml"
+difficulty: Advanced
+equipmentCost: High
+cleaningEffort: "Moderate"
+quickPick: "Best for milk drinks"
 
 canonicalRecipe: espresso
 grind: Fine

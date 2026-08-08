@@ -82,9 +82,17 @@ const guides = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/guides' }),
   schema: z.object({
     title: z.string(),
+    // description is the meta description and the lede on the guide page.
     description: z.string(),
     method: z.enum(['espresso', 'aeropress', 'v60', 'french-press', 'moka-pot']),
-    tagline: z.string(),
+    // summary and the three comparison fields drive the homepage chooser, so
+    // the methods can be compared rather than merely listed.
+    summary: z.string(),
+    cupStyle: z.string(),
+    brewTime: z.string(),
+    bestFor: z.string(),
+    // "I want …" — the phrasing someone uses before they know the method name.
+    intent: z.string(),
   }),
 });
 

@@ -2,7 +2,11 @@
 title: Espresso
 description: How to dial in rich, balanced espresso at home — dose, grind, time, and taste.
 method: espresso
-tagline: Bold, rich, and full of crema.
+summary: "Concentrated, syrupy and intense. The base for cappuccino, flat white and most café-style drinks."
+cupStyle: "Rich & concentrated"
+brewTime: "25–30 sec"
+bestFor: "Short coffees & milk drinks"
+intent: "I want café-style drinks"
 ---
 
 Espresso is a small, concentrated brew made by forcing hot water through finely ground coffee at high pressure. Start from the classic recipe — 18 g in, 36 g out, in 25–30 seconds — and adjust the grind until the shot tastes balanced: finer if it's sour and fast, coarser if it's bitter and slow.

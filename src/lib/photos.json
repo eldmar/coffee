@@ -2285,5 +2285,54 @@
       }
     ],
     "src": "/img/lesson-coffee-freshness-roast-dates.b6ec2a55-800.jpg"
+  },
+  "journal-why-we-built-kavovo": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/journal-why-we-built-kavovo.2321ffae-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/journal-why-we-built-kavovo.2321ffae-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/journal-why-we-built-kavovo.2321ffae-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/journal-why-we-built-kavovo.2321ffae-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/journal-why-we-built-kavovo.2321ffae-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/journal-why-we-built-kavovo.2321ffae-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/journal-why-we-built-kavovo.2321ffae-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/journal-why-we-built-kavovo.2321ffae-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/journal-why-we-built-kavovo.2321ffae-800.jpg"
   }
 }

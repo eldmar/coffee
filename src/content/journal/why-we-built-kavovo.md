@@ -5,7 +5,8 @@ excerpt: We did not begin with a roastery or a café. We began with questions—
 date: 2026-08-07
 category: Behind KAVOVO
 readingTime: 6
-imageAlt: A KAVOVO coffee setup with a ceramic cup, brewer and coffee beans in warm morning light.
+image: journal-why-we-built-kavovo
+imageAlt: A ceramic cup of black coffee beside a small dish of coffee beans in warm morning light.
 ---
 
 We did not begin with a roastery, a café or a dramatic plan to change the coffee industry. We began with questions.

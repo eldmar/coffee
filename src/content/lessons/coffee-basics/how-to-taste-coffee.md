@@ -10,10 +10,10 @@ image: lesson-how-to-taste-coffee
 imageBrief: Two small cups of black coffee placed side by side with a simple notebook and pencil in the KAVOVO style.
 imageAlt: Two cups of coffee being compared beside a tasting notebook.
 related:
-  - label: Why your coffee tastes different every morning
-    href: /journal/why-your-coffee-tastes-different-every-morning/
-  - label: The case for slow mornings
-    href: /journal/the-case-for-slow-mornings/
+  - label: What Coffee Flavour Notes Actually Mean
+    href: /learn/understand-your-beans/coffee-flavour-notes/
+  - label: Sour vs Bitter Espresso
+    href: /learn/dial-in-espresso/sour-vs-bitter-espresso/
 ---
 
 <div class="callout callout--answer">

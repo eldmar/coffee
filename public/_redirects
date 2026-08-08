@@ -2,3 +2,8 @@
 # integration emits /sitemap-index.xml, which robots.txt points at, so this only
 # turns a dead guess into the real file.
 /sitemap.xml /sitemap-index.xml 301
+
+# Two Journal articles were retired. Both were already indexed, so send anyone
+# arriving from a search result or bookmark to the Journal rather than a 404.
+/journal/the-case-for-slow-mornings/ /journal/ 301
+/journal/why-your-coffee-tastes-different-every-morning/ /journal/ 301

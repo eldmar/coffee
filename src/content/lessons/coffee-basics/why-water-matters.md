@@ -12,8 +12,8 @@ imageAlt: Filtered water in a glass carafe beside a home coffee brewer.
 related:
   - label: Espresso guide
     href: /guides/espresso/
-  - label: Why your coffee tastes different every morning
-    href: /journal/why-your-coffee-tastes-different-every-morning/
+  - label: V60 guide
+    href: /guides/v60/
 ---
 
 <div class="callout callout--answer">

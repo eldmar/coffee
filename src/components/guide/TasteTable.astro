@@ -1,0 +1,38 @@
+---
+interface Props {
+  method: string;
+  adjustments: { result: string; cause: string; change: string }[];
+}
+
+const { method, adjustments } = Astro.props;
+const columns = ['Result', 'Likely cause', 'Change first'];
+---
+
+<section id="adjust" class="guide-section">
+  <h2 class="font-display text-2xl font-medium">Adjust by taste</h2>
+  <p class="mt-4 text-ink-soft">
+    Make the change in the last column, brew again, then taste before changing anything else.
+  </p>
+
+  {/*
+    data-label is set here rather than by script, because the rows are rendered
+    from data. Below 40rem the CSS turns each row into a labelled card.
+  */}
+  <table class="data-table mt-5">
+    <caption class="sr-only">What to change when a {method} brew tastes wrong</caption>
+    <thead>
+      <tr>{columns.map((column) => <th scope="col">{column}</th>)}</tr>
+    </thead>
+    <tbody>
+      {
+        adjustments.map((row) => (
+          <tr>
+            <td data-label={columns[0]}>{row.result}</td>
+            <td data-label={columns[1]}>{row.cause}</td>
+            <td data-label={columns[2]}>{row.change}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</section>

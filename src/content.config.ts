@@ -41,6 +41,9 @@ const recipes = defineCollection({
     totalTime: z.number(),
     // Set when a range is more honest than a single number, e.g. "12–18 hr".
     totalTimeLabel: z.string().optional(),
+    // Set when minutes are the wrong unit, e.g. an espresso shot in seconds.
+    // Brew guides read their Quick start time from here, so it stays canonical.
+    brewTimeLabel: z.string().optional(),
     yield: z.string().default('1 drink'),
     // Ground coffee going in, and the volume of finished drink coming out —
     // not the same thing as the capacity of the cup it is served in.
@@ -78,6 +81,8 @@ const recipes = defineCollection({
   }),
 });
 
+const namedNote = z.object({ name: z.string(), note: z.string() });
+
 const guides = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/guides' }),
   schema: z.object({
@@ -85,14 +90,57 @@ const guides = defineCollection({
     // description is the meta description and the lede on the guide page.
     description: z.string(),
     method: z.enum(['espresso', 'aeropress', 'v60', 'french-press', 'moka-pot']),
-    // summary and the three comparison fields drive the homepage chooser, so
-    // the methods can be compared rather than merely listed.
+    readingTime: z.number().int().positive(),
+
+    // The homepage chooser compares methods with these five.
     summary: z.string(),
     cupStyle: z.string(),
     brewTime: z.string(),
     bestFor: z.string(),
     // "I want …" — the phrasing someone uses before they know the method name.
     intent: z.string(),
+
+    // Quick start reads dose, water, time, brewer and the photo from this
+    // recipe, so a recipe change cannot leave the guide quoting stale numbers.
+    // Only what the recipe does not hold lives here.
+    canonicalRecipe: z.string(),
+    grind: z.string(),
+    temperature: z.string(),
+    // Espresso's basket is not a recipe field; every other method has brewerSize.
+    brewerNote: z.string().optional(),
+
+    intro: z.array(z.string()),
+    equipmentEssential: z.array(namedNote),
+    equipmentOptional: z.array(namedNote),
+    howItWorks: z.array(z.string()),
+    // Each step says what to do and why it matters.
+    technique: z.array(z.object({ action: z.string(), why: z.string() })),
+    variables: z.array(
+      z.object({ name: z.string(), effect: z.string(), when: z.string() }),
+    ),
+    tasteAdjustments: z.array(
+      z.object({ result: z.string(), cause: z.string(), change: z.string() }),
+    ),
+    choosingCoffee: z.array(z.string()),
+    // Espresso only: milk is part of the method rather than an afterthought.
+    milk: z.array(z.string()).optional(),
+    troubleshooting: z.array(
+      z.object({
+        problem: z.string(),
+        cause: z.string(),
+        first: z.string(),
+        next: z.string(),
+      }),
+    ),
+    cleaning: z.array(z.string()),
+    // Site-relative hrefs, checked by scripts/check-build.mjs.
+    relatedLearning: z.array(
+      z.object({ label: z.string(), href: z.string().startsWith('/'), why: z.string() }),
+    ),
+    // Used once per page, above the technique steps.
+    keyPoint: z.string(),
+    // A safety warning where the method has one, e.g. the moka pot valve.
+    notice: z.string().optional(),
   }),
 });
 

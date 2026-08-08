@@ -185,7 +185,8 @@ body {
    fallback for genuinely wide tables on a phone. Astro 7's default Markdown
    processor takes no rehype plugins, so the table is its own scroll container
    and the page never scrolls sideways. */
-.prose-body table {
+.prose-body table,
+.data-table {
   display: block;
   overflow-x: auto;
   max-width: 100%;
@@ -195,7 +196,9 @@ body {
 }
 
 .prose-body th,
-.prose-body td {
+.prose-body td,
+.data-table th,
+.data-table td {
   padding: 0.6rem 0.75rem;
   border-bottom: 1px solid var(--color-line);
   text-align: left;
@@ -204,12 +207,14 @@ body {
   min-width: 6rem;
 }
 
-.prose-body th {
+.prose-body th,
+.data-table th {
   font-weight: 600;
   color: var(--color-ink);
 }
 
-.prose-body td {
+.prose-body td,
+.data-table td {
   color: var(--color-ink-soft);
 }
 
@@ -217,13 +222,15 @@ body {
    so each row becomes a card and every cell carries its own column heading.
    The labels are filled in by script; without it the plain table still works. */
 @media (max-width: 40rem) {
-  .prose-body table:has(td[data-label]) {
+  .prose-body table:has(td[data-label]),
+  .data-table:has(td[data-label]) {
     display: block;
     overflow: visible;
     font-size: 1rem;
   }
 
-  .prose-body table:has(td[data-label]) thead {
+  .prose-body table:has(td[data-label]) thead,
+  .data-table:has(td[data-label]) thead {
     /* Visually hidden: the headings now live on each cell. */
     position: absolute;
     width: 1px;
@@ -234,11 +241,15 @@ body {
 
   .prose-body table:has(td[data-label]) tbody,
   .prose-body table:has(td[data-label]) tr,
-  .prose-body table:has(td[data-label]) td {
+  .prose-body table:has(td[data-label]) td,
+  .data-table:has(td[data-label]) tbody,
+  .data-table:has(td[data-label]) tr,
+  .data-table:has(td[data-label]) td {
     display: block;
   }
 
-  .prose-body table:has(td[data-label]) tr {
+  .prose-body table:has(td[data-label]) tr,
+  .data-table:has(td[data-label]) tr {
     margin-top: 0.75rem;
     padding: 0.25rem 1rem 0.75rem;
     border: 1px solid var(--color-line);
@@ -246,13 +257,15 @@ body {
     background-color: var(--color-card);
   }
 
-  .prose-body table:has(td[data-label]) td {
+  .prose-body table:has(td[data-label]) td,
+  .data-table:has(td[data-label]) td {
     padding: 0.75rem 0 0;
     border-bottom: 0;
     min-width: 0;
   }
 
-  .prose-body table:has(td[data-label]) td::before {
+  .prose-body table:has(td[data-label]) td::before,
+  .data-table:has(td[data-label]) td::before {
     content: attr(data-label);
     display: block;
     margin-bottom: 0.15rem;
@@ -264,12 +277,14 @@ body {
   }
 
   /* The first cell is the row's subject, so it reads as the card title. */
-  .prose-body table:has(td[data-label]) td:first-child {
+  .prose-body table:has(td[data-label]) td:first-child,
+  .data-table:has(td[data-label]) td:first-child {
     color: var(--color-ink);
     font-weight: 500;
   }
 
-  .prose-body table:has(td[data-label]) td:first-child::before {
+  .prose-body table:has(td[data-label]) td:first-child::before,
+  .data-table:has(td[data-label]) td:first-child::before {
     color: var(--color-ink-soft);
   }
 }
@@ -320,6 +335,41 @@ body {
 
 .prose-body .callout--takeaway > h2 {
   color: var(--color-accent);
+}
+
+/* Brew guide sections. One rhythm for every section, wherever it is rendered
+   from, and an anchor offset that clears the sticky header. */
+.guide-section {
+  margin-top: 3rem;
+  scroll-margin-top: 6rem;
+}
+
+.guide-section:first-child {
+  margin-top: 0;
+}
+
+/* Native disclosures used for the contents list and each troubleshooting item. */
+.guide-detail[open] .guide-detail__chevron,
+.guide-toc[open] .guide-toc__chevron {
+  transform: rotate(180deg);
+}
+
+.guide-toc > summary,
+.guide-detail > summary {
+  list-style: none;
+}
+
+.guide-toc > summary::-webkit-details-marker,
+.guide-detail > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* From the large breakpoint the contents is a plain sidebar list, not a
+   disclosure, so its control disappears and the panel is always shown. */
+@media (min-width: 64rem) {
+  .guide-toc > summary {
+    display: none;
+  }
 }
 
 /* Compact next-lesson button, shown once the reader is into a long lesson.

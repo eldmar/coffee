@@ -1,0 +1,16 @@
+---
+/** Heading plus body copy — the shape every prose section on a guide shares. */
+interface Props {
+  id: string;
+  title: string;
+  paragraphs?: string[];
+}
+
+const { id, title, paragraphs } = Astro.props;
+---
+
+<section id={id} class="guide-section">
+  <h2 class="font-display text-2xl font-medium">{title}</h2>
+  {paragraphs?.map((text) => <p class="mt-4 leading-relaxed text-ink-soft">{text}</p>)}
+  <slot />
+</section>

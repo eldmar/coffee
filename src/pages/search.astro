@@ -54,7 +54,22 @@ const docs: SearchDoc[] = [
     description: g.data.description,
     url: `/guides/${g.id}/`,
     meta: 'Brew guide',
-    text: [g.data.title, g.data.description, g.data.summary, g.data.bestFor, g.data.intent, plain(g.body ?? '')]
+    text: [
+      g.data.title,
+      g.data.description,
+      g.data.summary,
+      g.data.bestFor,
+      g.data.intent,
+      g.data.grind,
+      ...g.data.intro,
+      ...g.data.howItWorks,
+      ...g.data.technique.flatMap((s) => [s.action, s.why]),
+      ...g.data.variables.map((v) => v.name),
+      ...g.data.choosingCoffee,
+      ...(g.data.milk ?? []),
+      ...g.data.troubleshooting.flatMap((t) => [t.problem, t.cause, t.first]),
+      ...g.data.cleaning,
+    ]
       .join(' ')
       .toLowerCase(),
   })),

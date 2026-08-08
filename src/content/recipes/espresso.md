@@ -10,6 +10,7 @@ temperature: hot
 milk: black
 prepTime: 3
 brewTime: 2
+brewTimeLabel: "25–30 sec"
 activeTime: 5
 totalTime: 5
 yield: "1 double shot"

@@ -1,0 +1,53 @@
+---
+import { humanDuration } from '../../lib/recipes';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  guide: CollectionEntry<'guides'>['data'];
+  recipe: CollectionEntry<'recipes'>;
+}
+
+const { guide, recipe } = Astro.props;
+const r = recipe.data;
+
+/**
+ * Every number here comes from the canonical recipe, so a recipe change cannot
+ * leave the guide quoting a dose it no longer uses. Only grind and temperature
+ * live on the guide, because the recipe does not hold them.
+ */
+const facts = [
+  ['Coffee', r.dose],
+  [r.water ? 'Water' : 'Yield', r.water ?? r.drinkYield],
+  ['Grind', guide.grind],
+  ['Water temperature', guide.temperature],
+  ['Brew time', r.brewTimeLabel ?? humanDuration(r.brewTime)],
+  ['Brewer', r.brewerSize ?? guide.brewerNote ?? r.vessel.name],
+] as const;
+---
+
+<section id="quick-start" class="guide-section">
+  <h2 class="font-display text-2xl font-medium">Quick start</h2>
+  <div class="mt-4 rounded-lg border-2 border-accent/25 bg-card p-6">
+    <dl class="grid grid-cols-2 gap-x-6 gap-y-5 lg:grid-cols-3">
+      {
+        facts.map(([label, value]) => (
+          <div>
+            <dt class="text-[0.6875rem] font-semibold tracking-[0.14em] text-ink-soft uppercase">
+              {label}
+            </dt>
+            <dd class="mt-1 font-medium">{value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <a
+      href={`/recipes/${recipe.id}/`}
+      class="group mt-6 inline-flex min-h-11 items-center rounded-md bg-accent px-5 text-sm font-medium text-accent-ink transition-colors hover:bg-accent-dark"
+    >
+      Open the printable {r.title} recipe
+      <span class="ml-1.5 inline-block transition-transform group-hover:translate-x-1" aria-hidden="true">
+        &#8594;
+      </span>
+    </a>
+  </div>
+</section>

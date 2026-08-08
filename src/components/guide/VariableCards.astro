@@ -1,0 +1,37 @@
+---
+interface Props {
+  variables: { name: string; effect: string; when: string }[];
+}
+
+const { variables } = Astro.props;
+---
+
+<section id="variables" class="guide-section">
+  <h2 class="font-display text-2xl font-medium">Variables that matter</h2>
+  <p class="mt-4 text-ink-soft">
+    Change one at a time. Two changes at once tell you nothing about either.
+  </p>
+  <ul class="mt-5 grid gap-4 sm:grid-cols-2">
+    {
+      variables.map((variable) => (
+        <li class="rounded-lg border border-line bg-card p-5">
+          <h3 class="font-medium">{variable.name}</h3>
+          <dl class="mt-3 flex flex-col gap-3 text-sm">
+            <div>
+              <dt class="text-[0.6875rem] font-semibold tracking-[0.14em] text-ink-soft uppercase">
+                What changes
+              </dt>
+              <dd class="mt-1 text-ink-soft">{variable.effect}</dd>
+            </div>
+            <div>
+              <dt class="text-[0.6875rem] font-semibold tracking-[0.14em] text-ink-soft uppercase">
+                When to reach for it
+              </dt>
+              <dd class="mt-1 text-ink-soft">{variable.when}</dd>
+            </div>
+          </dl>
+        </li>
+      ))
+    }
+  </ul>
+</section>

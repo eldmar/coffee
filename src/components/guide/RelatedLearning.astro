@@ -1,0 +1,29 @@
+---
+interface Props {
+  lessons: { label: string; href: string; why: string }[];
+}
+
+const { lessons } = Astro.props;
+---
+
+<section id="related-learning" class="guide-section">
+  <h2 class="font-display text-2xl font-medium">Related learning</h2>
+  <p class="mt-4 text-ink-soft">
+    Lessons that explain the reasoning behind the choices on this page.
+  </p>
+  <ul class="mt-5 grid gap-3 sm:grid-cols-2">
+    {
+      lessons.map((lesson) => (
+        <li class="flex">
+          <a
+            href={lesson.href}
+            class="group flex flex-1 flex-col rounded-lg border border-line bg-card p-5 transition duration-200 hover:border-ink/25 hover:shadow-md"
+          >
+            <span class="font-medium text-accent group-hover:underline">{lesson.label}</span>
+            <span class="mt-1.5 text-sm text-ink-soft">{lesson.why}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>

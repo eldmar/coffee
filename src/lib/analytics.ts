@@ -1,0 +1,222 @@
+import posthog from 'posthog-js';
+
+/**
+ * Privacy-first product analytics for the Brew Assistant.
+ *
+ * Anonymous and aggregate only: no profiles, no session recording, no
+ * autocapture, and nothing about the coffee itself. Recipe numbers, free text
+ * and the local session id never leave the browser — see PROHIBITED below.
+ */
+
+export type BrewMethod = 'espresso' | 'v60' | 'aeropress' | 'french_press';
+
+export type BrewEntryPoint = 'homepage' | 'assistant_page' | 'guide' | 'recipe' | 'direct';
+
+export type BrewIssue = 'sour' | 'bitter' | 'weak' | 'dry' | 'too_fast' | 'too_slow' | 'not_sure';
+
+export type BrewAdjustment =
+  | 'grind'
+  | 'dose'
+  | 'yield'
+  | 'water'
+  | 'time'
+  | 'temperature'
+  | 'technique';
+
+export type BrewDirection = 'finer' | 'coarser' | 'increase' | 'decrease' | 'improve';
+
+export type BrewAnalyticsEventMap = {
+  brew_assistant_opened: {
+    entry_point: BrewEntryPoint;
+    returning_brewer: boolean;
+  };
+  brew_assistant_started: {
+    entry_point: BrewEntryPoint;
+    method_group: 'espresso' | 'filter';
+    initial_issue: BrewIssue;
+  };
+  brew_method_selected: {
+    method: BrewMethod;
+    entry_point: BrewEntryPoint;
+  };
+  brew_diagnosis_completed: {
+    method: BrewMethod;
+    rule_id: string;
+    adjustment: BrewAdjustment;
+    direction: BrewDirection;
+    attempt_number: number;
+    entry_point: BrewEntryPoint;
+  };
+  brew_next_attempt_started: {
+    method: BrewMethod;
+    previous_rule_id: string;
+    attempt_number: number;
+  };
+  brew_next_attempt_completed: {
+    method: BrewMethod;
+    rule_id: string;
+    attempt_number: number;
+  };
+  brew_feedback_submitted: {
+    method: BrewMethod;
+    rule_id: string;
+    helpful: boolean;
+    attempt_number: number;
+  };
+  brew_related_content_clicked: {
+    method: BrewMethod;
+    rule_id: string;
+    content_type: 'learn' | 'guide' | 'recipe';
+    content_slug: string;
+  };
+  brew_validation_failed: {
+    method: BrewMethod;
+    step: 'method' | 'recipe' | 'taste';
+    error_category: string;
+  };
+};
+
+type AnalyticsValue = string | number | boolean | null;
+type AnalyticsProperties = Record<string, AnalyticsValue>;
+
+/**
+ * Property names that must never reach an analytics service. Checked at
+ * runtime rather than trusted, because a call site is easy to get wrong and a
+ * leak is not something you can take back.
+ */
+const PROHIBITED = new Set([
+  'dose',
+  'yield',
+  'yieldOut',
+  'water',
+  'time',
+  'temperature',
+  'notes',
+  'session_id',
+  'sessionId',
+  'email',
+  'name',
+  'ip',
+  'coffee',
+  'origin',
+  'referrer',
+  'url',
+]);
+
+let initialised = false;
+let warned = false;
+
+/** Enabled in production, or locally when explicitly switched on. */
+const enabled = () =>
+  import.meta.env.PROD || import.meta.env.PUBLIC_ANALYTICS_ENABLED === 'true';
+
+export function initAnalytics(): void {
+  if (initialised || typeof window === 'undefined' || !enabled()) return;
+
+  const projectKey = import.meta.env.PUBLIC_POSTHOG_KEY;
+  const apiHost = import.meta.env.PUBLIC_POSTHOG_HOST;
+
+  if (!projectKey || !apiHost) {
+    // Once only: a missing key is a deployment gap, not a per-event problem.
+    if (!warned) {
+      warned = true;
+      console.warn('[Analytics] PostHog configuration is missing.');
+    }
+    return;
+  }
+
+  try {
+    posthog.init(projectKey, {
+      api_host: apiHost,
+      autocapture: false,
+      capture_pageview: false,
+      person_profiles: 'never',
+      cookieless_mode: 'always',
+      disable_session_recording: true,
+    });
+    initialised = true;
+  } catch {
+    // A blocked or failed SDK must never surface to the person brewing coffee.
+  }
+}
+
+export function trackBrewEvent(event: string, properties: AnalyticsProperties = {}): void {
+  const leaked = Object.keys(properties).filter((key) => PROHIBITED.has(key));
+  if (leaked.length > 0) {
+    if (import.meta.env.DEV) {
+      console.error(`[Analytics] refusing to send ${event}: ${leaked.join(', ')}`);
+    }
+    return;
+  }
+
+  const payload = { analytics_version: 1, ...properties };
+
+  if (!enabled()) {
+    console.info('[Analytics]', event, payload);
+    return;
+  }
+
+  if (!initialised) initAnalytics();
+  if (!initialised) return;
+
+  try {
+    posthog.capture(event, payload);
+  } catch {
+    // Analytics is a bystander. It never blocks or breaks the assistant.
+  }
+}
+
+export function trackTypedBrewEvent<TEvent extends keyof BrewAnalyticsEventMap>(
+  event: TEvent,
+  properties: BrewAnalyticsEventMap[TEvent],
+): void {
+  trackBrewEvent(event, properties as AnalyticsProperties);
+}
+
+// --- Normalisation -------------------------------------------------------
+
+const ENTRY_POINTS: BrewEntryPoint[] = [
+  'homepage',
+  'assistant_page',
+  'guide',
+  'recipe',
+  'direct',
+];
+
+/** Anything unrecognised becomes "direct" rather than travelling as-is. */
+export const normaliseEntryPoint = (raw: string | null | undefined): BrewEntryPoint =>
+  ENTRY_POINTS.includes(raw as BrewEntryPoint) ? (raw as BrewEntryPoint) : 'direct';
+
+/** The rule engine uses hyphens; the event taxonomy uses underscores. */
+export const analyticsMethod = (method: string): BrewMethod =>
+  method === 'french-press' ? 'french_press' : (method as BrewMethod);
+
+const ISSUES: Record<string, BrewIssue> = {
+  sour: 'sour',
+  bitter: 'bitter',
+  weak: 'weak',
+  dry: 'dry',
+  'espresso-fast': 'too_fast',
+  'espresso-slow': 'too_slow',
+  unsure: 'not_sure',
+};
+
+export const analyticsIssue = (issue: string | null): BrewIssue => ISSUES[issue ?? ''] ?? 'not_sure';
+
+/**
+ * A KAVOVO href becomes a content type and its canonical slug. Full URLs and
+ * query strings are deliberately dropped.
+ */
+export function contentRef(
+  href: string,
+): { content_type: 'learn' | 'guide' | 'recipe'; content_slug: string } | null {
+  const [path] = href.split(/[?#]/);
+  const parts = path.split('/').filter(Boolean);
+  if (parts.length === 0) return null;
+  const [section] = parts;
+  if (section !== 'learn' && section !== 'guides' && section !== 'recipes') return null;
+  return {
+    content_type: section === 'guides' ? 'guide' : section === 'recipes' ? 'recipe' : 'learn',
+    content_slug: parts[parts.length - 1],
+  };
+}

@@ -1,5 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import RecipeFinder, { type FinderRecipe } from './RecipeFinder';
+import {
+  analyticsIssue,
+  initAnalytics,
+  trackTypedBrewEvent,
+} from '../lib/analytics';
+import { loadSessions } from '../lib/brew-assistant/storage';
 
 /**
  * "Filter coffee" is three brewers, so it travels as a group and the assistant
@@ -36,10 +42,28 @@ export default function TaskSelector({ recipes }: { recipes: FinderRecipe[] }) {
   // Kept across tab switches: flipping tabs by accident should not undo choices.
   const [method, setMethod] = useState<string | null>(null);
   const [issue, setIssue] = useState<string | null>(null);
+  // Opening the tab is reported once, however many times it is switched to.
+  const openedReported = useRef(false);
+
+  useEffect(() => {
+    initAnalytics();
+  }, []);
+
+  useEffect(() => {
+    if (tab !== 'fix' || openedReported.current) return;
+    openedReported.current = true;
+    trackTypedBrewEvent('brew_assistant_opened', {
+      entry_point: 'homepage',
+      // Whether anything is saved locally, never what or which.
+      returning_brewer: loadSessions().length > 0,
+    });
+  }, [tab]);
 
   const ready = method !== null && issue !== null;
   // new=1 starts a fresh session; earlier brews stay in the history.
-  const href = ready ? `/assistant/?${method}&issue=${issue}&new=1` : '/assistant/';
+  const href = ready
+    ? `/assistant/?${method}&issue=${issue}&new=1&entry=homepage`
+    : '/assistant/';
 
   return (
     <div className="rounded-xl border border-line bg-card p-6 shadow-sm md:p-8">
@@ -152,7 +176,17 @@ export default function TaskSelector({ recipes }: { recipes: FinderRecipe[] }) {
             href={href}
             aria-disabled={!ready}
             onClick={(e) => {
-              if (!ready) e.preventDefault();
+              if (!ready) {
+                e.preventDefault();
+                return;
+              }
+              // Sent before navigation; capture() is fire-and-forget, so the
+              // link is never held up waiting for it.
+              trackTypedBrewEvent('brew_assistant_started', {
+                entry_point: 'homepage',
+                method_group: method === 'mode=espresso' ? 'espresso' : 'filter',
+                initial_issue: analyticsIssue(issue),
+              });
             }}
             className={`flex min-h-11 items-center justify-center rounded-md px-5 text-sm font-medium transition-colors ${
               ready

@@ -7,7 +7,9 @@
   X-Frame-Options: SAMEORIGIN
   # 'unsafe-inline' is still needed for JSON-LD blocks and Astro's inline island
   # bootstrap. Tighten to nonces once the newsletter Function is in place.
-  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self'; form-action 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'
+  # PostHog is allowed only where it is actually needed: the SDK script and the
+  # ingestion endpoint. Nothing else about the policy is widened for it.
+  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://*.posthog.com; connect-src 'self' https://*.posthog.com; font-src 'self'; form-action 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'
 
 # Astro fingerprints these, and scripts/build-images.mjs puts a content hash in
 # every photo file name — replacing a photo changes its URL, so a year-long

@@ -25,3 +25,7 @@ pnpm-debug.log*
 
 # local claude settings
 .claude/settings.local.json
+
+# Real analytics keys live in the deployment environment.
+.env
+.env.local

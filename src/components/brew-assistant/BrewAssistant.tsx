@@ -18,6 +18,15 @@ import type {
   Roast,
   Taste,
 } from '../../lib/brew-assistant/types';
+import {
+  analyticsIssue,
+  analyticsMethod,
+  contentRef,
+  initAnalytics,
+  normaliseEntryPoint,
+  trackTypedBrewEvent,
+  type BrewEntryPoint,
+} from '../../lib/analytics';
 import { ChoiceButton, ChoiceGroup, NumberField, SelectField } from './fields';
 import BrewResultCard from './BrewResultCard';
 
@@ -144,6 +153,7 @@ function fromUrl() {
     taste: TASTES.some(([t]) => t === issue) ? (issue as Taste) : null,
     behaviour: BEHAVIOURS.espresso.some(([b]) => b === issue) ? (issue as Behaviour) : null,
     fresh: params.get('new') === '1',
+    entry: normaliseEntryPoint(params.get('entry')),
   };
 }
 
@@ -168,10 +178,32 @@ export default function BrewAssistant() {
   const [changedField, setChangedField] = useState<string | null>(null);
   const stepHeading = useRef<HTMLHeadingElement>(null);
   const [history, setHistory] = useState<BrewSession[]>([]);
+  const [entryPoint, setEntryPoint] = useState<BrewEntryPoint>('direct');
+  /**
+   * Rerenders, Strict Mode and the back button must not each count as another
+   * diagnosis, so every reported result is keyed by session, attempt and rule.
+   */
+  const reportedDiagnoses = useRef(new Set<string>());
+  const startReported = useRef(false);
+  const feedbackReported = useRef(new Set<string>());
 
   useEffect(() => {
+    initAnalytics();
     setStorageStatus(storageAvailable() ? 'available' : 'unavailable');
-    setHistory(loadSessions());
+    const saved = loadSessions();
+    setHistory(saved);
+
+    const arrivedFrom = fromUrl().entry;
+    setEntryPoint(arrivedFrom);
+    // The homepage already reported the open before it navigated here.
+    if (arrivedFrom !== 'homepage') {
+      trackTypedBrewEvent('brew_assistant_opened', {
+        entry_point: arrivedFrom,
+        returning_brewer: saved.length > 0,
+      });
+    } else {
+      startReported.current = true;
+    }
 
     /**
      * The URL is the instruction; whatever the page was showing before is not.
@@ -246,12 +278,38 @@ export default function BrewAssistant() {
   };
 
   const goToRecipe = () => {
+    if (method === null) return;
+    trackTypedBrewEvent('brew_method_selected', {
+      method: analyticsMethod(method),
+      entry_point: entryPoint,
+    });
+    // Arriving straight at /assistant/, the first step forward is the start.
+    if (!startReported.current) {
+      startReported.current = true;
+      trackTypedBrewEvent('brew_assistant_started', {
+        entry_point: entryPoint,
+        method_group: method === 'espresso' ? 'espresso' : 'filter',
+        initial_issue: analyticsIssue(tastes[0] ?? null),
+      });
+    }
     setStep(1);
   };
 
   const goToTaste = () => {
     setShowErrors(true);
-    if (hasBlockingError(issues)) return;
+    if (hasBlockingError(issues)) {
+      // Reported on the attempt to continue, not on every keystroke, and the
+      // rejected value itself is never sent.
+      const first = issues.find((issue) => issue.severity === 'error');
+      trackTypedBrewEvent('brew_validation_failed', {
+        method: analyticsMethod(chosen),
+        step: 'recipe',
+        error_category: first?.message.startsWith('This one is needed')
+          ? 'missing_required_field'
+          : 'invalid_numeric_range',
+      });
+      return;
+    }
     setStep(2);
   };
 
@@ -264,6 +322,32 @@ export default function BrewAssistant() {
     };
     const current = session ?? newSession(chosen);
     const saved = saveAttempt(current, attempt);
+    const attemptNumber = saved.attempts.length;
+
+    // A clarification is not a recommendation, so it is not a completed
+    // diagnosis and must not invent a rule_id in the funnel.
+    if (!result.needsClarification) {
+      const key = `${saved.id}:${attemptNumber}:${result.ruleId}`;
+      if (!reportedDiagnoses.current.has(key)) {
+        reportedDiagnoses.current.add(key);
+        trackTypedBrewEvent('brew_diagnosis_completed', {
+          method: analyticsMethod(result.method),
+          rule_id: result.ruleId,
+          adjustment: result.adjustment.variable,
+          direction: result.adjustment.direction,
+          attempt_number: attemptNumber,
+          entry_point: entryPoint,
+        });
+        if (attemptNumber > 1) {
+          trackTypedBrewEvent('brew_next_attempt_completed', {
+            method: analyticsMethod(result.method),
+            rule_id: result.ruleId,
+            attempt_number: attemptNumber,
+          });
+        }
+      }
+    }
+
     setSession(saved);
     setHistory(loadSessions());
     setFeedback(undefined);
@@ -274,6 +358,13 @@ export default function BrewAssistant() {
   const recordNextAttempt = () => {
     const last = session?.attempts.at(-1)?.diagnosis;
     setChangedField(last?.adjustment.variable ?? null);
+    if (session && last) {
+      trackTypedBrewEvent('brew_next_attempt_started', {
+        method: analyticsMethod(session.method),
+        previous_rule_id: last.ruleId,
+        attempt_number: session.attempts.length + 1,
+      });
+    }
     if (last?.nextTarget.yieldOut !== undefined) {
       setDraft((d) => ({ ...d, yieldOut: String(last.nextTarget.yieldOut) }));
     }
@@ -296,6 +387,19 @@ export default function BrewAssistant() {
   const recordFeedback = (value: 'yes' | 'not_yet') => {
     setFeedback(value);
     if (!session) return;
+    const rated = session.attempts.at(-1)?.diagnosis;
+    const key = `${session.id}:${session.attempts.length}`;
+    // One submission per diagnosis: changing your mind is allowed, a second
+    // event is not.
+    if (rated && !feedbackReported.current.has(key)) {
+      feedbackReported.current.add(key);
+      trackTypedBrewEvent('brew_feedback_submitted', {
+        method: analyticsMethod(session.method),
+        rule_id: rated.ruleId,
+        helpful: value === 'yes',
+        attempt_number: session.attempts.length,
+      });
+    }
     const attempts = [...session.attempts];
     const last = attempts.at(-1);
     if (last) attempts[attempts.length - 1] = { ...last, helpful: value };
@@ -580,6 +684,15 @@ export default function BrewAssistant() {
             onRestart={restart}
             onFeedback={recordFeedback}
             feedback={feedback}
+            onContentClick={(href) => {
+              const ref = contentRef(href);
+              if (!ref || !session) return;
+              trackTypedBrewEvent('brew_related_content_clicked', {
+                method: analyticsMethod(session.method),
+                rule_id: diagnosis.ruleId,
+                ...ref,
+              });
+            }}
           />
         </div>
       )}

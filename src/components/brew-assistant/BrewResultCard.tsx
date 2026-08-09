@@ -28,12 +28,14 @@ export default function BrewResultCard({
   onRestart,
   onFeedback,
   feedback,
+  onContentClick,
 }: {
   diagnosis: BrewDiagnosis;
   onNextAttempt: () => void;
   onRestart: () => void;
   onFeedback: (value: 'yes' | 'not_yet') => void;
   feedback?: 'yes' | 'not_yet';
+  onContentClick?: (href: string) => void;
 }) {
   const links = linksFor(diagnosis.relatedContent);
 
@@ -61,7 +63,11 @@ export default function BrewResultCard({
           <ul className="mt-6 flex flex-col gap-1.5 border-t border-line pt-4 text-sm">
             {links.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="font-medium text-accent hover:underline">
+                <a
+                  href={link.href}
+                  onClick={() => onContentClick?.(link.href)}
+                  className="font-medium text-accent hover:underline"
+                >
                   {link.label} &#8594;
                 </a>
               </li>
@@ -152,7 +158,11 @@ export default function BrewResultCard({
           <ul className="mt-2 flex flex-col gap-1.5 text-sm">
             {links.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="font-medium text-accent hover:underline">
+                <a
+                  href={link.href}
+                  onClick={() => onContentClick?.(link.href)}
+                  className="font-medium text-accent hover:underline"
+                >
                   {link.label} &#8594;
                 </a>
               </li>

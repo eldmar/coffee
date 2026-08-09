@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import RecipeFinder, { type FinderRecipe } from './RecipeFinder';
 
+/**
+ * "Filter coffee" is three brewers, so it travels as a group and the assistant
+ * asks which one. Sending mode=v60 would quietly decide that for the reader.
+ */
 const METHODS = [
-  ['espresso', 'Espresso'],
-  ['v60', 'Filter coffee'],
+  ['mode=espresso', 'Espresso'],
+  ['group=filter', 'Filter coffee'],
 ] as const;
 
 const ISSUES = [
@@ -34,7 +38,8 @@ export default function TaskSelector({ recipes }: { recipes: FinderRecipe[] }) {
   const [issue, setIssue] = useState<string | null>(null);
 
   const ready = method !== null && issue !== null;
-  const href = ready ? `/assistant/?mode=${method}&issue=${issue}` : '/assistant/';
+  // new=1 starts a fresh session; earlier brews stay in the history.
+  const href = ready ? `/assistant/?${method}&issue=${issue}&new=1` : '/assistant/';
 
   return (
     <div className="rounded-xl border border-line bg-card p-6 shadow-sm md:p-8">

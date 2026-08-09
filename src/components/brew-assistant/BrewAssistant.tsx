@@ -71,6 +71,27 @@ const ROASTS: readonly (readonly [string, string])[] = [
   ['dark', 'Dark'],
 ];
 
+const PRE_INFUSION: readonly (readonly [string, string])[] = [
+  ['unknown', 'Not sure'],
+  ['yes', 'Yes, it is included'],
+  ['no', 'No, timed from the pump'],
+];
+
+const GRINDS: readonly (readonly [string, string])[] = [
+  ['unknown', 'Not sure'],
+  ['fine', 'Fine'],
+  ['medium-fine', 'Medium-fine'],
+  ['medium', 'Medium'],
+  ['medium-coarse', 'Medium-coarse'],
+  ['coarse', 'Coarse'],
+];
+
+const AEROPRESS_STYLES: readonly (readonly [string, string])[] = [
+  ['unknown', 'Not sure'],
+  ['standard', 'Standard'],
+  ['inverted', 'Inverted'],
+];
+
 const STEPS = ['Method', 'Recipe', 'Taste', 'Adjustment'];
 
 interface Draft {
@@ -81,6 +102,9 @@ interface Draft {
   seconds: string;
   temperature: string;
   roast: Roast;
+  preInfusion: 'unknown' | 'yes' | 'no';
+  grind: 'unknown' | 'fine' | 'medium-fine' | 'medium' | 'medium-coarse' | 'coarse';
+  aeropressStyle: 'unknown' | 'standard' | 'inverted';
 }
 
 const emptyDraft = (): Draft => ({
@@ -91,6 +115,9 @@ const emptyDraft = (): Draft => ({
   seconds: '',
   temperature: '',
   roast: 'unknown',
+  preInfusion: 'unknown',
+  grind: 'unknown',
+  aeropressStyle: 'unknown',
 });
 
 /** Espresso is timed in seconds; the filter methods in minutes and seconds. */
@@ -99,22 +126,39 @@ const totalSeconds = (draft: Draft, method: Method) =>
     ? (parseNumber(draft.seconds) ?? NaN)
     : (parseNumber(draft.minutes) ?? 0) * 60 + (parseNumber(draft.seconds) ?? 0);
 
-/** The homepage sends ?mode= and ?issue=. Anything else in the URL is ignored. */
+const FILTER_METHODS: Method[] = ['v60', 'aeropress', 'french-press'];
+
+/**
+ * The homepage sends ?mode= (one method) or ?group=filter (choose from the three
+ * filter brewers), plus ?issue=. Anything else in the URL is ignored.
+ */
 function fromUrl() {
-  if (typeof window === 'undefined') return { method: null, taste: null, behaviour: null };
+  const empty = { method: null, group: null, taste: null, behaviour: null, fresh: false };
+  if (typeof window === 'undefined') return empty;
   const params = new URLSearchParams(window.location.search);
   const mode = params.get('mode');
   const issue = params.get('issue');
   return {
     method: METHODS.some(([m]) => m === mode) ? (mode as Method) : null,
+    group: params.get('group') === 'filter' ? ('filter' as const) : null,
     taste: TASTES.some(([t]) => t === issue) ? (issue as Taste) : null,
     behaviour: BEHAVIOURS.espresso.some(([b]) => b === issue) ? (issue as Behaviour) : null,
+    fresh: params.get('new') === '1',
   };
 }
 
 export default function BrewAssistant() {
   const [step, setStep] = useState(0);
-  const [method, setMethod] = useState<Method>('espresso');
+  // null while a group has been requested but no brewer picked yet.
+  const [method, setMethod] = useState<Method | null>('espresso');
+  /**
+   * Resolved after mount. Reading localStorage during render makes the server
+   * and the first client render disagree, which is a hydration mismatch.
+   */
+  const [storageStatus, setStorageStatus] = useState<'checking' | 'available' | 'unavailable'>(
+    'checking',
+  );
+  const [methodChoices, setMethodChoices] = useState<Method[]>(METHODS.map(([m]) => m));
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [tastes, setTastes] = useState<Taste[]>([]);
   const [behaviour, setBehaviour] = useState<Behaviour>('none');
@@ -126,11 +170,36 @@ export default function BrewAssistant() {
   const [history, setHistory] = useState<BrewSession[]>([]);
 
   useEffect(() => {
+    setStorageStatus(storageAvailable() ? 'available' : 'unavailable');
     setHistory(loadSessions());
-    const seed = fromUrl();
-    if (seed.method) setMethod(seed.method);
-    if (seed.taste) setTastes([seed.taste]);
-    if (seed.behaviour) setBehaviour(seed.behaviour);
+
+    /**
+     * The URL is the instruction; whatever the page was showing before is not.
+     * Re-read it on pageshow as well, because a page restored from the back
+     * button's cache keeps its old React state and never remounts.
+     */
+    const applyUrl = () => {
+      const seed = fromUrl();
+      if (seed.fresh) setSession(null);
+      if (seed.group === 'filter') {
+        // Ask which filter brewer rather than picking one on their behalf.
+        setMethodChoices(FILTER_METHODS);
+        setMethod(null);
+        setStep(0);
+      } else if (seed.method) {
+        setMethodChoices(METHODS.map(([m]) => m));
+        setMethod(seed.method);
+      }
+      if (seed.taste) setTastes([seed.taste]);
+      if (seed.behaviour) setBehaviour(seed.behaviour);
+    };
+
+    applyUrl();
+    const onShow = (event: PageTransitionEvent) => {
+      if (event.persisted) applyUrl();
+    };
+    window.addEventListener('pageshow', onShow);
+    return () => window.removeEventListener('pageshow', onShow);
   }, []);
 
   // Moving between steps must be announced, not just rendered.
@@ -138,20 +207,26 @@ export default function BrewAssistant() {
     if (step > 0) stepHeading.current?.focus();
   }, [step]);
 
+  /** Safe to use once past step 0, which cannot be left until a method is picked. */
+  const chosen: Method = method ?? 'espresso';
+
   const input: Partial<BrewInput> = useMemo(
     () => ({
-      method,
+      method: chosen,
       dose: parseNumber(draft.dose) ?? undefined,
-      yieldOut: method === 'espresso' ? (parseNumber(draft.yieldOut) ?? undefined) : undefined,
-      water: method === 'espresso' ? undefined : (parseNumber(draft.water) ?? undefined),
-      time: Number.isNaN(totalSeconds(draft, method)) ? undefined : totalSeconds(draft, method),
+      yieldOut: chosen === 'espresso' ? (parseNumber(draft.yieldOut) ?? undefined) : undefined,
+      water: chosen === 'espresso' ? undefined : (parseNumber(draft.water) ?? undefined),
+      time: Number.isNaN(totalSeconds(draft, chosen)) ? undefined : totalSeconds(draft, chosen),
       temperature: parseNumber(draft.temperature) ?? undefined,
       roast: draft.roast,
+      preInfusionIncluded: chosen === 'espresso' ? draft.preInfusion : undefined,
+      grind: chosen === 'espresso' ? undefined : draft.grind,
+      aeropressStyle: chosen === 'aeropress' ? draft.aeropressStyle : undefined,
     }),
-    [draft, method],
+    [draft, chosen],
   );
 
-  const issues = useMemo(() => validate(method, input), [method, input]);
+  const issues = useMemo(() => validate(chosen, input), [chosen, input]);
   const issueFor = (field: string) =>
     showErrors ? issues.find((i) => i.field === field) : undefined;
 
@@ -187,7 +262,7 @@ export default function BrewAssistant() {
       diagnosis: result,
       at: new Date().toISOString(),
     };
-    const current = session ?? newSession(method);
+    const current = session ?? newSession(chosen);
     const saved = saveAttempt(current, attempt);
     setSession(saved);
     setHistory(loadSessions());
@@ -259,18 +334,39 @@ export default function BrewAssistant() {
 
       {step === 0 && (
         <div className="flex flex-col gap-6">
-          <ChoiceGroup legend="What are you brewing?">
-            {METHODS.map(([value, label]) => (
+          <ChoiceGroup
+            legend="What are you brewing?"
+            hint={
+              methodChoices.length < METHODS.length
+                ? 'Filter coffee covers three brewers. Which one did you use?'
+                : undefined
+            }
+          >
+            {METHODS.filter(([value]) => methodChoices.includes(value)).map(([value, label]) => (
               <ChoiceButton key={value} selected={method === value} onClick={() => setMethod(value)}>
                 {label}
               </ChoiceButton>
             ))}
           </ChoiceGroup>
+          {methodChoices.length < METHODS.length && (
+            <button
+              type="button"
+              onClick={() => setMethodChoices(METHODS.map(([m]) => m))}
+              className="self-start text-sm font-medium text-accent hover:underline"
+            >
+              Show every method
+            </button>
+          )}
           <div>
             <button
               type="button"
               onClick={goToRecipe}
-              className="min-h-11 rounded-md bg-accent px-5 text-sm font-medium text-accent-ink transition-colors hover:bg-accent-dark"
+              disabled={method === null}
+              className={`min-h-11 rounded-md px-5 text-sm font-medium transition-colors ${
+                method === null
+                  ? 'border border-line bg-paper text-ink-soft'
+                  : 'bg-accent text-accent-ink hover:bg-accent-dark'
+              }`}
             >
               Continue &#8594;
             </button>
@@ -291,8 +387,9 @@ export default function BrewAssistant() {
             <h3 className="font-medium">What did you brew?</h3>
             {changedField && (
               <p className="mt-1 text-sm text-ink-soft">
-                Everything is carried over from your last attempt. Change the{' '}
-                <strong className="font-medium text-ink">{changedField}</strong> and leave the rest.
+                Your recommended target has been pre-filled. Adjust the{' '}
+                <strong className="font-medium text-ink">{changedField}</strong>, brew again and
+                record the result.
               </p>
             )}
           </div>
@@ -307,7 +404,7 @@ export default function BrewAssistant() {
               issue={issueFor('dose')}
               autoFocus
             />
-            {method === 'espresso' ? (
+            {chosen === 'espresso' ? (
               <NumberField
                 id="yieldOut"
                 label="Yield out"
@@ -328,7 +425,7 @@ export default function BrewAssistant() {
             )}
           </div>
 
-          {method === 'espresso' ? (
+          {chosen === 'espresso' ? (
             <NumberField
               id="time"
               label="Shot time"
@@ -361,6 +458,34 @@ export default function BrewAssistant() {
           )}
 
           <div className="grid gap-4 sm:grid-cols-2">
+            {chosen === 'espresso' ? (
+              <SelectField
+                id="preInfusion"
+                label="Pre-infusion included in the time? (optional)"
+                value={draft.preInfusion}
+                onChange={(v) => setDraft((d) => ({ ...d, preInfusion: v as Draft['preInfusion'] }))}
+                options={PRE_INFUSION}
+              />
+            ) : (
+              <SelectField
+                id="grind"
+                label="Grind (optional)"
+                value={draft.grind}
+                onChange={(v) => setDraft((d) => ({ ...d, grind: v as Draft['grind'] }))}
+                options={GRINDS}
+              />
+            )}
+            {chosen === 'aeropress' && (
+              <SelectField
+                id="aeropressStyle"
+                label="Standard or inverted? (optional)"
+                value={draft.aeropressStyle}
+                onChange={(v) =>
+                  setDraft((d) => ({ ...d, aeropressStyle: v as Draft['aeropressStyle'] }))
+                }
+                options={AEROPRESS_STYLES}
+              />
+            )}
             <SelectField
               id="roast"
               label="Roast level (optional)"
@@ -417,7 +542,7 @@ export default function BrewAssistant() {
           </ChoiceGroup>
 
           <ChoiceGroup legend="What did the brew do?">
-            {BEHAVIOURS[method].map(([value, label]) => (
+            {BEHAVIOURS[chosen].map(([value, label]) => (
               <ChoiceButton
                 key={value}
                 selected={behaviour === value}
@@ -490,7 +615,9 @@ export default function BrewAssistant() {
       )}
 
       <section className="border-t border-line pt-6 text-sm text-ink-soft">
-        {storageAvailable() ? (
+        {/* Reserve the line while checking so the layout does not jump. */}
+        {storageStatus === 'checking' && <p aria-hidden="true">&nbsp;</p>}
+        {storageStatus === 'available' && (
           <>
             <p>Your brew history is stored in this browser unless you choose to clear it.</p>
             {history.length > 0 && (
@@ -509,7 +636,8 @@ export default function BrewAssistant() {
               </button>
             )}
           </>
-        ) : (
+        )}
+        {storageStatus === 'unavailable' && (
           <p>
             You can still use the assistant, but this brew will not be saved after you leave the
             page.

@@ -46,6 +46,14 @@ export interface BrewInput {
   behaviour: Behaviour;
   /** Optional free text. Never the sole basis of a diagnosis. */
   notes?: string;
+
+  // Method-specific extras. Optional, but they sharpen the rules when present.
+  /** Espresso: whether the quoted shot time already includes pre-infusion. */
+  preInfusionIncluded?: 'yes' | 'no' | 'unknown';
+  /** Filter methods: how the grind looked, in the site's own vocabulary. */
+  grind?: 'fine' | 'medium-fine' | 'medium' | 'medium-coarse' | 'coarse' | 'unknown';
+  /** AeroPress only. */
+  aeropressStyle?: 'standard' | 'inverted' | 'unknown';
 }
 
 export interface BrewDiagnosis {

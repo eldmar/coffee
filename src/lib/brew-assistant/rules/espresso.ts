@@ -10,12 +10,19 @@ const TARGET_TIME: [number, number] = [27, 30];
 
 const targetYield = (input: BrewInput) => round(input.dose * TARGET_RATIO, 1);
 
+/**
+ * A time that excludes pre-infusion under-reports how long the coffee was wet,
+ * so treat it as a few seconds longer before judging the shot fast or slow.
+ */
+const comparableTime = (input: BrewInput) =>
+  input.preInfusionIncluded === 'no' ? input.time + 5 : input.time;
+
 /** Reached a normal yield well inside the usual window. */
 const ranFast = (input: BrewInput, m: Metrics) =>
-  input.behaviour === 'espresso-fast' || (input.time < 25 && m.ratio >= 1.8);
+  input.behaviour === 'espresso-fast' || (comparableTime(input) < 25 && m.ratio >= 1.8);
 
 const ranSlow = (input: BrewInput, m: Metrics) =>
-  input.behaviour === 'espresso-slow' || (input.time > 35 && m.ratio <= 2.4);
+  input.behaviour === 'espresso-slow' || (comparableTime(input) > 35 && m.ratio <= 2.4);
 
 const base = (input: BrewInput): Pick<BrewDiagnosis, 'method' | 'needsClarification'> => ({
   method: input.method,

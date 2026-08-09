@@ -174,6 +174,16 @@ const commonFilterRules: Rule[] = [
 
 export const v60Rules: Rule[] = [
   {
+    id: 'v60_grind_too_fine',
+    priority: 15,
+    test: (input) => input.grind === 'fine' && (input.behaviour === 'v60-stalled' || tastesOver(input)),
+    build: (input) =>
+      grindCoarser(input, 'v60_grind_too_fine', 'That grind is finer than a cone dripper can drain.', [
+        'A fine grind packs the bed and slows the drawdown, which over-extracts everything the water does reach.',
+        'Medium is the reference for a V60. Move there before changing anything else.',
+      ]),
+  },
+  {
     id: 'v60_uneven_bed',
     priority: 20,
     test: (input) =>
@@ -280,6 +290,21 @@ export const aeropressRules: Rule[] = [
 ];
 
 export const frenchPressRules: Rule[] = [
+  {
+    id: 'french_press_fine_grind_bitter',
+    priority: 20,
+    test: (input) => (input.grind === 'fine' || input.grind === 'medium-fine') && tastesOver(input),
+    build: (input) =>
+      grindCoarser(
+        input,
+        'french_press_fine_grind_bitter',
+        'The grind is fine for a brewer that steeps for minutes.',
+        [
+          'In full immersion the coffee cannot escape the water, so a fine grind keeps extracting for the whole steep.',
+          'Medium-coarse is the reference here. Coarser will also cut the sediment.',
+        ],
+      ),
+  },
   {
     id: 'french_press_sediment',
     priority: 20,

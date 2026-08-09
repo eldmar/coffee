@@ -490,6 +490,18 @@ body {
   }
 }
 
+/* Buttons and tabs are clickable, so they should say so. */
+button:not(:disabled),
+summary,
+[role='tab'] {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled='true'] {
+  cursor: not-allowed;
+}
+
 /* Compact next-lesson button, shown once the reader is into a long lesson.
    It sits above the safe-area inset so it clears the iOS home indicator. */
 .jump-next {

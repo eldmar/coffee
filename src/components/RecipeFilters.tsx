@@ -135,7 +135,7 @@ export default function RecipeFilters({ recipes }: Props) {
                 />
                 <span className="flex flex-1 flex-col gap-1.5 p-5">
                   <span className="eyebrow">{categoryLabel(r.category)}</span>
-                  <span className="font-display text-xl font-medium">{r.title}</span>
+                  <h2 className="font-display text-xl font-medium">{r.title}</h2>
                   <span className="mt-auto flex items-center gap-2 pt-2 text-sm text-ink-soft">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                       <circle cx="12" cy="12" r="9" />

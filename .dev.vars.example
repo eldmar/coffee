@@ -1,0 +1,4 @@
+# Local Worker development only. Never commit .dev.vars.
+BREVO_API_KEY=replace-me
+BREVO_LIST_ID=1
+BREVO_DOI_TEMPLATE_ID=1

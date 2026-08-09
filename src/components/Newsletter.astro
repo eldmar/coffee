@@ -1,9 +1,12 @@
 ---
 interface Props {
-  source?: string;
+  source?: 'homepage-newsletter';
 }
 
 const { source = 'homepage-newsletter' } = Astro.props;
+const subscriptionsEnabled = import.meta.env.PUBLIC_SUBSCRIPTIONS_ENABLED === 'true';
+
+import SubscribeForm from './SubscribeForm.astro';
 ---
 
 <section class="on-brand bg-sage text-ivory">
@@ -28,32 +31,27 @@ const { source = 'homepage-newsletter' } = Astro.props;
       </div>
     </div>
     <div>
-      <!-- TODO: /api/subscribe still needs its Cloudflare Function and Brevo credentials -->
-      <form method="post" action="/api/subscribe" class="flex flex-col gap-3 sm:flex-row">
-        <input type="hidden" name="source" value={source} />
-        <label class="sr-only" for="newsletter-email">Email address</label>
-        <input
-          id="newsletter-email"
-          type="email"
-          name="email"
-          required
-          autocomplete="email"
-          placeholder="Your email address"
-          class="flex-1 rounded-md border border-transparent bg-paper px-4 py-2.5 text-sm text-ink transition-colors"
-        />
-        <button
-          type="submit"
-          class="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-accent-ink transition-colors hover:bg-accent-dark"
-        >
-          Subscribe
-        </button>
-      </form>
-      <p class="mt-2.5 text-xs text-ivory/75">
-        No spam. Unsubscribe anytime. See our&#32;<a
-          href="/privacy/"
-          class="underline underline-offset-2 hover:text-ivory">privacy notice</a
-        >.
-      </p>
+      {
+        subscriptionsEnabled ? (
+          <>
+            <SubscribeForm
+              id="newsletter"
+              source={source}
+              submitLabel="Subscribe"
+              variant="brand"
+            />
+            <p class="mt-1 text-xs text-ivory/75">
+              No spam. Unsubscribe anytime. See our&#32;
+              <a href="/privacy/" class="underline underline-offset-2 hover:text-ivory">
+                privacy notice
+              </a>
+              .
+            </p>
+          </>
+        ) : (
+          <p class="text-sm font-medium text-ivory">Newsletter coming soon.</p>
+        )
+      }
     </div>
   </div>
 </section>

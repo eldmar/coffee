@@ -1,0 +1,160 @@
+---
+interface Props {
+  id: string;
+  source: 'homepage-newsletter' | 'shop-waitlist';
+  submitLabel: string;
+  variant?: 'brand' | 'light';
+  containerClass?: string;
+}
+
+const {
+  id,
+  source,
+  submitLabel,
+  variant = 'light',
+  containerClass = '',
+} = Astro.props;
+
+const emailId = `${id}-email`;
+const websiteId = `${id}-website`;
+const statusId = `${id}-status`;
+const brand = variant === 'brand';
+---
+
+<div class={containerClass}>
+  <form
+    method="post"
+    action="/api/subscribe"
+    class="flex flex-col gap-3 sm:flex-row"
+    data-subscribe-form
+  >
+    <input type="hidden" name="source" value={source} />
+    <div class="absolute left-[-10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+      <label for={websiteId}>Leave this field empty</label>
+      <input id={websiteId} type="text" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+    <label class="sr-only" for={emailId}>Email address</label>
+    <input
+      id={emailId}
+      type="email"
+      name="email"
+      required
+      maxlength="254"
+      autocomplete="email"
+      inputmode="email"
+      placeholder="Your email address"
+      aria-describedby={statusId}
+      class:list={[
+        'flex-1 rounded-md border px-4 py-2.5 text-sm transition-colors',
+        brand ? 'border-transparent bg-paper text-ink' : 'border-line bg-card text-ink',
+      ]}
+    />
+    <button
+      type="submit"
+      data-idle-label={submitLabel}
+      class="min-h-11 rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-accent-ink transition-colors hover:bg-accent-dark disabled:opacity-70"
+    >
+      {submitLabel}
+    </button>
+  </form>
+  <p
+    id={statusId}
+    class:list={['mt-2 min-h-5 text-sm', brand ? 'text-ivory/85' : 'text-ink-soft']}
+    role="status"
+    aria-live="polite"
+    data-subscribe-status
+  ></p>
+  <noscript>
+    <p class:list={['mt-1 text-xs', brand ? 'text-ivory/75' : 'text-ink-soft']}>
+      After submitting, a simple confirmation page will open.
+    </p>
+  </noscript>
+</div>
+
+<script>
+  const VALIDATION_MESSAGE = 'Enter a valid email address.';
+  const SERVER_ERROR_MESSAGE = 'Something went wrong. Please try again.';
+
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-subscribe-form]')) {
+    if (form.dataset.enhanced === 'true') continue;
+    form.dataset.enhanced = 'true';
+    form.noValidate = true;
+
+    const email = form.elements.namedItem('email');
+    const source = form.elements.namedItem('source');
+    const website = form.elements.namedItem('website');
+    const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+    const status = form.parentElement?.querySelector<HTMLElement>('[data-subscribe-status]');
+
+    if (
+      !(email instanceof HTMLInputElement) ||
+      !(source instanceof HTMLInputElement) ||
+      !(website instanceof HTMLInputElement) ||
+      !button ||
+      !status
+    ) {
+      continue;
+    }
+
+    const setStatus = (message: string, isError = false) => {
+      status.textContent = message;
+      status.setAttribute('role', isError ? 'alert' : 'status');
+    };
+
+    email.addEventListener('input', () => {
+      email.removeAttribute('aria-invalid');
+      if (status.getAttribute('role') === 'alert') setStatus('');
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (button.disabled) return;
+
+      if (!email.validity.valid) {
+        email.setAttribute('aria-invalid', 'true');
+        setStatus(VALIDATION_MESSAGE, true);
+        email.focus();
+        return;
+      }
+
+      email.removeAttribute('aria-invalid');
+      button.disabled = true;
+      button.textContent = 'Submitting...';
+      form.setAttribute('aria-busy', 'true');
+      setStatus('');
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email.value,
+            source: source.value,
+            website: website.value,
+          }),
+        });
+        const result = (await response.json()) as { code?: string; message?: string };
+
+        if (!response.ok) {
+          if (result.code === 'invalid_email') {
+            email.setAttribute('aria-invalid', 'true');
+            setStatus(VALIDATION_MESSAGE, true);
+            email.focus();
+          } else {
+            setStatus(SERVER_ERROR_MESSAGE, true);
+          }
+          return;
+        }
+
+        email.value = '';
+        setStatus(result.message ?? 'Check your inbox to confirm your subscription.');
+      } catch {
+        setStatus(SERVER_ERROR_MESSAGE, true);
+      } finally {
+        button.disabled = false;
+        button.textContent = button.dataset.idleLabel ?? 'Submit';
+        form.removeAttribute('aria-busy');
+      }
+    });
+  }
+</script>

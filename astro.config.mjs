@@ -5,8 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 
-// Update when a custom domain is connected
-const SITE_URL = 'https://coffee.ridkous.workers.dev';
+const SITE_URL = 'https://kavovo.uk';
+const SITEMAP_EXCLUSIONS = new Set(['/404/', '/search/', '/subscription-confirmed/']);
 
 // https://astro.build/config
 export default defineConfig({
@@ -23,6 +23,6 @@ export default defineConfig({
 
   integrations: [
     react(),
-    sitemap({ filter: (page) => !page.includes('/404') }),
+    sitemap({ filter: (page) => !SITEMAP_EXCLUSIONS.has(new URL(page).pathname) }),
   ],
 });

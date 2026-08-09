@@ -2,10 +2,11 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import SearchResults, { type SearchDoc } from '../components/SearchResults';
+import SearchResults from '../components/SearchResults';
 import { categoryLabel, formatTimeShort } from '../lib/recipes';
 import { equipmentFor } from '../lib/equipment';
 import { LEARN_PATHS, pathHref } from '../lib/learn';
+import type { SearchDoc } from '../lib/search';
 
 /** Strip markdown syntax so the index holds words, not punctuation. */
 const plain = (body: string) =>
@@ -32,21 +33,21 @@ const docs: SearchDoc[] = [
     description: r.data.description,
     url: `/recipes/${r.id}/`,
     meta: `${categoryLabel(r.data.category)} · ${formatTimeShort(r.data)}`,
-    text: [
-      r.data.title,
-      r.data.description,
+    keywords: [
       categoryLabel(r.data.category),
+      r.data.category,
       r.data.brewMethod,
       r.data.temperature,
+      r.data.milk,
+    ].join(' '),
+    body: [
       ...r.data.ingredients,
       ...equipmentFor(r.data.equipmentSet),
       ...r.data.equipmentExtra,
       ...r.data.equipmentOptional,
       r.data.vessel.name,
       plain(r.body ?? ''),
-    ]
-      .join(' ')
-      .toLowerCase(),
+    ].join(' '),
   })),
   ...guides.map((g) => ({
     type: 'guide' as const,
@@ -54,10 +55,9 @@ const docs: SearchDoc[] = [
     description: g.data.description,
     url: `/guides/${g.id}/`,
     meta: 'Brew guide',
-    text: [
-      g.data.title,
-      g.data.description,
-      g.data.summary,
+    keywords: [g.data.method, g.data.difficulty, g.data.quickPick].join(' '),
+    summary: g.data.summary,
+    body: [
       g.data.bestFor,
       g.data.intent,
       g.data.grind,
@@ -69,9 +69,7 @@ const docs: SearchDoc[] = [
       ...(g.data.milk ?? []),
       ...g.data.troubleshooting.flatMap((t) => [t.problem, t.cause, t.first]),
       ...g.data.cleaning,
-    ]
-      .join(' ')
-      .toLowerCase(),
+    ].join(' '),
   })),
   ...LEARN_PATHS.map((p) => ({
     type: 'learn' as const,
@@ -79,7 +77,9 @@ const docs: SearchDoc[] = [
     description: p.description,
     url: pathHref(p),
     meta: 'Learning path',
-    text: [p.title, p.description, p.short].join(' ').toLowerCase(),
+    keywords: 'learn learning path',
+    summary: p.short,
+    body: '',
   })),
   ...lessons.map((l) => ({
     type: 'learn' as const,
@@ -87,9 +87,9 @@ const docs: SearchDoc[] = [
     description: l.data.excerpt,
     url: `/learn/${l.id}/`,
     meta: `${pathTitle(l.data.path)} \u00b7 Lesson ${l.data.order}`,
-    text: [l.data.title, l.data.excerpt, l.data.seoDescription, plain(l.body ?? '')]
-      .join(' ')
-      .toLowerCase(),
+    keywords: `${pathTitle(l.data.path)} ${l.data.path} learn lesson`,
+    summary: l.data.seoDescription,
+    body: plain(l.body ?? ''),
   })),
   ...journal.map((p) => ({
     type: 'journal' as const,
@@ -97,7 +97,9 @@ const docs: SearchDoc[] = [
     description: p.data.description,
     url: `/journal/${p.id}/`,
     meta: p.data.date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
-    text: [p.data.title, p.data.description, plain(p.body ?? '')].join(' ').toLowerCase(),
+    keywords: [p.data.category ?? '', 'journal'].join(' '),
+    summary: p.data.excerpt,
+    body: plain(p.body ?? ''),
   })),
 ];
 ---
@@ -105,6 +107,7 @@ const docs: SearchDoc[] = [
 <Layout
   title="Search — KAVOVO"
   description="Search every KAVOVO recipe, brew guide, learning path and journal article."
+  noindex
 >
   <section class="mx-auto max-w-3xl px-5 py-14">
     <Breadcrumbs trail={[{ label: 'Search' }]} />

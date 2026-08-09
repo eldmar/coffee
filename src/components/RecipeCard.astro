@@ -10,11 +10,22 @@ interface Props {
   activeTime: number;
   totalTime: number;
   totalTimeLabel?: string;
+  headingLevel?: 'h2' | 'h3';
 }
 
-const { slug, title, image, category, activeTime, totalTime, totalTimeLabel } = Astro.props;
+const {
+  slug,
+  title,
+  image,
+  category,
+  activeTime,
+  totalTime,
+  totalTimeLabel,
+  headingLevel = 'h3',
+} = Astro.props;
 
 const timeLabel = formatTimeShort({ activeTime, totalTime, totalTimeLabel });
+const Heading = headingLevel;
 ---
 
 <a
@@ -30,7 +41,7 @@ const timeLabel = formatTimeShort({ activeTime, totalTime, totalTimeLabel });
   />
   <div class="flex flex-1 flex-col gap-1.5 p-5">
     <span class="eyebrow">{categoryLabel(category)}</span>
-    <h3 class="font-display text-xl font-medium">{title}</h3>
+    <Heading class="font-display text-xl font-medium">{title}</Heading>
     <div class="mt-auto flex items-center gap-2 pt-2 text-sm text-ink-soft">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <circle cx="12" cy="12" r="9" />

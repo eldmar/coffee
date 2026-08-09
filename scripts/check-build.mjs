@@ -40,6 +40,20 @@ let onDemandImages = 0;
 for (const page of pages) {
   const html = readFileSync(page, 'utf8');
 
+  const headings = [...html.matchAll(/<h([1-6])\b/gi)].map((match) => Number(match[1]));
+  const h1Count = headings.filter((level) => level === 1).length;
+  if (h1Count !== 1) {
+    problems.push(`${relative(DIST, page)} has ${h1Count} h1 elements; expected exactly one`);
+  }
+  for (let index = 1; index < headings.length; index += 1) {
+    if (headings[index] > headings[index - 1] + 1) {
+      problems.push(
+        `${relative(DIST, page)} skips heading level h${headings[index - 1]} to h${headings[index]}`,
+      );
+      break;
+    }
+  }
+
   const onDemand = html.match(/\/_image\/\?href=/g);
   if (onDemand) {
     onDemandImages += onDemand.length;
@@ -56,6 +70,36 @@ for (const page of pages) {
       const url = candidate.trim().split(/\s+/)[0];
       if (/^\/(?:_astro|img)\//.test(url) && !existsSync(join(DIST, url))) missingAssets.add(url);
     }
+  }
+}
+
+const searchPage = join(DIST, 'search', 'index.html');
+if (existsSync(searchPage)) {
+  const html = readFileSync(searchPage, 'utf8');
+  if (!/<meta name="robots" content="noindex, follow">/i.test(html)) {
+    problems.push('search/index.html is missing noindex, follow');
+  }
+  if (!/<link rel="canonical" href="https?:\/\/[^"?]+\/search\/">/i.test(html)) {
+    problems.push('search/index.html canonical is not the query-free /search/ URL');
+  }
+}
+
+for (const contentPage of [
+  join(DIST, 'recipes', 'index.html'),
+  join(DIST, 'guides', 'index.html'),
+  join(DIST, 'learn', 'index.html'),
+  join(DIST, 'journal', 'index.html'),
+]) {
+  if (existsSync(contentPage) && /<meta name="robots" content="noindex/i.test(readFileSync(contentPage, 'utf8'))) {
+    problems.push(`${relative(DIST, contentPage)} was accidentally marked noindex`);
+  }
+}
+
+for (const entry of readdirSync(DIST, { withFileTypes: true })) {
+  if (!entry.isFile() || !entry.name.endsWith('.xml')) continue;
+  const xml = readFileSync(join(DIST, entry.name), 'utf8');
+  if (/<loc>[^<]*\/search\/<\/loc>/i.test(xml)) {
+    problems.push(`${entry.name} includes the internal search page`);
   }
 }
 

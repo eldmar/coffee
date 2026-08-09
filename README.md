@@ -1,43 +1,49 @@
-# Astro Starter Kit: Minimal
+# KAVOVO
+
+KAVOVO is a static Astro site with a small Cloudflare Worker for newsletter and
+shop waitlist subscriptions.
+
+## Local development
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+astro dev --background
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Use `astro dev status`, `astro dev logs`, and `astro dev stop` to manage the
+background server.
 
-## 🚀 Project Structure
+## Checks
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+npm test
+npm run verify
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+`npm run verify` runs unit tests, builds the static site, checks generated pages
+and assets, and bundles the Worker without deploying it.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Subscription setup
 
-Any static assets, like images, can be placed in the `public/` directory.
+Subscriptions stay hidden unless `PUBLIC_SUBSCRIPTIONS_ENABLED=true` is present
+in the Astro build environment. Before enabling it:
 
-## 🧞 Commands
+1. Create a Brevo contact list, double opt-in template, and text contact
+   attribute named `SOURCE`.
+2. Store `BREVO_API_KEY`, `BREVO_LIST_ID`, and `BREVO_DOI_TEMPLATE_ID` with
+   `wrangler secret put`. Do not put their real values in `.env` or Git.
+3. Set `PUBLIC_SUBSCRIPTIONS_ENABLED=true` in the production build environment.
+4. Run `npm run verify`, deploy, and test both `homepage-newsletter` and
+   `shop-waitlist` with a real inbox.
 
-All commands are run from the root of the project, from a terminal:
+For local Worker testing, copy `.dev.vars.example` to `.dev.vars` and replace
+the placeholders. The local secrets file is ignored by Git.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Deployment
 
-## 👀 Want to learn more?
+```sh
+npm run deploy
+```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Cloudflare serves `dist/` as static assets. Only `/api/*` runs through the
+Worker first; unknown site routes still use the branded static 404 page.

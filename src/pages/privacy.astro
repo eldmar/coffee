@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import TextPage from '../components/TextPage.astro';
 
+const subscriptionsEnabled = import.meta.env.PUBLIC_SUBSCRIPTIONS_ENABLED === 'true';
+
 // TODO before launch: add the operating legal entity, its registered address and,
 // if required in your jurisdiction, a data protection contact. Have a lawyer review.
 ---
@@ -14,23 +16,36 @@ import TextPage from '../components/TextPage.astro';
     eyebrow="Privacy"
     title="Privacy notice"
     intro="A short, honest description of what happens to data when you visit KAVOVO."
-    updated="2026-08-05"
+    updated="2026-08-09"
   >
     <h2>The short version</h2>
     <p>
       KAVOVO is a static website. We do not run advertising, we do not set tracking cookies, and we do not sell or share
-      personal data. The only personal data we deliberately collect is an email address, and only if you hand it to us.
+      personal data. We use limited cookieless analytics to understand how the Brew Assistant works in aggregate. {
+        subscriptionsEnabled
+          ? 'We collect an email address only when you choose to subscribe to the newsletter or shop waitlist.'
+          : 'Newsletter and waitlist sign-ups are currently disabled, so the site does not accept email addresses.'
+      }
     </p>
 
     <h2>What we collect</h2>
     <ul>
       <li>
-        <strong>Nothing, if you only read.</strong> Browsing recipes and guides requires no account and sets no cookies
-        from us.
+        <strong>No account or tracking cookie.</strong> Reading recipes, guides, lessons and Journal articles requires no
+        account and sets no cookies from us.
       </li>
+      {
+        subscriptionsEnabled && (
+          <li>
+            <strong>Your email address and sign-up source,</strong> if you submit the newsletter or shop waitlist form.
+            Brevo also records the sign-up and confirmation dates so we can send the right emails and demonstrate
+            consent.
+          </li>
+        )
+      }
       <li>
-        <strong>Your email address,</strong> if you subscribe to the newsletter or join the shop waitlist. We store the
-        address, the date, and which form you used, so we can send the right emails and prove consent.
+        <strong>Limited Brew Assistant events,</strong> described below. These contain predefined categories, not your
+        recipe values or free text.
       </li>
     </ul>
 
@@ -43,21 +58,26 @@ import TextPage from '../components/TextPage.astro';
 
     <h2>Analytics</h2>
     <p>
-      We use PostHog, hosted in the EU, for anonymous product analytics. It tells us which parts of the Brew Assistant
-      people use and where they stop — nothing about who they are.
+      We use PostHog, hosted in the EU, for limited cookieless product analytics. It tells us which parts of the Brew
+      Assistant people use and where they stop, without telling us who they are.
     </p>
     <p>
-      It runs without cookies and without building a profile of you. We have turned off automatic click tracking,
-      session recording and person profiles, so events are only sent at the specific points we have chosen.
+      PostHog is configured with cookies, autocapture, pageview capture, person profiles and session recording all off.
+      Events are sent only at the specific points we have chosen.
     </p>
+    <p>Depending on the event, the properties sent are:</p>
+    <ul>
+      <li>entry point, whether a returning brew exists, and espresso or filter method group;</li>
+      <li>the selected method and a predefined issue category;</li>
+      <li>rule ID, adjustment type, direction and attempt number;</li>
+      <li>whether feedback was helpful;</li>
+      <li>related-content type and canonical content slug;</li>
+      <li>validation step and predefined error category;</li>
+      <li>the analytics schema version attached to every event.</li>
+    </ul>
     <p>
-      What is sent: which brewing method was chosen, which symptom was reported, which recommendation the assistant
-      gave, whether you marked it helpful, and which article you opened next.
-    </p>
-    <p>
-      What is never sent: your coffee dose, water, brew time or temperature, anything you typed, the identifier of a
-      brew saved in your browser, or your email address. Your brew history stays in your own browser and is never
-      uploaded.
+      We do not send your email address, free text, exact dose, yield, water, brew time or temperature, a full recipe,
+      or any session ID. Brew history stays in your own browser and is never uploaded.
     </p>
     <p>
       If you block analytics with a browser extension or a content blocker, the Brew Assistant carries on working
@@ -65,18 +85,42 @@ import TextPage from '../components/TextPage.astro';
     </p>
 
     <h2>Newsletter</h2>
-    <p>
-      The newsletter is not yet running. When it launches, subscriptions will use double opt-in: you enter your address,
-      we email you a confirmation link, and nothing is sent until you click it. Every email will carry a one-click
-      unsubscribe link, and unsubscribing removes your address from the sending list.
-    </p>
+    {
+      subscriptionsEnabled ? (
+        <>
+          <p>
+            Newsletter and shop waitlist subscriptions use Brevo as our email processor. When you submit a form, Brevo
+            sends a double opt-in message. You are added to the selected list only after following its confirmation link.
+            The sign-up source is stored so we send only the updates you requested.
+          </p>
+          <p>
+            We keep a confirmed address while the subscription is active. If you unsubscribe or ask for deletion, we
+            remove it from active mailing lists; a minimal suppression record may remain so the opt-out continues to be
+            honoured. Consent and delivery records are kept only as long as needed to demonstrate compliance and resolve
+            delivery or legal issues. Every marketing email includes an unsubscribe link.
+          </p>
+          <p>
+            Brevo processes this information on our behalf. Read the{' '}
+            <a href="https://www.brevo.com/legal/privacypolicy/" rel="external">
+              Brevo privacy policy
+            </a>
+            .
+          </p>
+        </>
+      ) : (
+        <p>
+          Newsletter and shop waitlist forms are currently disabled. KAVOVO does not collect or send email addresses to
+          an email provider while they remain disabled.
+        </p>
+      )
+    }
 
     <h2>Your choices</h2>
     <ul>
       <li>Unsubscribe at any time using the link in any email we send.</li>
       <li>
         Ask us what we hold about you, ask for it to be corrected, or ask for it to be deleted, by emailing
-        <a href="mailto:hello@kavovo.coffee">hello@kavovo.coffee</a>.
+        <a href="mailto:hello@kavovo.uk">hello@kavovo.uk</a>.
       </li>
     </ul>
     <p>We aim to answer requests within 30 days.</p>

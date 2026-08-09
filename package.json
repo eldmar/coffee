@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "images": "node scripts/build-images.mjs",
-    "verify": "astro build && node scripts/check-build.mjs"
+    "verify": "vitest run && astro build && node scripts/check-build.mjs",
+    "test": "vitest run"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.1",
@@ -27,6 +28,7 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "sharp": "^0.35.3"
+    "sharp": "^0.35.3",
+    "vitest": "^4.1.10"
   }
 }

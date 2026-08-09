@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import { thumbImage } from '../lib/cardImage';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
-import RecipeFinder from '../components/RecipeFinder';
+import TaskSelector from '../components/TaskSelector';
 import RecipeCard from '../components/RecipeCard.astro';
 import BrewMethods from '../components/BrewMethods.astro';
 import LearningPaths from '../components/LearningPaths.astro';
@@ -64,7 +64,7 @@ const finderRecipes = recipes.map((r) => ({
 
   <section class="mx-auto max-w-6xl px-5">
     <div class="relative z-10 -mt-2 md:-mt-28">
-      <RecipeFinder client:visible recipes={finderRecipes} />
+      <TaskSelector client:visible recipes={finderRecipes} />
     </div>
   </section>
 

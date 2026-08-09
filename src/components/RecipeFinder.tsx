@@ -17,6 +17,8 @@ export interface FinderRecipe {
 
 interface Props {
   recipes: FinderRecipe[];
+  /** Rendered inside TaskSelector, which already provides the card and heading. */
+  embedded?: boolean;
 }
 
 const methodOptions = [
@@ -81,7 +83,7 @@ function Field({
   );
 }
 
-export default function RecipeFinder({ recipes }: Props) {
+export default function RecipeFinder({ recipes, embedded = false }: Props) {
   const [method, setMethod] = useState('any');
   const [temp, setTemp] = useState('any');
   const [milk, setMilk] = useState('any');
@@ -100,9 +102,11 @@ export default function RecipeFinder({ recipes }: Props) {
   }
 
   return (
-    <div className="rounded-xl border border-line bg-card p-6 shadow-sm md:p-8">
-      <h2 className="font-display text-2xl font-medium">What do you want to make?</h2>
-      <form onSubmit={search} className="mt-5 flex flex-col gap-4 md:flex-row md:items-end">
+    <div className={embedded ? '' : 'rounded-xl border border-line bg-card p-6 shadow-sm md:p-8'}>
+      {!embedded && (
+        <h2 className="font-display text-2xl font-medium">What do you want to make?</h2>
+      )}
+      <form onSubmit={search} className={`flex flex-col gap-4 md:flex-row md:items-end ${embedded ? '' : 'mt-5'}`}>
         <Field
           label="Brew method"
           icon={

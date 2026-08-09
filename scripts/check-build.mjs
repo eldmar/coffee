@@ -78,6 +78,19 @@ for (const page of pages) {
 }
 for (const [href, from] of deadLinks) problems.push(`dead internal link ${href} (from ${from})`);
 
+// The Brew Assistant renders its links in the browser, so they never appear in
+// the static HTML the check above walks. Read them from the content map instead:
+// a renamed lesson should fail the build, not quietly link into nothing.
+const contentMap = 'src/lib/brew-assistant/content.ts';
+if (existsSync(contentMap)) {
+  const source = readFileSync(contentMap, 'utf8');
+  for (const match of source.matchAll(/href:\s*'(\/[^']+)'/g)) {
+    if (!existsSync(join(DIST, match[1], 'index.html'))) {
+      problems.push(`brew assistant links to a page that does not exist: ${match[1]}`);
+    }
+  }
+}
+
 if (problems.length > 0) {
   console.error(`\nBuild check ${warnOnly ? 'WARNING' : 'failed'}:\n`);
   for (const problem of problems.slice(0, 15)) console.error('  •', problem);

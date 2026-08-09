@@ -1,0 +1,74 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import BrewAssistant from '../components/brew-assistant/BrewAssistant';
+
+
+const faqs = [
+  {
+    q: 'Why does my espresso taste sour?',
+    a: 'Sourness usually means the water passed through the coffee too quickly to take much from it. Grinding finer is the first change to try, keeping the dose and yield the same.',
+    href: '/learn/dial-in-espresso/sour-vs-bitter-espresso/',
+    label: 'Sour vs Bitter Espresso',
+  },
+  {
+    q: 'Should I grind finer or coarser?',
+    a: 'Finer slows the brew and extracts more; coarser speeds it up and extracts less. Move one step at a time, and only after checking that the flow was even.',
+    href: '/learn/dial-in-espresso/grind-finer-or-coarser/',
+    label: 'Grind Finer or Coarser?',
+  },
+  {
+    q: 'Why does my filter coffee taste weak?',
+    a: 'Weak coffee is either under-extracted or simply too dilute. If it is sharp as well as weak, grind finer; if it is balanced but thin, use more coffee for the same water.',
+    href: '/learn/coffee-basics/coffee-to-water-ratio/',
+    label: 'Coffee-to-Water Ratio, Explained',
+  },
+  {
+    q: 'Why does coffee taste bitter or dry?',
+    a: 'Both point to the water taking too much from the grounds — or taking it unevenly. Grind coarser first, and if the cup tastes sour and bitter at once, fix the pour or the puck before the grinder.',
+    href: '/learn/coffee-basics/how-to-taste-coffee/',
+    label: 'How to Taste Coffee Without Overcomplicating It',
+  },
+];
+---
+
+<Layout
+  title="Coffee Brew Assistant — Fix Your Espresso or Filter Coffee | KAVOVO"
+  description="Tell KAVOVO how your espresso or filter coffee tasted and get one clear adjustment for your next brew."
+>
+  <div class="mx-auto max-w-3xl px-5 py-12">
+    <Breadcrumbs trail={[{ label: 'Brew Assistant' }]} />
+
+    <span class="eyebrow mt-6 block">KAVOVO Brew Assistant</span>
+    <h1 class="mt-2 font-display text-4xl font-medium text-balance">Fix your next brew</h1>
+    <p class="mt-4 text-lg text-ink-soft">
+      Enter the details of your last attempt and describe the result. KAVOVO will recommend one
+      change to try next.
+    </p>
+
+    <div class="mt-10">
+      {/* mode and issue arrive as query parameters, which a prerendered page
+          cannot see; the island reads them from the URL on mount. */}
+      <BrewAssistant client:load />
+    </div>
+
+    <section class="mt-16 border-t border-line pt-10">
+      <h2 class="font-display text-2xl font-medium">Common brewing questions</h2>
+      <dl class="mt-6 flex flex-col gap-6">
+        {
+          faqs.map((faq) => (
+            <div>
+              <dt class="font-medium">{faq.q}</dt>
+              <dd class="mt-2 text-ink-soft">
+                {faq.a}{' '}
+                <a href={faq.href} class="font-medium text-accent hover:underline">
+                  {faq.label} &#8594;
+                </a>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+  </div>
+</Layout>

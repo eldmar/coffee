@@ -1,5 +1,7 @@
 const BREVO_DOI_ENDPOINT = 'https://api.brevo.com/v3/contacts/doubleOptinConfirmation';
 const MAX_BODY_BYTES = 2_048;
+const CANONICAL_HOSTNAME = 'kavovo.uk';
+const LEGACY_HOSTNAMES = new Set(['coffee.ridkous.workers.dev', 'www.kavovo.uk']);
 
 export const SUCCESS_MESSAGE = 'Check your inbox to confirm your subscription.';
 export const VALIDATION_MESSAGE = 'Enter a valid email address.';
@@ -55,6 +57,18 @@ const responseHeaders = {
   'X-Robots-Tag': 'noindex, nofollow',
   Vary: 'Accept',
 };
+
+function canonicalRedirect(request: Request): Response | null {
+  const url = new URL(request.url);
+  const legacyHostname = LEGACY_HOSTNAMES.has(url.hostname);
+  const insecureCanonicalUrl = url.hostname === CANONICAL_HOSTNAME && url.protocol !== 'https:';
+  if (!legacyHostname && !insecureCanonicalUrl) return null;
+
+  url.protocol = 'https:';
+  url.hostname = CANONICAL_HOSTNAME;
+  url.port = '';
+  return Response.redirect(url.toString(), 301);
+}
 
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"']/g, (character) => {
@@ -376,6 +390,9 @@ async function subscribe(request: Request, env: Env): Promise<Response> {
 
 export const worker = {
   async fetch(request: Request, env: Env): Promise<Response> {
+    const redirect = canonicalRedirect(request);
+    if (redirect) return redirect;
+
     const { pathname } = new URL(request.url);
     if (pathname === '/api/subscribe') return subscribe(request, env);
     if (pathname.startsWith('/api/')) {

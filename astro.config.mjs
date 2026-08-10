@@ -6,7 +6,12 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 
 const SITE_URL = 'https://kavovo.uk';
-const SITEMAP_EXCLUSIONS = new Set(['/404/', '/search/', '/subscription-confirmed/']);
+const SITEMAP_EXCLUSIONS = new Set([
+  '/404/',
+  '/search/',
+  '/shop/',
+  '/subscription-confirmed/',
+]);
 
 // https://astro.build/config
 export default defineConfig({

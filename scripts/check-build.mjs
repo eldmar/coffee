@@ -84,6 +84,14 @@ if (existsSync(searchPage)) {
   }
 }
 
+const shopPage = join(DIST, 'shop', 'index.html');
+if (existsSync(shopPage)) {
+  const html = readFileSync(shopPage, 'utf8');
+  if (!/<meta name="robots" content="noindex, follow">/i.test(html)) {
+    problems.push('shop/index.html is missing noindex, follow while the shop is prelaunch');
+  }
+}
+
 for (const contentPage of [
   join(DIST, 'recipes', 'index.html'),
   join(DIST, 'guides', 'index.html'),
@@ -98,8 +106,10 @@ for (const contentPage of [
 for (const entry of readdirSync(DIST, { withFileTypes: true })) {
   if (!entry.isFile() || !entry.name.endsWith('.xml')) continue;
   const xml = readFileSync(join(DIST, entry.name), 'utf8');
-  if (/<loc>[^<]*\/search\/<\/loc>/i.test(xml)) {
-    problems.push(`${entry.name} includes the internal search page`);
+  for (const excludedPath of ['/404/', '/search/', '/shop/', '/subscription-confirmed/']) {
+    if (xml.includes(`<loc>https://kavovo.uk${excludedPath}</loc>`)) {
+      problems.push(`${entry.name} includes excluded page ${excludedPath}`);
+    }
   }
 }
 

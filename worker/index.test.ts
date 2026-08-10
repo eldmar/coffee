@@ -48,6 +48,42 @@ afterEach(() => {
 });
 
 describe('subscription worker routing', () => {
+  it('redirects the legacy Worker hostname while preserving path and query', async () => {
+    const { env, assetsFetch } = makeEnv();
+    const response = await worker.fetch(
+      new Request(
+        'https://coffee.ridkous.workers.dev/recipes/espresso-tonic/?utm_source=migration',
+      ),
+      env,
+    );
+
+    expect(response.status).toBe(301);
+    expect(response.headers.get('Location')).toBe(
+      'https://kavovo.uk/recipes/espresso-tonic/?utm_source=migration',
+    );
+    expect(assetsFetch).not.toHaveBeenCalled();
+  });
+
+  it('redirects www and plain HTTP to the canonical HTTPS origin', async () => {
+    const { env, assetsFetch } = makeEnv();
+    const wwwResponse = await worker.fetch(
+      new Request('https://www.kavovo.uk/learn/?from=www'),
+      env,
+    );
+    const httpResponse = await worker.fetch(
+      new Request('http://kavovo.uk/guides/v60/?from=http'),
+      env,
+    );
+
+    expect(wwwResponse.status).toBe(301);
+    expect(wwwResponse.headers.get('Location')).toBe('https://kavovo.uk/learn/?from=www');
+    expect(httpResponse.status).toBe(301);
+    expect(httpResponse.headers.get('Location')).toBe(
+      'https://kavovo.uk/guides/v60/?from=http',
+    );
+    expect(assetsFetch).not.toHaveBeenCalled();
+  });
+
   it('delegates non-API requests to static assets', async () => {
     const { env, assetsFetch } = makeEnv();
     const request = new Request('https://coffee.example/recipes/');

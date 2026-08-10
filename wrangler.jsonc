@@ -3,6 +3,7 @@
   "name": "coffee",
   "main": "./worker/index.ts",
   "compatibility_date": "2026-08-09",
+  "workers_dev": true,
   "routes": [
     {
       "pattern": "kavovo.uk",

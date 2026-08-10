@@ -57,8 +57,9 @@ const ogImageUrl = new URL(ogImage ?? photo('hero').src, Astro.site);
     <meta name="twitter:image" content={ogImageUrl} />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <Header />
-    <main>
+    <main id="main-content" tabindex="-1">
       <slot />
     </main>
     <Footer />

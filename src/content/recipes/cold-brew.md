@@ -2,6 +2,7 @@
 title: Overnight Cold Brew
 description: Smooth, sweet, and low in acidity — five minutes of prep, and the fridge does the rest overnight.
 image: cold-brew
+imageAlt: A tall glass of cold brew over ice beside a carafe
 category: iced-coffee
 brewMethod: cold-brew
 temperature: iced

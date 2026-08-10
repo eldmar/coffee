@@ -2,6 +2,7 @@
 title: V60 Pour Over
 description: A clean, balanced pour-over with bright clarity — the reference brew for tasting what your beans can do.
 image: v60-pour-over
+imageAlt: Hot water being poured into a V60 dripper over a glass server
 category: filter-coffee
 brewMethod: v60
 temperature: hot

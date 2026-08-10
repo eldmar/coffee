@@ -22,7 +22,6 @@ import {
   analyticsIssue,
   analyticsMethod,
   contentRef,
-  initAnalytics,
   normaliseEntryPoint,
   trackTypedBrewEvent,
   type BrewEntryPoint,
@@ -188,7 +187,6 @@ export default function BrewAssistant() {
   const feedbackReported = useRef(new Set<string>());
 
   useEffect(() => {
-    initAnalytics();
     setStorageStatus(storageAvailable() ? 'available' : 'unavailable');
     const saved = loadSessions();
     setHistory(saved);

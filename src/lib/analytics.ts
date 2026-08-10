@@ -1,5 +1,3 @@
-import posthog from 'posthog-js';
-
 /**
  * Privacy-first product analytics for the Brew Assistant.
  *
@@ -103,15 +101,20 @@ const PROHIBITED = new Set([
   'url',
 ]);
 
-let initialised = false;
+type PostHogClient = (typeof import('posthog-js'))['default'];
+
+let client: PostHogClient | null = null;
+let initialising: Promise<PostHogClient | null> | null = null;
 let warned = false;
 
 /** Enabled in production, or locally when explicitly switched on. */
 const enabled = () =>
   import.meta.env.PROD || import.meta.env.PUBLIC_ANALYTICS_ENABLED === 'true';
 
-export function initAnalytics(): void {
-  if (initialised || typeof window === 'undefined' || !enabled()) return;
+function analyticsClient(): Promise<PostHogClient | null> {
+  if (client) return Promise.resolve(client);
+  if (initialising) return initialising;
+  if (typeof window === 'undefined' || !enabled()) return Promise.resolve(null);
 
   const projectKey = import.meta.env.PUBLIC_POSTHOG_KEY;
   const apiHost = import.meta.env.PUBLIC_POSTHOG_HOST;
@@ -122,22 +125,30 @@ export function initAnalytics(): void {
       warned = true;
       console.warn('[Analytics] PostHog configuration is missing.');
     }
-    return;
+    initialising = Promise.resolve(null);
+    return initialising;
   }
 
-  try {
-    posthog.init(projectKey, {
-      api_host: apiHost,
-      autocapture: false,
-      capture_pageview: false,
-      person_profiles: 'never',
-      cookieless_mode: 'always',
-      disable_session_recording: true,
-    });
-    initialised = true;
-  } catch {
-    // A blocked or failed SDK must never surface to the person brewing coffee.
-  }
+  initialising = import('posthog-js')
+    .then(({ default: posthog }) => {
+      posthog.init(projectKey, {
+        api_host: apiHost,
+        autocapture: false,
+        capture_pageview: false,
+        person_profiles: 'never',
+        cookieless_mode: 'always',
+        disable_session_recording: true,
+      });
+      client = posthog;
+      return client;
+    })
+    .catch(() => null);
+
+  return initialising;
+}
+
+export function initAnalytics(): void {
+  void analyticsClient();
 }
 
 export function trackBrewEvent(event: string, properties: AnalyticsProperties = {}): void {
@@ -156,14 +167,14 @@ export function trackBrewEvent(event: string, properties: AnalyticsProperties = 
     return;
   }
 
-  if (!initialised) initAnalytics();
-  if (!initialised) return;
-
-  try {
-    posthog.capture(event, payload);
-  } catch {
-    // Analytics is a bystander. It never blocks or breaks the assistant.
-  }
+  void analyticsClient().then((posthog) => {
+    if (!posthog) return;
+    try {
+      posthog.capture(event, payload);
+    } catch {
+      // Analytics is a bystander. It never blocks or breaks the assistant.
+    }
+  });
 }
 
 export function trackTypedBrewEvent<TEvent extends keyof BrewAnalyticsEventMap>(

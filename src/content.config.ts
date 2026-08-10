@@ -9,7 +9,7 @@ const recipes = defineCollection({
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional(),
     image: z.string(),
-    imageAlt: z.string().optional(),
+    imageAlt: z.string(),
     // Shown above the recipe, e.g. an age advisory on alcoholic drinks.
     notice: z.string().optional(),
     category: z.enum([

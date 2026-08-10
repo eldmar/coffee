@@ -120,7 +120,7 @@ const share = shareText(data, extractSteps(recipe.body ?? ''), recipeUrl);
 
     <Photo
       name={data.image}
-      alt={data.imageAlt ?? data.title}
+      alt={data.imageAlt}
       sizes="(min-width: 768px) 768px, 100vw"
       class="mt-8 aspect-[16/9] w-full rounded-lg object-cover print:hidden"
       loading="eager"

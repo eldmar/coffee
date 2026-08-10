@@ -2,6 +2,7 @@
 title: Flat White
 description: A double shot of espresso under a thin layer of silky microfoam — strong, smooth, and velvety.
 image: flat-white
+imageAlt: A flat white with leaf-pattern latte art in a ceramic cup
 category: milk-drinks
 brewMethod: espresso
 temperature: hot

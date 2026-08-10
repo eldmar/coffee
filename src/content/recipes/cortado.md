@@ -4,6 +4,7 @@ description: A balanced combination of equal parts espresso and lightly textured
 seoTitle: How to Make a Cortado — KAVOVO
 seoDescription: Make a balanced cortado with equal parts double espresso and lightly textured steamed milk, plus the difference between a cortado and flat white.
 image: cortado
+imageAlt: A cortado with a small foam heart in a clear glass
 category: milk-drinks
 brewMethod: espresso
 temperature: hot

@@ -94,7 +94,7 @@ export default function SearchResults({ docs }: Props) {
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search KAVOVO"
             aria-label="Search recipes, guides, learning paths and journal articles"
-            className="w-full bg-transparent text-base placeholder:text-ink-soft/70"
+            className="w-full bg-transparent text-base placeholder:text-ink-soft"
           />
         </label>
       </form>

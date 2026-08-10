@@ -11,17 +11,19 @@ const BREVO_URL = 'https://api.brevo.com/v3/contacts/doubleOptinConfirmation';
 
 function makeEnv(overrides: Partial<Env> = {}) {
   const assetsFetch = vi.fn(async () => new Response('asset response'));
-  const limit = vi.fn(async () => ({ success: true }));
+  const emailLimit = vi.fn(async () => ({ success: true }));
+  const ipLimit = vi.fn(async () => ({ success: true }));
   const env: Env = {
     ASSETS: { fetch: assetsFetch },
-    SUBSCRIBE_RATE_LIMITER: { limit },
+    SUBSCRIBE_RATE_LIMITER: { limit: emailLimit },
+    SUBSCRIBE_IP_RATE_LIMITER: { limit: ipLimit },
     BREVO_API_KEY: 'brevo-secret',
     BREVO_LIST_ID: '42',
     BREVO_DOI_TEMPLATE_ID: '7',
     SITE_URL: 'https://coffee.example/',
     ...overrides,
   };
-  return { env, assetsFetch, limit };
+  return { env, assetsFetch, emailLimit, ipLimit };
 }
 
 function subscribeRequest(
@@ -30,7 +32,12 @@ function subscribeRequest(
 ): Request {
   return new Request('https://coffee.example/api/subscribe', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...headers },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'CF-Connecting-IP': '203.0.113.10',
+      ...headers,
+    },
     body: JSON.stringify(body),
   });
 }
@@ -114,7 +121,7 @@ describe('subscription validation and protection', () => {
   it('silently absorbs honeypot submissions', async () => {
     const brevoFetch = vi.fn();
     vi.stubGlobal('fetch', brevoFetch);
-    const { env, limit } = makeEnv();
+    const { env, emailLimit, ipLimit } = makeEnv();
 
     const response = await worker.fetch(
       subscribeRequest({ email: 'bot@example.com', source: 'unknown', website: 'spam.test' }),
@@ -123,7 +130,8 @@ describe('subscription validation and protection', () => {
 
     expect(response.status).toBe(200);
     expect((await response.json()).message).toBe(SUCCESS_MESSAGE);
-    expect(limit).not.toHaveBeenCalled();
+    expect(emailLimit).not.toHaveBeenCalled();
+    expect(ipLimit).not.toHaveBeenCalled();
     expect(brevoFetch).not.toHaveBeenCalled();
   });
 
@@ -160,8 +168,9 @@ describe('subscription validation and protection', () => {
 
   it('rate-limits repeated requests without exposing the address', async () => {
     vi.stubGlobal('fetch', vi.fn());
-    const { env, limit } = makeEnv({
-      SUBSCRIBE_RATE_LIMITER: { limit: vi.fn(async () => ({ success: false })) },
+    const emailLimit = vi.fn(async () => ({ success: false }));
+    const { env, ipLimit } = makeEnv({
+      SUBSCRIBE_RATE_LIMITER: { limit: emailLimit },
     });
     const response = await worker.fetch(
       subscribeRequest({
@@ -178,7 +187,30 @@ describe('subscription validation and protection', () => {
       code: 'rate_limited',
       message: SERVER_ERROR_MESSAGE,
     });
-    expect(limit).not.toHaveBeenCalled();
+    expect(emailLimit).toHaveBeenCalledTimes(1);
+    expect(String(emailLimit.mock.calls[0][0].key)).not.toContain('reader@example.com');
+    expect(ipLimit).toHaveBeenCalledTimes(1);
+  });
+
+  it('rate-limits address rotation without exposing the client IP', async () => {
+    vi.stubGlobal('fetch', vi.fn());
+    const ipLimit = vi.fn(async () => ({ success: false }));
+    const { env, emailLimit } = makeEnv({
+      SUBSCRIBE_IP_RATE_LIMITER: { limit: ipLimit },
+    });
+    const response = await worker.fetch(
+      subscribeRequest({
+        email: 'another-reader@example.com',
+        source: 'homepage-newsletter',
+        website: '',
+      }),
+      env,
+    );
+
+    expect(response.status).toBe(429);
+    expect(emailLimit).toHaveBeenCalledTimes(1);
+    expect(ipLimit).toHaveBeenCalledTimes(1);
+    expect(String(ipLimit.mock.calls[0][0].key)).not.toContain('203.0.113.10');
   });
 });
 
@@ -186,7 +218,7 @@ describe('Brevo double opt-in', () => {
   it('sends the approved fields and returns a neutral success response', async () => {
     const brevoFetch = vi.fn(async () => new Response('{}', { status: 201 }));
     vi.stubGlobal('fetch', brevoFetch);
-    const { env, limit } = makeEnv();
+    const { env, emailLimit, ipLimit } = makeEnv();
 
     const response = await worker.fetch(
       subscribeRequest({
@@ -203,8 +235,10 @@ describe('Brevo double opt-in', () => {
       code: 'confirmation_sent',
       message: SUCCESS_MESSAGE,
     });
-    expect(limit).toHaveBeenCalledTimes(1);
-    expect(String(limit.mock.calls[0][0].key)).not.toContain('reader@example.com');
+    expect(emailLimit).toHaveBeenCalledTimes(1);
+    expect(String(emailLimit.mock.calls[0][0].key)).not.toContain('reader@example.com');
+    expect(ipLimit).toHaveBeenCalledTimes(1);
+    expect(String(ipLimit.mock.calls[0][0].key)).not.toContain('203.0.113.10');
     expect(brevoFetch).toHaveBeenCalledTimes(1);
 
     const [url, init] = brevoFetch.mock.calls[0];

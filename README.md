@@ -36,6 +36,9 @@ in the Astro build environment. Before enabling it:
 4. Run `npm run verify`, deploy, and test both `homepage-newsletter` and
    `shop-waitlist` with a real inbox.
 
+The Worker applies separate rate limits to hashed email and IP keys. Their
+5-per-minute and 30-per-minute thresholds live in `wrangler.jsonc`.
+
 For local Worker testing, copy `.dev.vars.example` to `.dev.vars` and replace
 the placeholders. The local secrets file is ignored by Git.
 

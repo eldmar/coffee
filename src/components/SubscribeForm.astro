@@ -59,13 +59,13 @@ const brand = variant === 'brand';
   </form>
   <p
     id={statusId}
-    class:list={['mt-2 min-h-5 text-sm', brand ? 'text-ivory/85' : 'text-ink-soft']}
+    class:list={['mt-2 min-h-5 text-sm', brand ? 'text-ivory' : 'text-ink-soft']}
     role="status"
     aria-live="polite"
     data-subscribe-status
   ></p>
   <noscript>
-    <p class:list={['mt-1 text-xs', brand ? 'text-ivory/75' : 'text-ink-soft']}>
+    <p class:list={['mt-1 text-xs', brand ? 'text-ivory' : 'text-ink-soft']}>
       After submitting, a simple confirmation page will open.
     </p>
   </noscript>

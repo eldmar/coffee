@@ -12,7 +12,7 @@
   /* Core brand palette */
   --color-espresso: #2b211b;
   --color-kalyna: #a43b32;
-  --color-sage: #6e7455;
+  --color-sage: #606848;
   --color-ivory: #f3ebdd;
 
   /* Semantic surfaces, derived from the palette */
@@ -32,7 +32,7 @@
   /* Focus and validation. Kalyna is reserved for real errors, so focus is
      sage — inside a form a red ring reads as "you typed something wrong". */
   --color-focus: var(--color-sage);
-  --color-focus-ring: rgb(110 116 85 / 14%);
+  --color-focus-ring: rgb(96 104 72 / 14%);
   --color-invalid: var(--color-kalyna);
   --color-invalid-ring: rgb(164 59 50 / 14%);
 
@@ -60,6 +60,25 @@ body {
   color: var(--color-ink);
   background-color: var(--color-paper);
   -webkit-font-smoothing: antialiased;
+}
+
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 50;
+  transform: translateY(-200%);
+  border-radius: var(--radius-md);
+  background-color: var(--color-card);
+  padding: 0.65rem 1rem;
+  color: var(--color-ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgb(43 33 27 / 18%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
 }
 
 .font-display {

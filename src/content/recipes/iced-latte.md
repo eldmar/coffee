@@ -4,6 +4,7 @@ description: A refreshing double espresso poured over cold milk and ice, with a 
 seoTitle: Easy Iced Latte Recipe — KAVOVO
 seoDescription: Make a refreshing iced latte at home with double espresso, cold milk and plenty of ice, plus simple vanilla and honey variations.
 image: iced-latte
+imageAlt: A layered iced latte in a tall glass on a wooden coaster
 category: iced-coffee
 brewMethod: espresso
 temperature: iced

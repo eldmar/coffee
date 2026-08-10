@@ -48,8 +48,8 @@ describe('switched on without configuration', () => {
     });
     trackBrewEvent('brew_assistant_opened', { entry_point: 'homepage' });
     trackBrewEvent('brew_assistant_opened', { entry_point: 'homepage' });
+    await vi.waitFor(() => expect(console.warn).toHaveBeenCalledTimes(1));
     expect(capture).not.toHaveBeenCalled();
-    expect(console.warn).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -62,24 +62,28 @@ describe('switched on with configuration', () => {
   it('stamps every event with the schema version', async () => {
     const { trackTypedBrewEvent } = await loadAnalytics(true, env);
     trackTypedBrewEvent('brew_method_selected', { method: 'espresso', entry_point: 'homepage' });
-    expect(capture).toHaveBeenCalledWith(
-      'brew_method_selected',
-      expect.objectContaining({ analytics_version: 1 }),
+    await vi.waitFor(() =>
+      expect(capture).toHaveBeenCalledWith(
+        'brew_method_selected',
+        expect.objectContaining({ analytics_version: 1 }),
+      ),
     );
   });
 
   it('initialises with autocapture, profiles and replay all off', async () => {
     const { trackTypedBrewEvent } = await loadAnalytics(true, env);
     trackTypedBrewEvent('brew_method_selected', { method: 'v60', entry_point: 'direct' });
-    expect(init).toHaveBeenCalledWith(
-      'phc_test',
-      expect.objectContaining({
-        autocapture: false,
-        capture_pageview: false,
-        person_profiles: 'never',
-        cookieless_mode: 'always',
-        disable_session_recording: true,
-      }),
+    await vi.waitFor(() =>
+      expect(init).toHaveBeenCalledWith(
+        'phc_test',
+        expect.objectContaining({
+          autocapture: false,
+          capture_pageview: false,
+          person_profiles: 'never',
+          cookieless_mode: 'always',
+          disable_session_recording: true,
+        }),
+      ),
     );
   });
 
@@ -99,6 +103,7 @@ describe('switched on with configuration', () => {
     expect(() =>
       trackTypedBrewEvent('brew_method_selected', { method: 'espresso', entry_point: 'direct' }),
     ).not.toThrow();
+    await vi.waitFor(() => expect(capture).toHaveBeenCalledTimes(1));
   });
 });
 

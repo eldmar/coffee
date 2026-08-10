@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import RecipeFinder, { type FinderRecipe } from './RecipeFinder';
 import {
   analyticsIssue,
-  initAnalytics,
   trackTypedBrewEvent,
 } from '../lib/analytics';
 import { loadSessions } from '../lib/brew-assistant/storage';
@@ -44,10 +43,6 @@ export default function TaskSelector({ recipes }: { recipes: FinderRecipe[] }) {
   const [issue, setIssue] = useState<string | null>(null);
   // Opening the tab is reported once, however many times it is switched to.
   const openedReported = useRef(false);
-
-  useEffect(() => {
-    initAnalytics();
-  }, []);
 
   useEffect(() => {
     if (tab !== 'fix' || openedReported.current) return;

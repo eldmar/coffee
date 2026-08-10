@@ -19,6 +19,7 @@ interface RateLimitBinding {
 export interface Env {
   ASSETS: AssetsBinding;
   SUBSCRIBE_RATE_LIMITER: RateLimitBinding;
+  SUBSCRIBE_IP_RATE_LIMITER: RateLimitBinding;
   BREVO_API_KEY?: string;
   BREVO_LIST_ID?: string;
   BREVO_DOI_TEMPLATE_ID?: string;
@@ -88,7 +89,7 @@ function htmlResponse(status: number, body: ApiBody, source?: SubscribeSource): 
       h1 { margin: 0; font-family: Georgia, serif; font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 500; }
       p { margin: 1rem auto 0; max-width: 34rem; color: #6f6357; line-height: 1.6; }
       a { display: inline-block; margin-top: 1.5rem; border-radius: .5rem; background: #a43b32; color: #f3ebdd; padding: .7rem 1rem; text-decoration: none; }
-      a:focus-visible { outline: 2px solid #6e7455; outline-offset: 3px; }
+      a:focus-visible { outline: 2px solid #606848; outline-offset: 3px; }
     </style>
   </head>
   <body>
@@ -206,12 +207,20 @@ function subscriptionConfig(env: Env): {
   }
 }
 
-async function emailRateLimitKey(email: string, source: SubscribeSource): Promise<string> {
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email));
+async function rateLimitHash(value: string): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
   const hash = [...new Uint8Array(digest)]
     .map((byte) => byte.toString(16).padStart(2, '0'))
     .join('');
-  return `${source}:${hash}`;
+  return hash;
+}
+
+async function emailRateLimitKey(email: string, source: SubscribeSource): Promise<string> {
+  return `${source}:email:${await rateLimitHash(email)}`;
+}
+
+async function ipRateLimitKey(ip: string): Promise<string> {
+  return `ip:${await rateLimitHash(ip)}`;
 }
 
 async function subscribe(request: Request, env: Env): Promise<Response> {
@@ -290,10 +299,22 @@ async function subscribe(request: Request, env: Env): Promise<Response> {
     );
   }
 
-  const rateLimit = await env.SUBSCRIBE_RATE_LIMITER.limit({
-    key: await emailRateLimitKey(payload.email, source),
-  });
-  if (!rateLimit.success) {
+  const clientIp = request.headers.get('CF-Connecting-IP');
+  const rateLimits = [
+    env.SUBSCRIBE_RATE_LIMITER.limit({
+      key: await emailRateLimitKey(payload.email, source),
+    }),
+  ];
+  if (clientIp) {
+    rateLimits.push(
+      env.SUBSCRIBE_IP_RATE_LIMITER.limit({
+        key: await ipRateLimitKey(clientIp),
+      }),
+    );
+  }
+
+  const limits = await Promise.all(rateLimits);
+  if (limits.some(({ success }) => !success)) {
     return apiResponse(
       request,
       429,

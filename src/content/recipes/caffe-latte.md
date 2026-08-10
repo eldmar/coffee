@@ -3,6 +3,7 @@ title: Caffè Latte
 description: A smooth double espresso topped with silky steamed milk and a thin layer of microfoam.
 seoDescription: Learn how to make a smooth caffè latte with double espresso, silky steamed milk and a thin layer of microfoam.
 image: caffe-latte
+imageAlt: A caffè latte with heart-shaped latte art in a ceramic cup
 category: milk-drinks
 brewMethod: espresso
 temperature: hot

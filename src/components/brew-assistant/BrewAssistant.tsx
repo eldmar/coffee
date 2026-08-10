@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { diagnose } from '../../lib/brew-assistant/rules';
+import { parseAssistantParams } from '../../lib/brew-assistant/query';
 import { hasBlockingError, parseNumber, validate } from '../../lib/brew-assistant/validation';
 import {
   clearAll,
@@ -52,6 +53,7 @@ const BEHAVIOURS: Record<Method, [Behaviour, string][]> = {
     ['espresso-fast', 'Too fast'],
     ['espresso-slow', 'Too slow'],
     ['espresso-spraying', 'Spraying or uneven flow'],
+    ['espresso-low-crema', 'Little or no crema'],
     ['none', 'No visible problem'],
   ],
   v60: [
@@ -137,23 +139,21 @@ const totalSeconds = (draft: Draft, method: Method) =>
 const FILTER_METHODS: Method[] = ['v60', 'aeropress', 'french-press'];
 
 /**
- * The homepage sends ?mode= (one method) or ?group=filter (choose from the three
- * filter brewers), plus ?issue=. Anything else in the URL is ignored.
+ * The homepage still sends legacy ?mode=. The floating widget uses ?method=.
+ * Both pass through the same allowlist before they can seed the form.
  */
 function fromUrl() {
-  const empty = { method: null, group: null, taste: null, behaviour: null, fresh: false };
-  if (typeof window === 'undefined') return empty;
-  const params = new URLSearchParams(window.location.search);
-  const mode = params.get('mode');
-  const issue = params.get('issue');
-  return {
-    method: METHODS.some(([m]) => m === mode) ? (mode as Method) : null,
-    group: params.get('group') === 'filter' ? ('filter' as const) : null,
-    taste: TASTES.some(([t]) => t === issue) ? (issue as Taste) : null,
-    behaviour: BEHAVIOURS.espresso.some(([b]) => b === issue) ? (issue as Behaviour) : null,
-    fresh: params.get('new') === '1',
-    entry: normaliseEntryPoint(params.get('entry')),
+  const empty = {
+    method: null,
+    group: null,
+    taste: null,
+    behaviour: null,
+    fresh: false,
+    entry: 'direct' as BrewEntryPoint,
   };
+  if (typeof window === 'undefined') return empty;
+  const seed = parseAssistantParams(window.location.search);
+  return { ...seed, entry: normaliseEntryPoint(seed.entry) };
 }
 
 export default function BrewAssistant() {

@@ -30,6 +30,36 @@ const base = (input: BrewInput): Pick<BrewDiagnosis, 'method' | 'needsClarificat
 });
 
 export const espressoRules: Rule[] = [
+  {
+    id: 'espresso_low_crema_good_taste',
+    priority: 10,
+    test: (input) =>
+      input.behaviour === 'espresso-low-crema' &&
+      !has(input, 'sour', 'bitter', 'weak', 'dry', 'hollow'),
+    build: (input) => ({
+      ...base(input),
+      diagnosis: 'The espresso tastes good, so crema alone is not a reason to change the recipe.',
+      adjustment: {
+        variable: 'freshness',
+        direction: 'improve',
+        title: "Check the coffee's freshness",
+      },
+      keepConstant: ['Grind', 'Dose', 'Yield', 'Temperature'],
+      nextTarget: {
+        dose: input.dose,
+        yieldOut: input.yieldOut,
+        timeMin: TARGET_TIME[0],
+        timeMax: TARGET_TIME[1],
+      },
+      reasons: [
+        'Crema changes with roast level, bean variety and time since roasting, even when extraction is good.',
+        'Keep the recipe where it is and check the roast date before moving the grinder.',
+      ],
+      relatedContent: ['freshness', 'doseYieldTime'],
+      ruleId: 'espresso_low_crema_good_taste',
+    }),
+  },
+
   // 2. Method-specific technical problem, before anything about taste.
   {
     id: 'espresso_channeling',

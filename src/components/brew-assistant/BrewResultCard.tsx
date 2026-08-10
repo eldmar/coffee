@@ -13,6 +13,7 @@ function targetLine(method: Method, target: BrewDiagnosis['nextTarget']): string
   if (target.dose !== undefined) parts.push(`${target.dose} g in`);
   if (target.yieldOut !== undefined) parts.push(`${target.yieldOut} g out`);
   if (target.water !== undefined) parts.push(`${target.water} g water`);
+  if (target.bypass !== undefined) parts.push(`${target.bypass} g bypass after pressing`);
   const time =
     target.timeMin !== undefined && target.timeMax !== undefined
       ? timeRange(target.timeMin, target.timeMax)

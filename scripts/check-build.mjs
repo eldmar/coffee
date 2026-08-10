@@ -92,6 +92,25 @@ if (existsSync(shopPage)) {
   }
 }
 
+const homePage = join(DIST, 'index.html');
+if (existsSync(homePage)) {
+  const html = readFileSync(homePage, 'utf8');
+  if (!html.includes('data-brew-widget')) {
+    problems.push('index.html is missing the global Fix my coffee widget');
+  }
+}
+
+const assistantPage = join(DIST, 'assistant', 'index.html');
+if (existsSync(assistantPage)) {
+  const html = readFileSync(assistantPage, 'utf8');
+  if (html.includes('data-brew-widget')) {
+    problems.push('assistant/index.html includes the floating widget beside the full assistant');
+  }
+  if (!/<link rel="canonical" href="https:\/\/kavovo\.uk\/assistant\/">/i.test(html)) {
+    problems.push('assistant/index.html canonical must stay query-free');
+  }
+}
+
 for (const contentPage of [
   join(DIST, 'recipes', 'index.html'),
   join(DIST, 'guides', 'index.html'),

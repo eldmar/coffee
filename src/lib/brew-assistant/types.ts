@@ -20,6 +20,7 @@ export type Behaviour =
   | 'espresso-fast'
   | 'espresso-slow'
   | 'espresso-spraying'
+  | 'espresso-low-crema'
   | 'v60-stalled'
   | 'v60-fast'
   | 'v60-uneven'
@@ -60,7 +61,15 @@ export interface BrewDiagnosis {
   method: Method;
   diagnosis: string;
   adjustment: {
-    variable: 'grind' | 'dose' | 'yield' | 'time' | 'temperature' | 'technique';
+    variable:
+      | 'grind'
+      | 'dose'
+      | 'yield'
+      | 'water'
+      | 'time'
+      | 'temperature'
+      | 'technique'
+      | 'freshness';
     direction: 'increase' | 'decrease' | 'finer' | 'coarser' | 'improve';
     title: string;
   };
@@ -69,6 +78,8 @@ export interface BrewDiagnosis {
     dose?: number;
     yieldOut?: number;
     water?: number;
+    /** AeroPress: water added to the finished concentrate. */
+    bypass?: number;
     timeMin?: number;
     timeMax?: number;
     temperature?: number;

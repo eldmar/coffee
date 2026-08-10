@@ -70,6 +70,27 @@ describe('switched on with configuration', () => {
     );
   });
 
+  it('sends only the allowed compact diagnosis properties for the widget', async () => {
+    const { trackTypedBrewEvent } = await loadAnalytics(true, env);
+    trackTypedBrewEvent('brew_diagnosis_completed', {
+      method: 'espresso',
+      issue: 'sour',
+      recommendation_id: 'espresso_fast_sour',
+      adjustment_type: 'grind-finer',
+      entry_point: 'floating_widget',
+    });
+    await vi.waitFor(() =>
+      expect(capture).toHaveBeenCalledWith('brew_diagnosis_completed', {
+        analytics_version: 1,
+        method: 'espresso',
+        issue: 'sour',
+        recommendation_id: 'espresso_fast_sour',
+        adjustment_type: 'grind-finer',
+        entry_point: 'floating_widget',
+      }),
+    );
+  });
+
   it('initialises with autocapture, profiles and replay all off', async () => {
     const { trackTypedBrewEvent } = await loadAnalytics(true, env);
     trackTypedBrewEvent('brew_method_selected', { method: 'v60', entry_point: 'direct' });
@@ -92,6 +113,7 @@ describe('switched on with configuration', () => {
     trackBrewEvent('brew_diagnosis_completed', { method: 'espresso', dose: 18 });
     trackBrewEvent('brew_diagnosis_completed', { method: 'espresso', notes: 'tasted odd' });
     trackBrewEvent('brew_diagnosis_completed', { method: 'espresso', session_id: 'abc' });
+    trackBrewEvent('brew_diagnosis_completed', { method: 'espresso', brew_time: 28 });
     expect(capture).not.toHaveBeenCalled();
   });
 
@@ -127,6 +149,11 @@ describe('normalisation', () => {
     expect(normaliseEntryPoint('guide')).toBe('guide');
     expect(normaliseEntryPoint('utm_campaign_spam')).toBe('direct');
     expect(normaliseEntryPoint(null)).toBe('direct');
+  });
+
+  it('normalises the widget URL token to the shared analytics entry point', async () => {
+    const { normaliseEntryPoint } = await loadAnalytics(false);
+    expect(normaliseEntryPoint('widget')).toBe('floating_widget');
   });
 
   it('reduces a link to a content type and slug, dropping the query', async () => {

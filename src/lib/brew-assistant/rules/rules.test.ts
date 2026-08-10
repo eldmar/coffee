@@ -55,6 +55,12 @@ describe('espresso rules', () => {
     expect(result.adjustment.direction).toBe('increase');
   });
 
+  it('checks freshness instead of changing extraction for good espresso with little crema', () => {
+    const result = diagnose(espresso({ behaviour: 'espresso-low-crema', tastes: [] }));
+    expect(result.adjustment.variable).toBe('freshness');
+    expect(result.ruleId).toBe('espresso_low_crema_good_taste');
+  });
+
   // The scenario the spec calls out by name.
   it('matches the required acceptance scenario', () => {
     const result = diagnose(
@@ -85,6 +91,21 @@ describe('filter rules', () => {
     const result = diagnose(filter('aeropress', { time: 60, tastes: ['sour'] }));
     expect(result.adjustment.variable).toBe('time');
     expect(result.adjustment.direction).toBe('increase');
+  });
+
+  it('adds bypass water to strong AeroPress that is not bitter', () => {
+    const result = diagnose(
+      filter('aeropress', { dose: 20, water: 250, tastes: ['strong'], time: 180 }),
+    );
+    expect(result.adjustment.variable).toBe('water');
+    expect(result.ruleId).toBe('aeropress_strong_balanced');
+    expect(result.nextTarget.bypass).toBeGreaterThan(0);
+  });
+
+  it('sends muddy AeroPress coarser', () => {
+    const result = diagnose(filter('aeropress', { tastes: ['muddy'] }));
+    expect(result.adjustment.direction).toBe('coarser');
+    expect(result.ruleId).toBe('aeropress_muddy');
   });
 
   it('sends a gritty French press coarser', () => {

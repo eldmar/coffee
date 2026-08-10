@@ -47,6 +47,10 @@ export const CONTENT: Record<string, ContentLink> = {
     label: 'How to Taste Coffee Without Overcomplicating It',
     href: '/learn/coffee-basics/how-to-taste-coffee/',
   },
+  freshness: {
+    label: 'Coffee Freshness and Roast Dates',
+    href: '/learn/understand-your-beans/coffee-freshness-roast-dates/',
+  },
   espressoGuide: { label: 'Espresso brew guide', href: '/guides/espresso/' },
   v60Guide: { label: 'V60 brew guide', href: '/guides/v60/' },
   aeropressGuide: { label: 'AeroPress brew guide', href: '/guides/aeropress/' },

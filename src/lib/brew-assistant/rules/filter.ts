@@ -1,5 +1,5 @@
 import type { BrewDiagnosis, BrewInput, Method } from '../types';
-import { has, round, tastesOver, tastesUnder, type Metrics, type Rule } from './shared';
+import { has, round, tastesOver, tastesUnder, type Rule } from './shared';
 
 /** Around 60 g of coffee per litre, the starting zone for filter brewing. */
 const TARGET_RATIO = 16.7;
@@ -60,7 +60,7 @@ const commonFilterRules: Rule[] = [
     priority: 40,
     // Weak without the sharpness of under-extraction: a dilution problem.
     test: (input, m) => has(input, 'weak') && !has(input, 'sour', 'hollow') && m.ratio > 17.5,
-    build: (input, m) => ({
+    build: (input) => ({
       ...base(input),
       diagnosis: 'The brew is balanced but there is more water than the coffee can fill.',
       adjustment: { variable: 'dose', direction: 'increase', title: 'Use a little more coffee' },
@@ -72,7 +72,7 @@ const commonFilterRules: Rule[] = [
         timeMax: window(input)[1],
       },
       reasons: [
-        `At ${m.ratio.toFixed(1)} parts water to one of coffee, this is a dilution problem rather than an extraction one.`,
+        'The cup is diluted rather than under-extracted, so changing the grind would solve the wrong problem.',
         'More coffee at the same water raises the strength without changing how the brew extracts.',
       ],
       relatedContent: ['ratio', guideKey[input.method]],
@@ -83,7 +83,7 @@ const commonFilterRules: Rule[] = [
     id: 'filter_ratio_strong',
     priority: 40,
     test: (input, m) => has(input, 'strong') && !tastesOver(input) && m.ratio < 15,
-    build: (input, m) => ({
+    build: (input) => ({
       ...base(input),
       diagnosis: 'The brew is concentrated rather than over-extracted.',
       adjustment: { variable: 'dose', direction: 'decrease', title: 'Use a little less coffee' },
@@ -95,7 +95,7 @@ const commonFilterRules: Rule[] = [
         timeMax: window(input)[1],
       },
       reasons: [
-        `At ${m.ratio.toFixed(1)} parts water to one of coffee there is simply a lot of coffee in the cup.`,
+        'The cup is concentrated rather than over-extracted, so changing the grind would solve the wrong problem.',
         'Nothing here says it is over-extracted, so lower the dose rather than coarsening the grind.',
       ],
       relatedContent: ['ratio', guideKey[input.method]],
@@ -231,6 +231,16 @@ export const v60Rules: Rule[] = [
 
 export const aeropressRules: Rule[] = [
   {
+    id: 'aeropress_muddy',
+    priority: 20,
+    test: (input) => has(input, 'muddy'),
+    build: (input) =>
+      grindCoarser(input, 'aeropress_muddy', 'Fine particles are making the cup muddy.', [
+        'A grind that is too fine can pass through or clog the filter and leave a heavy, silty cup.',
+        'Move one step coarser and keep the steep and press unchanged.',
+      ]),
+  },
+  {
     id: 'aeropress_easy_press_weak',
     priority: 20,
     test: (input) => input.behaviour === 'aeropress-easy' && tastesUnder(input),
@@ -284,6 +294,31 @@ export const aeropressRules: Rule[] = [
       ],
       relatedContent: ['aeropressGuide', 'grindSize'],
       ruleId: 'aeropress_long_steep_bitter',
+    }),
+  },
+  {
+    id: 'aeropress_strong_balanced',
+    priority: 35,
+    test: (input) => has(input, 'strong') && !tastesOver(input),
+    build: (input) => ({
+      ...base(input),
+      diagnosis: 'The cup is concentrated rather than over-extracted.',
+      adjustment: {
+        variable: 'water',
+        direction: 'increase',
+        title: 'Add a small bypass after pressing',
+      },
+      keepConstant: ['Grind', 'Dose', 'Steep time', 'Temperature'],
+      nextTarget: {
+        ...unchanged(input),
+        bypass: Math.max(20, round((input.water ?? 200) * 0.1, 5)),
+      },
+      reasons: [
+        'Nothing here points to bitterness or over-extraction; the finished coffee is simply concentrated.',
+        'A little hot water after pressing lowers the strength without changing the extraction.',
+      ],
+      relatedContent: ['ratio', 'aeropressGuide'],
+      ruleId: 'aeropress_strong_balanced',
     }),
   },
   ...commonFilterRules,

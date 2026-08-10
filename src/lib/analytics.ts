@@ -8,9 +8,26 @@
 
 export type BrewMethod = 'espresso' | 'v60' | 'aeropress' | 'french_press';
 
-export type BrewEntryPoint = 'homepage' | 'assistant_page' | 'guide' | 'recipe' | 'direct';
+export type BrewEntryPoint =
+  | 'homepage'
+  | 'assistant_page'
+  | 'guide'
+  | 'recipe'
+  | 'floating_widget'
+  | 'direct';
 
-export type BrewIssue = 'sour' | 'bitter' | 'weak' | 'dry' | 'too_fast' | 'too_slow' | 'not_sure';
+export type BrewIssue =
+  | 'sour'
+  | 'bitter'
+  | 'weak'
+  | 'strong'
+  | 'dry'
+  | 'muddy'
+  | 'flat'
+  | 'crema'
+  | 'too_fast'
+  | 'too_slow'
+  | 'not_sure';
 
 export type BrewAdjustment =
   | 'grind'
@@ -19,48 +36,86 @@ export type BrewAdjustment =
   | 'water'
   | 'time'
   | 'temperature'
-  | 'technique';
+  | 'technique'
+  | 'freshness';
 
 export type BrewDirection = 'finer' | 'coarser' | 'increase' | 'decrease' | 'improve';
 
 export type BrewAnalyticsEventMap = {
+  brew_widget_opened: {
+    page_type: 'home' | 'recipe' | 'guide' | 'learn' | 'journal' | 'other';
+    pathname: string;
+  };
+  brew_widget_closed: {
+    step: 'welcome' | 'method' | 'issue' | 'follow-up' | 'recommendation' | 'feedback';
+    has_recommendation: boolean;
+  };
+  brew_widget_full_assistant_opened: {
+    method: BrewMethod;
+    issue: BrewIssue;
+    source_step: 'issue' | 'follow-up' | 'recommendation' | 'feedback';
+  };
   brew_assistant_opened: {
     entry_point: BrewEntryPoint;
     returning_brewer: boolean;
   };
   brew_assistant_started: {
     entry_point: BrewEntryPoint;
-    method_group: 'espresso' | 'filter';
-    initial_issue: BrewIssue;
+    method_group?: 'espresso' | 'filter';
+    initial_issue?: BrewIssue;
   };
   brew_method_selected: {
     method: BrewMethod;
     entry_point: BrewEntryPoint;
   };
-  brew_diagnosis_completed: {
-    method: BrewMethod;
-    rule_id: string;
-    adjustment: BrewAdjustment;
-    direction: BrewDirection;
-    attempt_number: number;
-    entry_point: BrewEntryPoint;
-  };
-  brew_next_attempt_started: {
-    method: BrewMethod;
-    previous_rule_id: string;
-    attempt_number: number;
-  };
-  brew_next_attempt_completed: {
-    method: BrewMethod;
-    rule_id: string;
-    attempt_number: number;
-  };
-  brew_feedback_submitted: {
-    method: BrewMethod;
-    rule_id: string;
-    helpful: boolean;
-    attempt_number: number;
-  };
+  brew_diagnosis_completed:
+    | {
+        method: BrewMethod;
+        rule_id: string;
+        adjustment: BrewAdjustment;
+        direction: BrewDirection;
+        attempt_number: number;
+        entry_point: BrewEntryPoint;
+      }
+    | {
+        method: BrewMethod;
+        issue: BrewIssue;
+        recommendation_id: string;
+        adjustment_type: string;
+        entry_point: 'floating_widget';
+      };
+  brew_next_attempt_started:
+    | {
+        method: BrewMethod;
+        previous_rule_id: string;
+        attempt_number: number;
+      }
+    | {
+        method: BrewMethod;
+        entry_point: 'floating_widget';
+      };
+  brew_next_attempt_completed:
+    | {
+        method: BrewMethod;
+        rule_id: string;
+        attempt_number: number;
+      }
+    | {
+        recommendation_id: string;
+        entry_point: 'floating_widget';
+      };
+  brew_feedback_submitted:
+    | {
+        method: BrewMethod;
+        rule_id: string;
+        helpful: boolean;
+        attempt_number: number;
+      }
+    | {
+        recommendation_id: string;
+        result: 'better' | 'same' | 'worse' | 'not_tried' | 'yes' | 'not_yet';
+        entry_point: 'floating_widget';
+      };
   brew_related_content_clicked: {
     method: BrewMethod;
     rule_id: string;
@@ -86,9 +141,13 @@ const PROHIBITED = new Set([
   'dose',
   'yield',
   'yieldOut',
+  'yield_out',
   'water',
+  'brew_water',
   'time',
+  'brew_time',
   'temperature',
+  'brew_temperature',
   'notes',
   'session_id',
   'sessionId',
@@ -191,12 +250,15 @@ const ENTRY_POINTS: BrewEntryPoint[] = [
   'assistant_page',
   'guide',
   'recipe',
+  'floating_widget',
   'direct',
 ];
 
 /** Anything unrecognised becomes "direct" rather than travelling as-is. */
-export const normaliseEntryPoint = (raw: string | null | undefined): BrewEntryPoint =>
-  ENTRY_POINTS.includes(raw as BrewEntryPoint) ? (raw as BrewEntryPoint) : 'direct';
+export const normaliseEntryPoint = (raw: string | null | undefined): BrewEntryPoint => {
+  if (raw === 'widget') return 'floating_widget';
+  return ENTRY_POINTS.includes(raw as BrewEntryPoint) ? (raw as BrewEntryPoint) : 'direct';
+};
 
 /** The rule engine uses hyphens; the event taxonomy uses underscores. */
 export const analyticsMethod = (method: string): BrewMethod =>
@@ -206,7 +268,13 @@ const ISSUES: Record<string, BrewIssue> = {
   sour: 'sour',
   bitter: 'bitter',
   weak: 'weak',
+  strong: 'strong',
   dry: 'dry',
+  muddy: 'muddy',
+  flat: 'flat',
+  crema: 'crema',
+  fast: 'too_fast',
+  slow: 'too_slow',
   'espresso-fast': 'too_fast',
   'espresso-slow': 'too_slow',
   unsure: 'not_sure',

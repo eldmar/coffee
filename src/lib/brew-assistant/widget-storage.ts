@@ -60,14 +60,7 @@ const ADJUSTMENT_TYPES = new Set<WidgetAdjustmentType>([
   'change-technique',
   'check-freshness',
 ]);
-const FEEDBACK = new Set<WidgetFeedback>([
-  'yes',
-  'not_yet',
-  'better',
-  'same',
-  'worse',
-  'not_tried',
-]);
+const FEEDBACK = new Set<WidgetFeedback>(['better', 'same', 'worse', 'not_tried']);
 const ANSWER_VALUES: Record<WidgetQuestionId, Set<string>> = {
   closest: new Set(['sharp', 'harsh', 'thin', 'dry', 'flat']),
   flow: new Set(['fast', 'slow', 'expected', 'not-sure']),
@@ -118,6 +111,12 @@ export function isWidgetState(value: unknown): value is WidgetState {
   }
   if (state.method !== undefined && !METHODS.has(state.method)) return false;
   if (state.issue !== undefined && !ISSUES.has(state.issue)) return false;
+  if (
+    state.feedbackPending !== undefined &&
+    typeof state.feedbackPending !== 'boolean'
+  ) {
+    return false;
+  }
   if (state.feedback !== undefined && !FEEDBACK.has(state.feedback)) return false;
   if (state.startedAt !== undefined && !validDate(state.startedAt)) return false;
   if (
@@ -135,6 +134,21 @@ export function isWidgetState(value: unknown): value is WidgetState {
   ) {
     return false;
   }
+  if (state.feedbackPending && state.step !== 'recommendation') return false;
+  if (
+    state.feedback === 'not_tried' &&
+    (state.step !== 'recommendation' || !state.feedbackPending)
+  ) {
+    return false;
+  }
+  if (
+    state.step === 'recommendation' &&
+    state.feedback !== undefined &&
+    state.feedback !== 'not_tried'
+  ) {
+    return false;
+  }
+  if (state.step === 'feedback' && (!state.feedback || state.feedback === 'not_tried')) return false;
   if (
     state.attemptNumber !== undefined &&
     (!Number.isInteger(state.attemptNumber) || state.attemptNumber < 1)

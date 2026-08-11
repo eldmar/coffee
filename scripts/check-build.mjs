@@ -36,6 +36,7 @@ console.log(`Checking ${pages.length} pages in ${DIST}/`);
 
 const missingAssets = new Set();
 let onDemandImages = 0;
+let recipeSchemas = 0;
 
 for (const page of pages) {
   const html = readFileSync(page, 'utf8');
@@ -69,6 +70,44 @@ for (const page of pages) {
     for (const candidate of match[1].split(',')) {
       const url = candidate.trim().split(/\s+/)[0];
       if (/^\/(?:_astro|img)\//.test(url) && !existsSync(join(DIST, url))) missingAssets.add(url);
+    }
+  }
+
+  for (const match of html.matchAll(
+    /<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi,
+  )) {
+    let schema;
+    try {
+      schema = JSON.parse(match[1]);
+    } catch {
+      problems.push(`${relative(DIST, page)} contains invalid JSON-LD`);
+      continue;
+    }
+    if (schema?.['@type'] !== 'Recipe') continue;
+    recipeSchemas += 1;
+    const label = relative(DIST, page);
+    if (typeof schema.keywords !== 'string' || schema.keywords.trim().length === 0) {
+      problems.push(`${label} Recipe schema is missing keywords`);
+    }
+    if (!Array.isArray(schema.recipeInstructions) || schema.recipeInstructions.length === 0) {
+      problems.push(`${label} Recipe schema is missing recipeInstructions`);
+      continue;
+    }
+    for (const [index, step] of schema.recipeInstructions.entries()) {
+      if (step?.['@type'] !== 'HowToStep') {
+        problems.push(`${label} instruction ${index + 1} is not a HowToStep`);
+        continue;
+      }
+      if (typeof step.name !== 'string' || step.name.trim().length === 0) {
+        problems.push(`${label} instruction ${index + 1} is missing a descriptive name`);
+      }
+      if (typeof step.text !== 'string' || step.text.trim().length === 0) {
+        problems.push(`${label} instruction ${index + 1} is missing text`);
+      }
+      const fragment = typeof step.url === 'string' ? step.url.split('#')[1] : '';
+      if (!fragment || !html.includes(`id="${fragment}"`)) {
+        problems.push(`${label} instruction ${index + 1} URL does not target a rendered step`);
+      }
     }
   }
 }
@@ -133,6 +172,7 @@ for (const entry of readdirSync(DIST, { withFileTypes: true })) {
 }
 
 for (const asset of missingAssets) problems.push(`referenced but not emitted: ${asset}`);
+if (recipeSchemas === 0) problems.push('no Recipe schemas found in the production build');
 
 // Internal links. Lessons hand-pick their "put it into practice" links, and a
 // typo there is invisible until someone clicks it.
@@ -185,3 +225,4 @@ if (variants === 0) {
   if (!warnOnly) process.exit(1);
 }
 console.log(`Build check passed: ${pages.length} pages, ${variants} image variants served statically.`);
+console.log(`Structured data check passed: ${recipeSchemas} Recipe schemas.`);

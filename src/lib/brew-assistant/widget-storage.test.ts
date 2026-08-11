@@ -8,8 +8,10 @@ import {
   loadWidgetState,
   saveWidgetHistoryEntry,
   saveWidgetState,
+  setWidgetHistoryFeedback,
   type StorageLike,
 } from './widget-storage';
+import { isCompletedWidgetFeedback } from './widget-types';
 import type { WidgetHistoryEntry } from './widget-types';
 
 class MemoryStorage implements StorageLike {
@@ -38,9 +40,30 @@ const historyEntry = (createdAt: string, recommendationId: string): WidgetHistor
 });
 
 describe('widget session state', () => {
+  it('only treats an observed brew result as completed feedback', () => {
+    expect(isCompletedWidgetFeedback('better')).toBe(true);
+    expect(isCompletedWidgetFeedback('same')).toBe(true);
+    expect(isCompletedWidgetFeedback('worse')).toBe(true);
+    expect(isCompletedWidgetFeedback('not_tried')).toBe(false);
+  });
+
   it('round-trips a valid session', () => {
     const storage = new MemoryStorage();
     const state = { ...createWidgetState(), step: 'method' as const, attemptNumber: 1 };
+    saveWidgetState(storage, state);
+    expect(loadWidgetState(storage)).toEqual(state);
+  });
+
+  it('round-trips a recommendation waiting for the next brew', () => {
+    const storage = new MemoryStorage();
+    const state = {
+      ...createWidgetState(),
+      step: 'recommendation' as const,
+      method: 'espresso' as const,
+      issue: 'sour' as const,
+      recommendationId: 'espresso_fast_sour',
+      feedbackPending: true,
+    };
     saveWidgetState(storage, state);
     expect(loadWidgetState(storage)).toEqual(state);
   });
@@ -62,6 +85,32 @@ describe('widget session state', () => {
         method: 'espresso',
         issue: 'sour',
         answers: { flow: 'invented' },
+      }),
+    );
+    expect(loadWidgetState(storage)).toBeNull();
+
+    storage.setItem(
+      WIDGET_STATE_KEY,
+      JSON.stringify({
+        ...createWidgetState(),
+        step: 'feedback',
+        method: 'espresso',
+        issue: 'sour',
+        recommendationId: 'espresso_fast_sour',
+        feedback: 'yes',
+      }),
+    );
+    expect(loadWidgetState(storage)).toBeNull();
+
+    storage.setItem(
+      WIDGET_STATE_KEY,
+      JSON.stringify({
+        ...createWidgetState(),
+        step: 'recommendation',
+        method: 'espresso',
+        issue: 'sour',
+        recommendationId: 'espresso_fast_sour',
+        feedback: 'not_tried',
       }),
     );
     expect(loadWidgetState(storage)).toBeNull();
@@ -122,5 +171,14 @@ describe('widget history', () => {
       ]),
     );
     expect(loadWidgetHistory(storage).map((entry) => entry.recommendationId)).toEqual(['valid']);
+  });
+
+  it('replaces a pending history result with the observed brew result', () => {
+    const storage = new MemoryStorage();
+    const createdAt = new Date().toISOString();
+    saveWidgetHistoryEntry(storage, historyEntry(createdAt, 'espresso_fast_sour'));
+    setWidgetHistoryFeedback(storage, 'espresso_fast_sour', createdAt, 'not_tried');
+    setWidgetHistoryFeedback(storage, 'espresso_fast_sour', createdAt, 'better');
+    expect(loadWidgetHistory(storage)[0]?.feedback).toBe('better');
   });
 });

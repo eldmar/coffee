@@ -91,6 +91,23 @@ describe('switched on with configuration', () => {
     );
   });
 
+  it('captures only an observed next-brew result as widget feedback', async () => {
+    const { trackTypedBrewEvent } = await loadAnalytics(true, env);
+    trackTypedBrewEvent('brew_feedback_submitted', {
+      recommendation_id: 'espresso_fast_sour',
+      result: 'better',
+      entry_point: 'floating_widget',
+    });
+    await vi.waitFor(() =>
+      expect(capture).toHaveBeenCalledWith('brew_feedback_submitted', {
+        analytics_version: 1,
+        recommendation_id: 'espresso_fast_sour',
+        result: 'better',
+        entry_point: 'floating_widget',
+      }),
+    );
+  });
+
   it('initialises with autocapture, profiles and replay all off', async () => {
     const { trackTypedBrewEvent } = await loadAnalytics(true, env);
     trackTypedBrewEvent('brew_method_selected', { method: 'v60', entry_point: 'direct' });

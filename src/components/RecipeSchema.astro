@@ -2,7 +2,13 @@
 import { photo } from '../lib/photos';
 import type { CollectionEntry } from 'astro:content';
 import JsonLd from './JsonLd.astro';
-import { categoryLabel, extractSteps, isoDuration } from '../lib/recipes';
+import {
+  categoryLabel,
+  extractSteps,
+  isoDuration,
+  recipeKeywords,
+  recipeStepName,
+} from '../lib/recipes';
 import { equipmentFor } from '../lib/equipment';
 
 interface Props {
@@ -16,6 +22,7 @@ const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const url = `${site}/recipes/${recipe.id}/`;
 const steps = extractSteps(recipe.body ?? '');
 
+// Ratings, videos and step media belong here only when the page shows real source data.
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'Recipe',
@@ -35,6 +42,7 @@ const schema = {
     data.drinkYield === data.yield ? data.yield : `${data.yield} (${data.drinkYield})`,
   recipeCategory: categoryLabel(data.category),
   recipeCuisine: 'Coffee',
+  keywords: recipeKeywords(data),
   recipeIngredient: data.ingredients,
   tool: [
     ...equipmentFor(data.equipmentSet),
@@ -49,6 +57,7 @@ const schema = {
         recipeInstructions: steps.map((text, index) => ({
           '@type': 'HowToStep',
           position: index + 1,
+          name: recipeStepName(text),
           text,
           url: `${url}#step-${index + 1}`,
         })),

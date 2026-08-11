@@ -31,13 +31,12 @@ export type WidgetQuestionId =
   | 'strong-finish'
   | 'flat-character';
 
-export type WidgetFeedback =
-  | 'yes'
-  | 'not_yet'
-  | 'better'
-  | 'same'
-  | 'worse'
-  | 'not_tried';
+export type WidgetCompletedFeedback = 'better' | 'same' | 'worse';
+export type WidgetFeedback = WidgetCompletedFeedback | 'not_tried';
+
+export const isCompletedWidgetFeedback = (
+  feedback: WidgetFeedback,
+): feedback is WidgetCompletedFeedback => feedback !== 'not_tried';
 
 export type WidgetAdjustmentType =
   | 'grind-finer'
@@ -55,6 +54,7 @@ export interface WidgetState {
   issue?: WidgetIssue;
   answers: Partial<Record<WidgetQuestionId, string>>;
   recommendationId?: string;
+  feedbackPending?: boolean;
   feedback?: WidgetFeedback;
   attemptNumber?: number;
   startedAt?: string;

@@ -122,6 +122,63 @@ export function extractSteps(body: string): string[] {
     .map((m) => m[1].replace(/\*\*(.+?)\*\*/g, '$1'));
 }
 
+const METHOD_KEYWORDS = {
+  espresso: 'espresso-based drink',
+  aeropress: 'AeroPress brewing',
+  v60: 'pour-over brewing',
+  'french-press': 'immersion brewing',
+  'moka-pot': 'stovetop brewing',
+  'cold-brew': 'make-ahead coffee',
+  filter: 'drip brewing',
+  phin: 'Vietnamese phin brewing',
+  cezve: 'cezve brewing',
+} as const;
+
+interface RecipeKeywordData {
+  title: string;
+  brewMethod: keyof typeof METHOD_KEYWORDS;
+  temperature: 'hot' | 'iced';
+  milk: 'black' | 'milk';
+}
+
+/** Search descriptors that are distinct from recipeCategory and recipeCuisine. */
+export function recipeKeywords(data: RecipeKeywordData): string {
+  const keywords = [
+    `${data.title} recipe`,
+    METHOD_KEYWORDS[data.brewMethod],
+    data.temperature === 'iced' ? 'served over ice' : 'made at home',
+  ];
+  if (data.milk === 'milk') keywords.push('milk-based coffee');
+  return [...new Set(keywords)].join(', ');
+}
+
+/** A short, descriptive HowToStep name derived from the visible instruction. */
+export function recipeStepName(text: string): string {
+  const plain = text
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\s*\([^)]*\)/g, '')
+    .replace(/,\s*if possible,\s*/gi, ' ')
+    .replace(/[*_`]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const firstSentence = plain.match(/^[^.!?]+[.!?]?/)?.[0] ?? plain;
+  const conciseSentence = firstSentence.replace(/\s+and aim for\b.*$/i, '');
+  const firstClause = conciseSentence.split(/(?:,|;|\s+—\s+)/)[0]?.trim() ?? '';
+  const clauseIsDependent = /^(?:if|when|while|once|after|before)\b/i.test(firstClause);
+  const clauseEndsIncomplete =
+    /\b(?:a|an|and|at|for|from|in|into|of|or|the|to|with|approximately|firm)$/i.test(
+      firstClause,
+    );
+  const summary =
+    firstClause.split(/\s+/).length >= 6 &&
+    !firstClause.includes(':') &&
+    !clauseIsDependent &&
+    !clauseEndsIncomplete
+      ? firstClause
+      : conciseSentence;
+  return summary.replace(/[.,;:!?]+$/, '');
+}
+
 /** ISO 8601 duration for schema.org, e.g. 965 -> "PT16H5M". */
 export function isoDuration(minutes: number): string {
   const hours = Math.floor(minutes / 60);

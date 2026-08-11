@@ -113,7 +113,7 @@ export type BrewAnalyticsEventMap = {
       }
     | {
         recommendation_id: string;
-        result: 'better' | 'same' | 'worse' | 'not_tried' | 'yes' | 'not_yet';
+        result: 'better' | 'same' | 'worse';
         entry_point: 'floating_widget';
       };
   brew_related_content_clicked: {

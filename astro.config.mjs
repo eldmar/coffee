@@ -2,8 +2,10 @@
 import { defineConfig, passthroughImageService } from 'astro/config';
 
 import tailwindcss from '@tailwindcss/vite';
+import { satteri } from '@astrojs/markdown-satteri';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
+import satteriRecipeStepIds from './src/lib/satteri-recipe-step-ids.mjs';
 
 const SITE_URL = 'https://kavovo.uk';
 const SITEMAP_EXCLUSIONS = new Set([
@@ -22,6 +24,9 @@ export default defineConfig({
   // builds with its own adapter, where sharp cannot run, and Astro silently
   // falls back to a /_image endpoint that 404s on every photo.
   image: { service: passthroughImageService() },
+  markdown: {
+    processor: satteri({ hastPlugins: [satteriRecipeStepIds] }),
+  },
   vite: {
     plugins: [tailwindcss()],
   },

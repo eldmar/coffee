@@ -49,6 +49,9 @@
           <button class="brew-widget-text-action" type="button" hidden data-brew-widget-restart>
             Start over
           </button>
+          <button class="brew-widget-text-action" type="button" data-brew-widget-history>
+            Brew history
+          </button>
           <a class="brew-widget-text-action" href="/assistant/" hidden data-brew-widget-full>
             Open full assistant
           </a>
@@ -76,6 +79,7 @@
     setWidgetHistoryFeedback,
     type StorageLike,
   } from '../lib/brew-assistant/widget-storage';
+  import { isCompletedWidgetFeedback } from '../lib/brew-assistant/widget-types';
   import type {
     WidgetFeedback,
     WidgetHistoryEntry,
@@ -100,6 +104,7 @@
     const status = root.querySelector<HTMLElement>('[data-brew-widget-status]');
     const body = root.querySelector<HTMLElement>('[data-brew-widget-body]');
     const restartButton = root.querySelector<HTMLButtonElement>('[data-brew-widget-restart]');
+    const historyButton = root.querySelector<HTMLButtonElement>('[data-brew-widget-history]');
     const fullAssistantLink = root.querySelector<HTMLAnchorElement>('[data-brew-widget-full]');
 
     if (
@@ -110,6 +115,7 @@
       !status ||
       !body ||
       !restartButton ||
+      !historyButton ||
       !fullAssistantLink
     ) {
       return;
@@ -130,7 +136,9 @@
     const localStore = getStorage('localStorage');
     let state = loadWidgetState(sessionStore) ?? createWidgetState();
     let history = loadWidgetHistory(localStore);
-    let returningToRecommendation = state.step === 'recommendation';
+    let showFeedbackPrompt = false;
+    let showRecommendationHelp = false;
+    let showingHistory = false;
     let renderId = 0;
     const reportedRecommendations = new Set<string>();
     const reportedFeedback = new Set<string>();
@@ -180,7 +188,10 @@
     }
 
     function stepHeading(text: string): HTMLHeadingElement {
-      return make('h3', 'brew-widget-step-title', text);
+      const heading = make('h3', 'brew-widget-step-title', text);
+      heading.tabIndex = -1;
+      heading.dataset.brewWidgetStepHeading = '';
+      return heading;
     }
 
     function choices(
@@ -201,14 +212,26 @@
       });
     }
 
+    function focusRenderedStep(currentRender: number): void {
+      const heading = body.querySelector<HTMLElement>('[data-brew-widget-step-heading]');
+      if (!heading) return;
+      window.requestAnimationFrame(() => {
+        if (dialog.open && currentRender === renderId) heading.focus({ preventScroll: true });
+      });
+    }
+
     function feedbackKey(recommendationId: string): string {
       return `${state.startedAt ?? state.updatedAt}:${recommendationId}`;
     }
 
     async function updateFooter(engine: Engine): Promise<void> {
-      restartButton.hidden = state.step === 'welcome';
+      restartButton.hidden = state.step === 'welcome' || showingHistory;
+      historyButton.hidden = showingHistory;
+      historyButton.textContent =
+        history.length > 0 ? `Brew history (${history.length})` : 'Brew history';
       const canOpenFull = Boolean(state.method && state.issue && state.step !== 'method');
-      fullAssistantLink.hidden = !canOpenFull;
+      const fullAssistantIsInBody = state.step === 'recommendation' || state.step === 'feedback';
+      fullAssistantLink.hidden = !canOpenFull || showingHistory || fullAssistantIsInBody;
       if (!state.method || !state.issue) return;
       const issue = engine.resolvedWidgetIssue(state.issue, state.answers) ?? state.issue;
       fullAssistantLink.href = engine.buildFullAssistantHref(state.method, issue);
@@ -225,11 +248,22 @@
       };
     }
 
-    async function renderHistory(engine: Engine): Promise<HTMLElement | null> {
-      if (history.length === 0) return null;
-      const details = make('details', 'brew-widget-history');
-      details.append(make('summary', undefined, `Recent attempts (${history.length})`));
-      const list = make('ol');
+    function historyFeedbackLabel(feedback: WidgetFeedback | undefined): string {
+      if (feedback === 'better') return 'Better';
+      if (feedback === 'same') return 'About the same';
+      if (feedback === 'worse') return 'Worse';
+      return 'Awaiting result';
+    }
+
+    function renderHistoryView(engine: Engine): void {
+      body.append(stepHeading('Brew history'));
+      if (history.length === 0) {
+        body.append(
+          assistantMessage('No saved attempts yet. Your completed diagnoses will appear here.'),
+        );
+      }
+
+      const list = make('ol', 'brew-widget-history-list');
       for (const entry of history) {
         const item = make('li');
         const date = new Intl.DateTimeFormat('en-GB', {
@@ -237,24 +271,42 @@
           month: 'short',
         }).format(new Date(entry.createdAt));
         item.append(
-          make('span', 'brew-widget-history-title', engine.methodLabel(entry.method)),
+          make(
+            'span',
+            'brew-widget-history-title',
+            `${engine.methodLabel(entry.method)} / ${engine.issueLabel(entry.method, entry.issue)}`,
+          ),
           make('span', undefined, `${engine.adjustmentLabel(entry.adjustmentType)} / ${date}`),
+          make('span', 'brew-widget-history-feedback', historyFeedbackLabel(entry.feedback)),
         );
         list.append(item);
       }
-      details.append(list);
-      details.append(
-        actionButton('Clear history', () => {
-          clearWidgetHistory(localStore);
-          history = [];
-          announce('Brew history cleared.');
+
+      if (history.length > 0) body.append(list);
+      const actions = make('div', 'brew-widget-actions');
+      if (history.length > 0) {
+        actions.append(
+          actionButton('Clear history', () => {
+            clearWidgetHistory(localStore);
+            history = [];
+            announce('Brew history cleared.');
+            void render();
+          }),
+        );
+      }
+      actions.append(
+        actionButton('Back', () => {
+          showingHistory = false;
           void render();
         }),
       );
-      return details;
+      body.append(actions);
+      announce(
+        history.length > 0 ? `${history.length} saved brew attempts.` : 'Brew history is empty.',
+      );
     }
 
-    async function renderWelcome(engine: Engine | null): Promise<void> {
+    async function renderWelcome(): Promise<void> {
       body.append(
         assistantMessage(
           "Hi, I'm the KAVOVO Brew Assistant.",
@@ -284,10 +336,6 @@
         ),
       );
       body.append(actions);
-      if (engine) {
-        const historyView = await renderHistory(engine);
-        if (historyView) body.append(historyView);
-      }
       announce('Welcome to the KAVOVO Brew Assistant.');
     }
 
@@ -312,6 +360,7 @@
             issue: undefined,
             answers: {},
             recommendationId: undefined,
+            feedbackPending: undefined,
             feedback: undefined,
           });
           trackTypedBrewEvent('brew_method_selected', {
@@ -336,6 +385,7 @@
             issue: value as WidgetIssue,
             answers: {},
             recommendationId: undefined,
+            feedbackPending: undefined,
             feedback: undefined,
           });
           void advance();
@@ -361,9 +411,11 @@
       announce(`Quick question. ${question.prompt}`);
     }
 
-    function renderFullAssistantAction(engine: Engine, label = 'Add brew details'): HTMLElement {
-      const actions = make('div', 'brew-widget-actions');
-      if (!state.method || !state.issue) return actions;
+    function createFullAssistantLink(
+      engine: Engine,
+      label = 'Add brew details',
+    ): HTMLAnchorElement | null {
+      if (!state.method || !state.issue) return null;
       const issue = engine.resolvedWidgetIssue(state.issue, state.answers) ?? state.issue;
       const link = make('a', 'brew-widget-link-button', label);
       link.href = engine.buildFullAssistantHref(state.method, issue);
@@ -374,7 +426,13 @@
           source_step: state.step === 'feedback' ? 'feedback' : 'recommendation',
         });
       });
-      actions.append(link);
+      return link;
+    }
+
+    function renderFullAssistantAction(engine: Engine, label = 'Add brew details'): HTMLElement {
+      const actions = make('div', 'brew-widget-actions');
+      const link = createFullAssistantLink(engine, label);
+      if (link) actions.append(link);
       return actions;
     }
 
@@ -412,38 +470,89 @@
       return link;
     }
 
-    function renderFeedbackChoices(
-      recommendation: WidgetRecommendation,
-      returning: boolean,
-    ): HTMLElement {
-      const section = make('section', 'brew-widget-feedback');
-      section.append(
-        make(
-          'h4',
-          undefined,
-          returning ? 'How did the next brew go?' : 'Was this recommendation useful?',
-        ),
-      );
-      const options: Array<{ value: WidgetFeedback; label: string }> = returning
-        ? [
+    function renderFeedbackPrompt(engine: Engine, recommendation: WidgetRecommendation): void {
+      renderContext(engine);
+      const result = make('section', 'brew-widget-result');
+      result.append(
+        make('p', 'brew-widget-kicker', 'Next brew'),
+        stepHeading('How did the next brew go?'),
+        make('p', undefined, `Your previous change was: ${recommendation.adjustment}.`),
+        choices(
+          [
             { value: 'better', label: 'Better' },
             { value: 'same', label: 'About the same' },
             { value: 'worse', label: 'Worse' },
             { value: 'not_tried', label: "I haven't tried it yet" },
-          ]
-        : [
-            { value: 'yes', label: 'Yes, it helped' },
-            { value: 'not_yet', label: 'Not yet' },
-          ];
-      section.append(
-        choices(options, (value) => {
-          recordFeedback(recommendation, value as WidgetFeedback);
+          ],
+          (value) => recordFeedback(recommendation, value as WidgetFeedback),
+        ),
+      );
+      body.append(result);
+      announce('How did the next brew go?');
+    }
+
+    function renderWaitingForBrew(engine: Engine, recommendation: WidgetRecommendation): void {
+      renderContext(engine);
+      const result = make('section', 'brew-widget-result');
+      result.append(
+        make('p', 'brew-widget-kicker', 'Saved for next brew'),
+        stepHeading('Come back after you brew'),
+        make(
+          'p',
+          undefined,
+          `Your next change is: ${recommendation.adjustment}. Keep the rest of the recipe unchanged.`,
+        ),
+      );
+      const actions = make('div', 'brew-widget-actions');
+      actions.append(
+        actionButton(
+          "I've tried it",
+          () => {
+            showFeedbackPrompt = true;
+            void render();
+          },
+          'primary',
+        ),
+        actionButton('Close for now', closeWidget),
+      );
+      const fullAssistant = createFullAssistantLink(engine, 'Open full assistant');
+      if (fullAssistant) actions.append(fullAssistant);
+      result.append(actions);
+      body.append(result);
+      announce('Recommendation saved for your next brew.');
+    }
+
+    function renderRecommendationHelp(engine: Engine): void {
+      renderContext(engine);
+      const result = make('section', 'brew-widget-result');
+      result.append(
+        make('p', 'brew-widget-kicker', 'More help'),
+        stepHeading('Add your brew details'),
+        make(
+          'p',
+          undefined,
+          'The full assistant can use your dose, water and brew time for a more precise adjustment.',
+        ),
+      );
+      const actions = make('div', 'brew-widget-actions');
+      const fullAssistant = createFullAssistantLink(engine, 'Open full assistant');
+      if (fullAssistant) actions.append(fullAssistant);
+      actions.append(
+        actionButton('Back to recommendation', () => {
+          showRecommendationHelp = false;
+          void render();
         }),
       );
-      return section;
+      result.append(actions);
+      body.append(result);
+      announce('Add brew details for more help.');
     }
 
     function renderRecommendation(engine: Engine, recommendation: WidgetRecommendation): void {
+      if (showFeedbackPrompt) return renderFeedbackPrompt(engine, recommendation);
+      if (showRecommendationHelp) return renderRecommendationHelp(engine);
+      if (state.feedbackPending) return renderWaitingForBrew(engine, recommendation);
+
       renderContext(engine);
       const result = make('section', 'brew-widget-result');
       result.append(
@@ -469,14 +578,32 @@
       );
       const related = relatedLink(recommendation);
       if (related) result.append(related);
-      result.append(renderFeedbackChoices(recommendation, returningToRecommendation));
+      const actions = make('div', 'brew-widget-actions');
+      actions.append(
+        actionButton(
+          "I'll try this",
+          () => {
+            commit({ ...state, feedbackPending: true, feedback: undefined });
+            showRecommendationHelp = false;
+            void render();
+          },
+          'primary',
+        ),
+        actionButton('I need more help', () => {
+          showRecommendationHelp = true;
+          void render();
+        }),
+      );
+      const fullAssistant = createFullAssistantLink(engine, 'Open full assistant');
+      if (fullAssistant) actions.append(fullAssistant);
+      result.append(actions);
       body.append(result);
       announce(`Try this next. ${recommendation.adjustment}.`);
     }
 
     function renderFeedback(engine: Engine): void {
       renderContext(engine);
-      const positive = state.feedback === 'yes' || state.feedback === 'better';
+      const positive = state.feedback === 'better';
       const result = make('section', 'brew-widget-result');
       result.append(
         make('p', 'brew-widget-kicker', positive ? 'Brew updated' : 'Next step'),
@@ -489,8 +616,12 @@
             : 'That result needs the exact dose, water and time before another change would be useful.',
         ),
       );
-      if (!positive) result.append(renderFullAssistantAction(engine));
-      result.append(
+      const actions = make('div', 'brew-widget-actions');
+      if (!positive) {
+        const fullAssistant = createFullAssistantLink(engine);
+        if (fullAssistant) actions.append(fullAssistant);
+      }
+      actions.append(
         actionButton('Try another problem', () => {
           const nextAttempt = (state.attemptNumber ?? 1) + 1;
           if (state.method) {
@@ -505,14 +636,17 @@
             issue: undefined,
             answers: {},
             recommendationId: undefined,
+            feedbackPending: undefined,
             feedback: undefined,
             attemptNumber: nextAttempt,
             startedAt: now(),
           });
-          returningToRecommendation = false;
+          showFeedbackPrompt = false;
+          showRecommendationHelp = false;
           void render();
         }),
       );
+      result.append(actions);
       body.append(result);
       announce(positive ? 'Feedback saved.' : 'More brew details are needed.');
     }
@@ -521,6 +655,26 @@
       recommendation: WidgetRecommendation,
       feedback: WidgetFeedback,
     ): void {
+      history = setWidgetHistoryFeedback(
+        localStore,
+        recommendation.id,
+        state.startedAt ?? state.updatedAt,
+        feedback,
+      );
+
+      if (!isCompletedWidgetFeedback(feedback)) {
+        commit({
+          ...state,
+          step: 'recommendation',
+          feedbackPending: true,
+          feedback,
+        });
+        showFeedbackPrompt = false;
+        showRecommendationHelp = false;
+        void render();
+        return;
+      }
+
       const key = feedbackKey(recommendation.id);
       if (!reportedFeedback.has(key)) {
         reportedFeedback.add(key);
@@ -530,19 +684,8 @@
           result: feedback,
         });
       }
-      history = setWidgetHistoryFeedback(
-        localStore,
-        recommendation.id,
-        state.startedAt ?? state.updatedAt,
-        feedback,
-      );
-
-      if (feedback === 'not_yet' || feedback === 'not_tried') {
-        commit({ ...state, feedback });
-        returningToRecommendation = true;
-      } else {
-        commit({ ...state, step: 'feedback', feedback });
-      }
+      commit({ ...state, step: 'feedback', feedbackPending: false, feedback });
+      showFeedbackPrompt = false;
       void render();
     }
 
@@ -552,10 +695,12 @@
         ...state,
         step: 'recommendation',
         recommendationId: recommendation.id,
+        feedbackPending: false,
         feedback: undefined,
         startedAt,
       });
-      returningToRecommendation = false;
+      showFeedbackPrompt = false;
+      showRecommendationHelp = false;
       const entry: WidgetHistoryEntry = {
         method: recommendation.method,
         issue: state.issue as WidgetIssue,
@@ -608,15 +753,20 @@
       body.replaceChildren();
 
       let engine: Engine | null = null;
-      if (state.step !== 'welcome' || history.length > 0) engine = await loadEngine();
+      if (state.step !== 'welcome' || history.length > 0 || showingHistory) {
+        engine = await loadEngine();
+      }
       if (currentRender !== renderId) return;
       if (engine) await updateFooter(engine);
       else {
         restartButton.hidden = true;
+        historyButton.hidden = false;
+        historyButton.textContent = 'Brew history';
         fullAssistantLink.hidden = true;
       }
 
-      if (state.step === 'welcome') await renderWelcome(engine);
+      if (showingHistory && engine) renderHistoryView(engine);
+      else if (state.step === 'welcome') await renderWelcome();
       else if (!engine) startOver();
       else if (state.step === 'method') await renderMethod(engine);
       else if (state.step === 'issue') await renderIssue(engine);
@@ -640,19 +790,28 @@
       } else renderFeedback(engine);
 
       body.removeAttribute('aria-busy');
+      focusRenderedStep(currentRender);
     }
 
     function startOver(): void {
       commit(createWidgetState());
-      returningToRecommendation = false;
+      showFeedbackPrompt = false;
+      showRecommendationHelp = false;
+      showingHistory = false;
       void render();
     }
 
     function openWidget(): void {
       if (dialog.open) return;
-      returningToRecommendation = state.step === 'recommendation' && Boolean(state.recommendationId);
+      showFeedbackPrompt =
+        state.step === 'recommendation' &&
+        Boolean(state.recommendationId) &&
+        state.recommendationId !== 'needs-more-data';
+      showRecommendationHelp = false;
+      showingHistory = false;
       dialog.showModal();
       trigger.setAttribute('aria-expanded', 'true');
+      trigger.hidden = true;
       document.body.classList.add('brew-widget-open');
       trackTypedBrewEvent('brew_widget_opened', {
         page_type: pageType(window.location.pathname),
@@ -669,16 +828,57 @@
         has_recommendation:
           Boolean(state.recommendationId) && state.recommendationId !== 'needs-more-data',
       });
-      returningToRecommendation = state.step === 'recommendation';
       dialog.close();
       trigger.setAttribute('aria-expanded', 'false');
+      trigger.hidden = false;
       document.body.classList.remove('brew-widget-open');
       trigger.focus();
+    }
+
+    function focusableDialogElements(): HTMLElement[] {
+      const selector = [
+        'a[href]:not([hidden])',
+        'button:not([disabled]):not([hidden])',
+        'input:not([disabled]):not([hidden])',
+        'select:not([disabled]):not([hidden])',
+        'textarea:not([disabled]):not([hidden])',
+        '[tabindex]:not([tabindex="-1"]):not([hidden])',
+      ].join(',');
+      return Array.from(dialog.querySelectorAll<HTMLElement>(selector)).filter(
+        (element) => element.getClientRects().length > 0,
+      );
+    }
+
+    function trapDialogFocus(event: KeyboardEvent): void {
+      if (event.key !== 'Tab') return;
+      const focusable = focusableDialogElements();
+      if (focusable.length === 0) {
+        event.preventDefault();
+        title.focus();
+        return;
+      }
+
+      const activeIndex = focusable.indexOf(document.activeElement as HTMLElement);
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+      if (event.shiftKey && activeIndex === 0) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && activeIndex === focusable.length - 1) {
+        event.preventDefault();
+        first.focus();
+      }
     }
 
     trigger.addEventListener('click', openWidget);
     closeButton.addEventListener('click', closeWidget);
     restartButton.addEventListener('click', startOver);
+    historyButton.addEventListener('click', () => {
+      showingHistory = true;
+      showRecommendationHelp = false;
+      void render();
+    });
     dialog.addEventListener('cancel', (event) => {
       event.preventDefault();
       closeWidget();
@@ -686,6 +886,7 @@
     dialog.addEventListener('click', (event) => {
       if (event.target === dialog) closeWidget();
     });
+    dialog.addEventListener('keydown', trapDialogFocus);
   }
 
   if (document.readyState === 'loading') {
@@ -716,6 +917,10 @@
     box-shadow: 0 10px 30px rgb(43 33 27 / 24%);
     cursor: pointer;
     transition: background-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  }
+
+  .brew-widget-trigger[hidden] {
+    display: none;
   }
 
   .brew-widget-trigger:hover {
@@ -978,48 +1183,33 @@
     text-underline-offset: 3px;
   }
 
-  .brew-widget-feedback {
-    margin-top: 18px;
+  .brew-widget-history-list {
+    display: grid;
+    gap: 0;
+    margin-top: 16px;
     border-top: 1px solid var(--color-line);
-    padding-top: 14px;
-  }
-
-  .brew-widget-feedback h4 {
-    margin-bottom: 10px;
-    font-size: 0.875rem;
-    font-weight: 650;
-  }
-
-  .brew-widget-history {
-    margin-top: 22px;
-    border-top: 1px solid var(--color-line);
-    padding-top: 16px;
     color: var(--color-ink-soft);
     font-size: 0.8125rem;
+    list-style: none;
   }
 
-  .brew-widget-history summary {
-    min-height: 44px;
-    padding: 12px 0;
-    color: var(--color-ink);
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  .brew-widget-history ol {
+  .brew-widget-history-list li {
     display: grid;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  .brew-widget-history li {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+    border-bottom: 1px solid var(--color-line);
+    padding: 12px 0;
   }
 
   .brew-widget-history-title {
     color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  .brew-widget-history-feedback {
+    grid-column: 1 / -1;
+    color: var(--color-accent);
+    font-size: 0.75rem;
     font-weight: 600;
   }
 

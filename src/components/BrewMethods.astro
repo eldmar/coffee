@@ -83,24 +83,5 @@ const sorted = order
       }
     </ul>
 
-    <div class="mt-8 rounded-lg border border-line bg-card p-6">
-      <h3 class="font-display text-xl font-medium">Not sure where to start?</h3>
-      <ul class="mt-4 flex flex-col gap-2 text-sm">
-        {
-          sorted.map((guide) => (
-            <li>
-              <a
-                href={`/guides/${guide.id}/`}
-                class="group flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-ink-soft hover:text-ink"
-              >
-                <span>{guide.data.intent}</span>
-                <span aria-hidden="true">&#8594;</span>
-                <span class="font-medium text-accent group-hover:underline">{guide.data.title}</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
   </div>
 </section>

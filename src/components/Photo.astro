@@ -38,7 +38,7 @@ const entry = photo(name);
     alt={alt}
     width={entry.width}
     height={entry.height}
-    class={className}
+    class:list={[className, loading === 'lazy' && 'bg-line']}
     loading={loading}
     fetchpriority={fetchpriority}
     decoding="async"

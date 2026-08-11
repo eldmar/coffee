@@ -21,6 +21,12 @@ interface Props {
   recipes: CatalogRecipe[];
 }
 
+interface ActiveFilter {
+  id: string;
+  label: string;
+  clear: () => void;
+}
+
 const methodOptions = [
   ['any', 'Any method'],
   ['espresso', 'Espresso machine'],
@@ -98,6 +104,36 @@ export default function RecipeFilters({ recipes }: Props) {
     setVisibleCount(INITIAL_RESULT_COUNT);
   }
 
+  const activeFilters: ActiveFilter[] = [];
+  if (query.trim()) {
+    activeFilters.push({
+      id: 'query',
+      label: `Search: “${query.trim()}”`,
+      clear: () => setQuery(''),
+    });
+  }
+  if (method !== 'any') {
+    activeFilters.push({
+      id: 'method',
+      label: methodOptions.find(([value]) => value === method)?.[1] ?? method,
+      clear: () => setMethod('any'),
+    });
+  }
+  if (temp !== 'any') {
+    activeFilters.push({
+      id: 'temp',
+      label: temp === 'hot' ? 'Hot' : 'Iced',
+      clear: () => setTemp('any'),
+    });
+  }
+  if (milk !== 'any') {
+    activeFilters.push({
+      id: 'milk',
+      label: milk === 'black' ? 'Black' : 'With milk',
+      clear: () => setMilk('any'),
+    });
+  }
+
   return (
     <div>
       <div className="flex flex-wrap items-center gap-3">
@@ -113,7 +149,7 @@ export default function RecipeFilters({ recipes }: Props) {
               setQuery(e.target.value);
               setVisibleCount(INITIAL_RESULT_COUNT);
             }}
-            placeholder="Search recipes"
+            placeholder={`Search ${recipes.length} recipes`}
             className="w-full bg-transparent placeholder:text-ink-soft"
             aria-label="Search recipes"
           />
@@ -161,7 +197,7 @@ export default function RecipeFilters({ recipes }: Props) {
         </select>
       </div>
 
-      <div className="mt-6 flex min-h-8 flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+      <div className="mt-6 min-h-8 text-sm">
         <p className="text-ink-soft" aria-live="polite">
           {results.length > visibleResults.length
             ? `Showing ${visibleResults.length} of ${results.length}${hasFilters ? ' matching' : ''} recipes`
@@ -169,14 +205,36 @@ export default function RecipeFilters({ recipes }: Props) {
               ? `${results.length} matching ${results.length === 1 ? 'recipe' : 'recipes'}`
               : `${results.length} recipes`}
         </p>
-        {hasFilters && (
-          <button
-            type="button"
-            onClick={clearFilters}
-            className="min-h-8 rounded-md font-medium text-accent hover:underline"
-          >
-            Clear filters
-          </button>
+        {activeFilters.length > 0 && (
+          <div className="mt-3 flex flex-wrap items-center gap-2" aria-label="Active recipe filters">
+            {activeFilters.map((filter) => (
+              <span
+                key={filter.id}
+                className="inline-flex min-h-8 max-w-full min-w-0 items-center gap-1 rounded-md border border-line bg-card py-1 pr-1 pl-3"
+              >
+                <span className="min-w-0 truncate">{filter.label}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    filter.clear();
+                    setVisibleCount(INITIAL_RESULT_COUNT);
+                  }}
+                  className="flex h-7 w-7 shrink-0 items-center justify-center text-ink-soft hover:text-ink"
+                  aria-label={`Remove ${filter.label} filter`}
+                  title={`Remove ${filter.label} filter`}
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </span>
+            ))}
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="min-h-8 px-2 font-medium text-accent hover:underline"
+            >
+              Clear all
+            </button>
+          </div>
         )}
       </div>
 
@@ -207,7 +265,7 @@ export default function RecipeFilters({ recipes }: Props) {
                     srcSet={r.image.srcset}
                     sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 92vw"
                     alt=""
-                    className="aspect-[4/3] w-full object-cover"
+                    className="aspect-[4/3] w-full bg-line object-cover"
                     width={r.image.width}
                     height={r.image.height}
                     loading="lazy"

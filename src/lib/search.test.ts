@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
+  filterSearchResults,
   highlightSearchText,
+  isSearchTypeFilter,
   normalizeSearchText,
   rankSearchDocs,
   type SearchDoc,
@@ -82,5 +84,22 @@ describe('search ranking', () => {
 
     expect(results).toHaveLength(1);
     expect(results[0]).toMatchObject({ score: 5, doc: { title: 'Espresso' } });
+  });
+
+  it('filters ranked results by a URL-safe content type', () => {
+    const ranked = rankSearchDocs(
+      [
+        doc({ type: 'recipe', title: 'Espresso recipe' }),
+        doc({ type: 'guide', title: 'Espresso guide', url: '/guides/espresso/' }),
+      ],
+      'espresso',
+    );
+
+    expect(filterSearchResults(ranked, 'guide').map(({ doc: result }) => result.url)).toEqual([
+      '/guides/espresso/',
+    ]);
+    expect(filterSearchResults(ranked, 'all')).toBe(ranked);
+    expect(isSearchTypeFilter('journal')).toBe(true);
+    expect(isSearchTypeFilter('video')).toBe(false);
   });
 });

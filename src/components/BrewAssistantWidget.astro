@@ -1,7 +1,20 @@
-<div class="brew-assistant-widget" data-brew-widget>
+---
+interface Props {
+  revealAfterScroll?: boolean;
+}
+
+const { revealAfterScroll = false } = Astro.props;
+---
+
+<div
+  class="brew-assistant-widget"
+  data-brew-widget
+  data-brew-widget-reveal={revealAfterScroll ? 'scroll' : 'immediate'}
+>
   <button
     class="brew-widget-trigger"
     type="button"
+    hidden={revealAfterScroll}
     aria-haspopup="dialog"
     aria-expanded="false"
     aria-controls="brew-widget-dialog"
@@ -887,6 +900,14 @@
       if (event.target === dialog) closeWidget();
     });
     dialog.addEventListener('keydown', trapDialogFocus);
+
+    if (root.dataset.brewWidgetReveal === 'scroll' && trigger.hidden) {
+      const revealTrigger = () => {
+        trigger.hidden = false;
+      };
+      if (window.scrollY > 0) revealTrigger();
+      else window.addEventListener('scroll', revealTrigger, { once: true, passive: true });
+    }
   }
 
   if (document.readyState === 'loading') {

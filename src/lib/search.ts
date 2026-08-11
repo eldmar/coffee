@@ -18,6 +18,25 @@ export interface RankedSearchResult {
   score: number;
 }
 
+export type SearchTypeFilter = 'all' | SearchContentType;
+
+export function isSearchTypeFilter(value: string | null): value is SearchTypeFilter {
+  return (
+    value === 'all' ||
+    value === 'recipe' ||
+    value === 'guide' ||
+    value === 'learn' ||
+    value === 'journal'
+  );
+}
+
+export function filterSearchResults(
+  results: RankedSearchResult[],
+  type: SearchTypeFilter,
+): RankedSearchResult[] {
+  return type === 'all' ? results : results.filter(({ doc }) => doc.type === type);
+}
+
 const TYPE_ORDER: Record<SearchContentType, number> = {
   recipe: 0,
   guide: 1,

@@ -121,6 +121,26 @@ if (existsSync(searchPage)) {
   if (!/<link rel="canonical" href="https?:\/\/[^"?]+\/search\/">/i.test(html)) {
     problems.push('search/index.html canonical is not the query-free /search/ URL');
   }
+  if (!html.includes('placeholder="Search all KAVOVO"')) {
+    problems.push('search/index.html is missing the global search placeholder');
+  }
+  if (!html.includes('aria-label="Filter search results by content type"')) {
+    problems.push('search/index.html is missing content-type search filters');
+  }
+}
+
+const recipesPage = join(DIST, 'recipes', 'index.html');
+if (existsSync(recipesPage)) {
+  const html = readFileSync(recipesPage, 'utf8');
+  if (!/placeholder="Search \d+ recipes"/.test(html)) {
+    problems.push('recipes/index.html is missing its recipe-count search placeholder');
+  }
+  if (!html.includes('data-brew-widget-reveal="immediate"')) {
+    problems.push('recipes/index.html floating brew widget should appear immediately');
+  }
+  if (!html.includes('bg-line object-cover')) {
+    problems.push('recipes/index.html cards are missing image skeleton backgrounds');
+  }
 }
 
 const shopPage = join(DIST, 'shop', 'index.html');
@@ -136,6 +156,15 @@ if (existsSync(homePage)) {
   const html = readFileSync(homePage, 'utf8');
   if (!html.includes('data-brew-widget')) {
     problems.push('index.html is missing the global Fix my coffee widget');
+  }
+  if (!html.includes('data-brew-widget-reveal="scroll"')) {
+    problems.push('index.html floating brew widget must wait for the first scroll');
+  }
+  if (!/<button[^>]*class="brew-widget-trigger"[^>]*\shidden(?:\s|>)/i.test(html)) {
+    problems.push('index.html floating brew widget trigger is not initially hidden');
+  }
+  if (html.includes('Not sure where to start?')) {
+    problems.push('index.html includes the duplicated brew-method chooser');
   }
 }
 

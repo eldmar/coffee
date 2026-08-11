@@ -77,6 +77,14 @@ const recipes = defineCollection({
     // Essential but specific to one recipe, e.g. a teaspoon for a macchiato.
     equipmentExtra: z.array(z.string()).default([]),
     equipmentOptional: z.array(z.string()).default([]),
+    // Only recipes that scale cleanly expose the 1/2/3-cup control.
+    cupScaling: z
+      .object({
+        baseCups: z.number().int().min(1).max(3),
+        batchScaling: z.boolean().default(false),
+        note: z.string().optional(),
+      })
+      .optional(),
     popular: z.boolean().default(false),
   }),
 });

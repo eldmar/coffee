@@ -122,6 +122,19 @@ export function extractSteps(body: string): string[] {
     .map((m) => m[1].replace(/\*\*(.+?)\*\*/g, '$1'));
 }
 
+/** Scale coffee and water quantities while leaving timer values untouched. */
+export function scaleRecipeMeasurements(text: string, factor: number): string {
+  if (!Number.isFinite(factor) || factor <= 0) return text;
+
+  return text.replace(/(\d+(?:\.\d+)?)\s*(g|ml)\b/gi, (_match, value: string, unit: string) => {
+    const scaled = Number(value) * factor;
+    const formatted = Number.isInteger(scaled)
+      ? String(scaled)
+      : scaled.toFixed(1).replace(/\.0$/, '');
+    return `${formatted} ${unit}`;
+  });
+}
+
 const METHOD_KEYWORDS = {
   espresso: 'espresso-based drink',
   aeropress: 'AeroPress brewing',

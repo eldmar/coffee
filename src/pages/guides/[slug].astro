@@ -95,7 +95,12 @@ const schema = {
       <span class="eyebrow block">Brew guide</span>
       <h1 class="mt-2 font-display text-4xl font-medium text-balance">{data.title}</h1>
       <p class="mt-4 max-w-2xl text-lg text-ink-soft">{data.description}</p>
-      <p class="mt-3 text-sm text-ink-soft">{readingMinutes(data.readingTime)} read</p>
+      <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+        <p class="text-ink-soft">{readingMinutes(data.readingTime)} read</p>
+        <a href="#quick-start" class="font-medium text-accent hover:underline">
+          Jump to quick start
+        </a>
+      </div>
       <Photo
         name={heroImage}
         alt={heroAlt}

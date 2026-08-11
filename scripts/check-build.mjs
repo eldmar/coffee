@@ -86,6 +86,18 @@ for (const page of pages) {
     if (schema?.['@type'] !== 'Recipe') continue;
     recipeSchemas += 1;
     const label = relative(DIST, page);
+    if (!html.includes('data-recipe-experience')) {
+      problems.push(`${label} is missing the interactive recipe experience`);
+    }
+    if (!html.includes('Tap each step as you brew.')) {
+      problems.push(`${label} is missing the step checklist prompt`);
+    }
+    if (!html.includes('data-open-brew-mode') || !html.includes('data-brew-time')) {
+      problems.push(`${label} is missing brew mode or its timer`);
+    }
+    if (!html.includes('Keep screen awake')) {
+      problems.push(`${label} is missing the optional screen wake control`);
+    }
     if (typeof schema.keywords !== 'string' || schema.keywords.trim().length === 0) {
       problems.push(`${label} Recipe schema is missing keywords`);
     }
@@ -108,6 +120,35 @@ for (const page of pages) {
       if (!fragment || !html.includes(`id="${fragment}"`)) {
         problems.push(`${label} instruction ${index + 1} URL does not target a rendered step`);
       }
+    }
+  }
+}
+
+const v60GuidePage = join(DIST, 'guides', 'v60', 'index.html');
+if (existsSync(v60GuidePage)) {
+  const html = readFileSync(v60GuidePage, 'utf8');
+  if (!html.includes('href="#quick-start"') || !html.includes('Jump to quick start')) {
+    problems.push('guides/v60/index.html is missing the hero quick-start shortcut');
+  }
+  if (!html.includes('<details id="guide-toc"')) {
+    problems.push('guides/v60/index.html is missing the responsive table of contents');
+  }
+}
+
+for (const [slug, baseCups] of [
+  ['v60-pour-over', 1],
+  ['aeropress-daily', 1],
+  ['classic-french-press', 2],
+]) {
+  const recipePage = join(DIST, 'recipes', slug, 'index.html');
+  if (!existsSync(recipePage)) continue;
+  const html = readFileSync(recipePage, 'utf8');
+  if (!html.includes(`data-base-cups="${baseCups}"`)) {
+    problems.push(`recipes/${slug}/index.html is missing its base cup count`);
+  }
+  for (const cups of [1, 2, 3]) {
+    if (!html.includes(`data-cups="${cups}"`)) {
+      problems.push(`recipes/${slug}/index.html is missing the ${cups}-cup option`);
     }
   }
 }

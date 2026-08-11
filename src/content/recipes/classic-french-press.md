@@ -25,6 +25,8 @@ ingredients:
   - 30 g coarsely ground coffee
   - 500 ml water at 94 °C
 equipmentSet: french-press
+cupScaling:
+  baseCups: 2
 ---
 
 ## Steps

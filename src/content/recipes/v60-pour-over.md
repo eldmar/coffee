@@ -28,6 +28,8 @@ ingredients:
 equipmentSet: pour-over
 equipmentOptional:
   - Brew scale with timer
+cupScaling:
+  baseCups: 1
 ---
 
 ## Steps

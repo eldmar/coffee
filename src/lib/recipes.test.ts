@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { recipeKeywords, recipeStepName } from './recipes';
+import { recipeKeywords, recipeStepName, scaleRecipeMeasurements } from './recipes';
 
 describe('recipe structured data helpers', () => {
   it('builds keyword descriptors without repeating the schema category or cuisine', () => {
@@ -43,5 +43,26 @@ describe('recipe structured data helpers', () => {
     ).toBe(
       'Pour steadily so the drink settles into thirds: espresso, warm milk, and a deep cap of foam',
     );
+  });
+});
+
+describe('recipe serving helpers', () => {
+  it('scales coffee and water without changing brew times', () => {
+    expect(
+      scaleRecipeMeasurements(
+        'Add 15 g coffee, bloom with 45 ml, then pour to 250 g by 2:00.',
+        2,
+      ),
+    ).toBe('Add 30 g coffee, bloom with 90 ml, then pour to 500 g by 2:00.');
+  });
+
+  it('keeps half-gram quantities when scaling an odd dose', () => {
+    expect(scaleRecipeMeasurements('Use 15 g coffee and 250 ml water.', 1.5)).toBe(
+      'Use 22.5 g coffee and 375 ml water.',
+    );
+  });
+
+  it('returns the original text for an invalid scale', () => {
+    expect(scaleRecipeMeasurements('15 g coffee', 0)).toBe('15 g coffee');
   });
 });

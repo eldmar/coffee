@@ -27,6 +27,10 @@ ingredients:
 equipmentSet: aeropress
 equipmentOptional:
   - Metal filter for more body
+cupScaling:
+  baseCups: 1
+  batchScaling: true
+  note: Two- and three-cup quantities are totals. Brew identical batches because a standard AeroPress cannot hold all the water at once.
 ---
 
 ## Steps

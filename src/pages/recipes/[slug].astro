@@ -35,8 +35,8 @@ const equipment = [...equipmentFor(data.equipmentSet), ...data.equipmentExtra];
 const guides = await getCollection('guides');
 const guide = guides.find((g) => g.data.method === data.brewMethod);
 
-// Related: same category first, then same brew method, never itself.
-const related = [
+// Related recipes are automatic unless editorially pinned in frontmatter.
+const automaticRelated = [
   ...all.filter((r) => r.id !== recipe.id && r.data.category === data.category),
   ...all.filter(
     (r) =>
@@ -45,6 +45,13 @@ const related = [
       r.data.brewMethod === data.brewMethod,
   ),
 ].slice(0, 3);
+const related = data.relatedRecipes
+  ? data.relatedRecipes.map((slug) => {
+      const match = all.find((candidate) => candidate.id === slug);
+      if (!match) throw new Error(`Recipe "${recipe.id}" links to missing related recipe "${slug}".`);
+      return match;
+    })
+  : automaticRelated;
 
 // Absolute URL for social cards and structured data.
 const ogImagePath = photo(data.image).src;

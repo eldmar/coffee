@@ -39,6 +39,7 @@ const docs: SearchDoc[] = [
       r.data.brewMethod,
       r.data.temperature,
       r.data.milk,
+      ...r.data.seoKeywords,
     ].join(' '),
     body: [
       ...r.data.ingredients,

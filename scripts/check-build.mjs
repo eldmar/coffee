@@ -182,6 +182,89 @@ if (existsSync(recipesPage)) {
   if (!html.includes('bg-line object-cover')) {
     problems.push('recipes/index.html cards are missing image skeleton backgrounds');
   }
+  if (!html.includes('Iced Salted Vanilla Cloud Foam')) {
+    problems.push('recipes/index.html is missing Iced Salted Vanilla Cloud Foam');
+  }
+}
+
+const cloudFoamPage = join(DIST, 'recipes', 'iced-salted-vanilla-cloud-foam', 'index.html');
+if (existsSync(cloudFoamPage)) {
+  const html = readFileSync(cloudFoamPage, 'utf8');
+  if (!html.includes('<title>Iced Salted Vanilla Cloud Foam Recipe | KAVOVO</title>')) {
+    problems.push('cloud foam recipe is missing its exact SEO title');
+  }
+  if (
+    !/<link rel="canonical" href="https:\/\/kavovo\.uk\/recipes\/iced-salted-vanilla-cloud-foam\/">/i.test(
+      html,
+    )
+  ) {
+    problems.push('cloud foam recipe canonical URL is incorrect');
+  }
+  if (
+    !/<meta property="og:image" content="https:\/\/kavovo\.uk\/img\/iced-salted-vanilla-cloud-foam\.[^"]+">/i.test(
+      html,
+    )
+  ) {
+    problems.push('cloud foam recipe is missing its Open Graph image');
+  }
+
+  const recipeScript = [...html.matchAll(
+    /<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi,
+  )]
+    .map((match) => JSON.parse(match[1]))
+    .find((schema) => schema?.['@type'] === 'Recipe');
+  if (
+    recipeScript?.prepTime !== 'PT8M' ||
+    recipeScript?.totalTime !== 'PT8M' ||
+    recipeScript?.recipeYield !== '1 drink' ||
+    recipeScript?.recipeCuisine !== 'International'
+  ) {
+    problems.push('cloud foam Recipe schema has incorrect time, yield or cuisine');
+  }
+  for (const keyword of [
+    'iced salted vanilla cloud foam',
+    'salted vanilla cold foam',
+    'iced vanilla coffee',
+    'vanilla cold foam recipe',
+    'iced espresso recipe',
+    'homemade cold foam',
+  ]) {
+    if (!recipeScript?.keywords?.includes(keyword)) {
+      problems.push(`cloud foam Recipe schema is missing keyword: ${keyword}`);
+    }
+  }
+
+  const relatedSlugs = ['iced-latte', 'vietnamese-iced-coffee', 'freddo-espresso'];
+  const relatedStart = html.indexOf('Related recipes');
+  const relatedPositions = relatedSlugs.map((slug) =>
+    html.indexOf(`href="/recipes/${slug}/"`, relatedStart),
+  );
+  if (
+    relatedStart === -1 ||
+    relatedPositions.some((position) => position === -1) ||
+    relatedPositions.some(
+      (position, index) => index > 0 && position <= relatedPositions[index - 1],
+    )
+  ) {
+    problems.push('cloud foam related recipes are missing or out of editorial order');
+  }
+} else {
+  problems.push('Iced Salted Vanilla Cloud Foam recipe page was not built');
+}
+
+const icedRecipesPage = join(DIST, 'recipes', 'iced-coffee', 'index.html');
+if (
+  existsSync(icedRecipesPage) &&
+  !readFileSync(icedRecipesPage, 'utf8').includes('Iced Salted Vanilla Cloud Foam')
+) {
+  problems.push('iced-coffee category is missing Iced Salted Vanilla Cloud Foam');
+}
+
+if (
+  existsSync(searchPage) &&
+  !readFileSync(searchPage, 'utf8').includes('Iced Salted Vanilla Cloud Foam')
+) {
+  problems.push('search index is missing Iced Salted Vanilla Cloud Foam');
 }
 
 const shopPage = join(DIST, 'shop', 'index.html');
@@ -231,14 +314,25 @@ for (const contentPage of [
   }
 }
 
+let cloudFoamInSitemap = false;
 for (const entry of readdirSync(DIST, { withFileTypes: true })) {
   if (!entry.isFile() || !entry.name.endsWith('.xml')) continue;
   const xml = readFileSync(join(DIST, entry.name), 'utf8');
+  if (
+    xml.includes(
+      '<loc>https://kavovo.uk/recipes/iced-salted-vanilla-cloud-foam/</loc>',
+    )
+  ) {
+    cloudFoamInSitemap = true;
+  }
   for (const excludedPath of ['/404/', '/search/', '/shop/', '/subscription-confirmed/']) {
     if (xml.includes(`<loc>https://kavovo.uk${excludedPath}</loc>`)) {
       problems.push(`${entry.name} includes excluded page ${excludedPath}`);
     }
   }
+}
+if (!cloudFoamInSitemap) {
+  problems.push('sitemap is missing Iced Salted Vanilla Cloud Foam');
 }
 
 for (const asset of missingAssets) problems.push(`referenced but not emitted: ${asset}`);

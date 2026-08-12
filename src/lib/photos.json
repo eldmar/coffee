@@ -496,6 +496,55 @@
     ],
     "src": "/img/iced-latte.5e8b9d18-800.jpg"
   },
+  "iced-salted-vanilla-cloud-foam": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/iced-salted-vanilla-cloud-foam.a68bd6ed-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/iced-salted-vanilla-cloud-foam.a68bd6ed-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/iced-salted-vanilla-cloud-foam.a68bd6ed-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/iced-salted-vanilla-cloud-foam.a68bd6ed-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/iced-salted-vanilla-cloud-foam.a68bd6ed-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/iced-salted-vanilla-cloud-foam.a68bd6ed-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/iced-salted-vanilla-cloud-foam.a68bd6ed-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/iced-salted-vanilla-cloud-foam.a68bd6ed-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/iced-salted-vanilla-cloud-foam.a68bd6ed-800.jpg"
+  },
   "moka-pot-classic": {
     "width": 800,
     "height": 600,

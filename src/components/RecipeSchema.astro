@@ -21,6 +21,10 @@ const { data } = recipe;
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const url = `${site}/recipes/${recipe.id}/`;
 const steps = extractSteps(recipe.body ?? '');
+const keywords = [
+  ...data.seoKeywords,
+  ...recipeKeywords(data).split(', '),
+].filter((keyword, index, all) => all.indexOf(keyword) === index);
 
 // Ratings, videos and step media belong here only when the page shows real source data.
 const schema = {
@@ -36,13 +40,14 @@ const schema = {
   datePublished: data.datePublished.toISOString().slice(0, 10),
   dateModified: data.dateModified.toISOString().slice(0, 10),
   prepTime: isoDuration(data.prepTime),
-  cookTime: isoDuration(data.brewTime),
+  ...(data.brewTime > 0 ? { cookTime: isoDuration(data.brewTime) } : {}),
   totalTime: isoDuration(data.totalTime),
   recipeYield:
-    data.drinkYield === data.yield ? data.yield : `${data.yield} (${data.drinkYield})`,
+    data.schemaYield ??
+    (data.drinkYield === data.yield ? data.yield : `${data.yield} (${data.drinkYield})`),
   recipeCategory: categoryLabel(data.category),
-  recipeCuisine: 'Coffee',
-  keywords: recipeKeywords(data),
+  recipeCuisine: data.recipeCuisine,
+  keywords: keywords.join(', '),
   recipeIngredient: data.ingredients,
   tool: [
     ...equipmentFor(data.equipmentSet),

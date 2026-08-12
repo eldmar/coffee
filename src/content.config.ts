@@ -8,6 +8,8 @@ const recipes = defineCollection({
     description: z.string(),
     seoTitle: z.string().optional(),
     seoDescription: z.string().optional(),
+    seoKeywords: z.array(z.string()).default([]),
+    recipeCuisine: z.string().default('Coffee'),
     image: z.string(),
     imageAlt: z.string(),
     // Shown above the recipe, e.g. an age advisory on alcoholic drinks.
@@ -45,6 +47,8 @@ const recipes = defineCollection({
     // Brew guides read their Quick start time from here, so it stays canonical.
     brewTimeLabel: z.string().optional(),
     yield: z.string().default('1 drink'),
+    // Optional schema-specific value when the visible serving detail is richer.
+    schemaYield: z.string().optional(),
     // Ground coffee going in, and the volume of finished drink coming out —
     // not the same thing as the capacity of the cup it is served in.
     dose: z.string(),
@@ -85,6 +89,8 @@ const recipes = defineCollection({
         note: z.string().optional(),
       })
       .optional(),
+    // Set only when editorially chosen recipes should replace the automatic list.
+    relatedRecipes: z.array(z.string()).length(3).optional(),
     popular: z.boolean().default(false),
   }),
 });

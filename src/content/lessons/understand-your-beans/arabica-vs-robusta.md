@@ -2,13 +2,14 @@
 path: understand-your-beans
 order: 1
 title: Arabica vs Robusta
-seoTitle: Arabica vs Robusta — KAVOVO
+seoTitle: "Arabica vs Robusta: Taste, Caffeine & Price | KAVOVO"
 seoDescription: Understand how Arabica and Robusta differ in the plant, the cup and the coffee bag—and why species alone does not decide quality.
 excerpt: Arabica and Robusta are different species with common tendencies—not automatic quality grades.
 readingTime: 6
 image: lesson-arabica-vs-robusta
 imageBrief: "KAVOVO-style editorial coffee photograph with two shallow cream ceramic dishes of roasted coffee beans side by side: one sample slightly more elongated with a curved centre crease, the other somewhat smaller and rounder. Include a few coffee leaves and ripe cherries as quiet botanical context, not a scientific diagram. Warm cream plaster, pale wood, natural linen, soft leaf shadows and side sunlight. No labels, logos or text. Landscape 4:3, centred crop-safe composition."
 imageAlt: Two small dishes of Arabica and Robusta coffee beans arranged side by side.
+dateModified: 2026-08-15
 related:
   - label: Espresso brew guide
     href: /guides/espresso/
@@ -36,16 +37,15 @@ Canephora is genetically diverse and includes many populations and cultivated ty
 
 This matters because neither category is one single flavour. An SL28 Arabica from Kenya, a Bourbon from El Salvador and a low-grown commercial Arabica blend can taste dramatically different. Fine Canephora lots can also be far cleaner and sweeter than the rubbery stereotype suggests.
 
-## How they tend to differ
+## Arabica vs Robusta at a Glance
 
-| Characteristic | Arabica | Robusta / Canephora |
+| Feature | Arabica | Robusta |
 | --- | --- | --- |
-| Common cup profile | More aromatic, sweet, bright or fruit-led | More bitter, full-bodied, earthy, woody or cocoa-led |
-| Caffeine | Generally lower | Generally higher |
-| Growing conditions | Often cooler and higher, though not always | Often warmer and lower, with greater heat tolerance |
-| Plant resilience | More vulnerable to several diseases and climate pressures | Often more robust, but not invulnerable |
-| Common use | Single origins, filter coffee, espresso and blends | Espresso blends, instant coffee and increasingly fine Canephora lots |
-| Typical price | Often higher | Often lower, with major exceptions at the quality end |
+| Taste | Sweeter, more aromatic | Stronger, more bitter |
+| Caffeine | Lower | Higher |
+| Acidity | Usually higher | Usually lower |
+| Price | Usually higher | Usually lower |
+| Common use | Specialty and filter coffee | Espresso blends and instant coffee |
 
 The word "often" is doing important work in this table.
 
@@ -63,7 +63,7 @@ Robusta commonly contributes:
 
 Traditional Italian-style espresso blends may use Robusta deliberately for body, intensity and crema. Its presence is not automatically evidence that someone tried to ruin the coffee before breakfast.
 
-## Does Robusta contain twice the caffeine?
+## Which Has More Caffeine?
 
 Robusta generally contains considerably more caffeine than Arabica, and "roughly twice as much" is a useful broad description. The exact amount varies with variety, growing conditions, roast, dose and brewing method.
 
@@ -85,13 +85,17 @@ More useful quality clues include:
 - a roaster whose coffees you trust;
 - flavour notes that match your preferences.
 
-## What is Fine Robusta?
+## Which Is Better for Espresso?
+
+Neither species is automatically better. Arabica is often chosen for aromatic, sweet or fruit-led espresso. Robusta can add body, bitterness, caffeine and persistent crema to a blend. Choose 100% Arabica for clarity and a softer profile, or a well-made Arabica–Robusta blend for a stronger traditional style that remains noticeable through milk.
+
+## Is Robusta Always Lower Quality?
 
 Fine Robusta or Fine Canephora refers to coffees produced and evaluated with greater attention to genetics, harvesting, processing and sensory quality. These lots may show sweetness, clean fruit, spice or chocolate characteristics without the harsh defects associated with poorly handled commodity coffee.
 
 The category is still developing, and quality varies. The useful lesson is that species sets possibilities; it does not write the entire cup profile in advance.
 
-## Which should you buy?
+## Which Coffee Should Beginners Buy?
 
 Choose by the drink you want.
 

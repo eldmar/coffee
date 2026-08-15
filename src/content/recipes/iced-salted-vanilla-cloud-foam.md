@@ -29,7 +29,7 @@ vessel:
   name: "Tall glass"
   capacity: "350–400 ml"
 datePublished: 2026-08-12
-dateModified: 2026-08-12
+dateModified: 2026-08-15
 ingredients:
   - 18 g freshly ground coffee
   - 36–40 g double espresso
@@ -45,8 +45,8 @@ equipmentExtra:
   - Spoon
 relatedRecipes:
   - iced-latte
+  - iced-caramel-latte
   - vietnamese-iced-coffee
-  - freddo-espresso
 ---
 
 Skimmed milk creates the lightest, airiest foam. Use whole milk for a creamier texture, although the foam may be slightly denser.
@@ -83,3 +83,7 @@ Reduce the vanilla syrup from 10 ml to 5 ml. Do not compensate by adding more sa
 - **Sweeter version:** add 5 ml of vanilla syrup directly to the espresso.
 - **Stronger coffee:** use 45–50 g of espresso while keeping the same amount of milk.
 - **Without an espresso machine:** use 50 ml of strong Moka Pot coffee.
+
+## More Iced Latte Recipes
+
+For a simpler milk-and-espresso balance, start with the [Iced Latte recipe](/recipes/iced-latte/). For a sweeter drink without foam, make the [Iced Caramel Latte](/recipes/iced-caramel-latte/).

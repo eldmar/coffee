@@ -27,6 +27,15 @@ const pathTitle = (slug: string) =>
   LEARN_PATHS.find((p) => p.slug === slug)?.title ?? slug;
 
 const docs: SearchDoc[] = [
+  {
+    type: 'recipe' as const,
+    title: 'Iced Coffee Recipes',
+    description: 'Explore easy iced coffee recipes including Iced Americano, Iced Latte, Cold Brew, Espresso Tonic and flavoured coffee drinks.',
+    url: '/recipes/iced-coffee/',
+    meta: 'Recipe collection',
+    keywords: 'iced coffee recipes cold brew iced espresso milk drinks',
+    body: 'Iced Americano Iced Latte Iced Caramel Latte Iced Salted Vanilla Cloud Foam Cold Brew Vietnamese Iced Coffee Freddo Espresso Espresso Tonic',
+  },
   ...recipes.map((r) => ({
     type: 'recipe' as const,
     title: r.data.title,

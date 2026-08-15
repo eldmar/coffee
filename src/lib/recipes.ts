@@ -122,6 +122,35 @@ export function extractSteps(body: string): string[] {
     .map((m) => m[1].replace(/\*\*(.+?)\*\*/g, '$1'));
 }
 
+export interface RecipeFaq {
+  question: string;
+  answer: string;
+}
+
+/** Read visible h3 question-and-answer pairs under the recipe FAQ h2. */
+export function extractFaqs(body: string): RecipeFaq[] {
+  const heading = body.match(/^##\s+Frequently asked questions\s*$/im);
+  if (!heading || heading.index === undefined) return [];
+
+  const rest = body.slice(heading.index + heading[0].length);
+  const nextSection = rest.search(/^##\s+/m);
+  const section = nextSection === -1 ? rest : rest.slice(0, nextSection);
+  const questions = [...section.matchAll(/^###\s+(.+?\?)\s*$/gm)];
+
+  return questions.flatMap((match, index) => {
+    if (match.index === undefined) return [];
+    const answerStart = match.index + match[0].length;
+    const answerEnd = questions[index + 1]?.index ?? section.length;
+    const answer = section
+      .slice(answerStart, answerEnd)
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/[*_`]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return answer ? [{ question: match[1].trim(), answer }] : [];
+  });
+}
+
 /** Scale coffee and water quantities while leaving timer values untouched. */
 export function scaleRecipeMeasurements(text: string, factor: number): string {
   if (!Number.isFinite(factor) || factor <= 0) return text;
@@ -157,7 +186,7 @@ interface RecipeKeywordData {
 /** Search descriptors that are distinct from recipeCategory and recipeCuisine. */
 export function recipeKeywords(data: RecipeKeywordData): string {
   const keywords = [
-    `${data.title} recipe`,
+    /\brecipe$/i.test(data.title) ? data.title : `${data.title} recipe`,
     METHOD_KEYWORDS[data.brewMethod],
     data.temperature === 'iced' ? 'served over ice' : 'made at home',
   ];

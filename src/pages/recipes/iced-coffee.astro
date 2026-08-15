@@ -1,5 +1,193 @@
 ---
-import CategoryPage from '../../components/CategoryPage.astro';
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import Photo from '../../components/Photo.astro';
+import { CATEGORIES, formatTimeShort } from '../../lib/recipes';
+import { photo } from '../../lib/photos';
+
+const title = 'Iced Coffee Recipes: Easy Drinks to Make at Home | KAVOVO';
+const description = 'Explore easy iced coffee recipes including Iced Americano, Iced Latte, Cold Brew, Espresso Tonic and flavoured coffee drinks.';
+
+const featured = [
+  { slug: 'iced-americano', label: 'Iced Americano', difficulty: 'Beginner', method: 'Espresso' },
+  { slug: 'iced-latte', label: 'Iced Latte', difficulty: 'Beginner', method: 'Espresso' },
+  { slug: 'iced-caramel-latte', label: 'Iced Caramel Latte', difficulty: 'Beginner', method: 'Espresso' },
+  { slug: 'iced-salted-vanilla-cloud-foam', label: 'Iced Salted Vanilla Cloud Foam', difficulty: 'Intermediate', method: 'Espresso + cold foam' },
+  { slug: 'cold-brew', label: 'Cold Brew', difficulty: 'Beginner', method: 'Cold extraction' },
+  { slug: 'vietnamese-iced-coffee', label: 'Vietnamese Iced Coffee', difficulty: 'Intermediate', method: 'Phin' },
+  { slug: 'freddo-espresso', label: 'Freddo Espresso', difficulty: 'Intermediate', method: 'Whipped espresso' },
+  { slug: 'espresso-tonic', label: 'Espresso Tonic', difficulty: 'Beginner', method: 'Espresso' },
+] as const;
+
+const recipes = await getCollection('recipes');
+const cards = featured.map((item) => {
+  const recipe = recipes.find((candidate) => candidate.id === item.slug);
+  if (!recipe) throw new Error(`Iced Coffee hub links to missing recipe "${item.slug}".`);
+  return { ...item, recipe };
+});
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const url = `${site}/recipes/iced-coffee/`;
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': url,
+  url,
+  name: 'Iced Coffee Recipes',
+  description,
+  mainEntity: {
+    '@type': 'ItemList',
+    numberOfItems: cards.length,
+    itemListElement: cards.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.label,
+      url: `${site}/recipes/${item.slug}/`,
+    })),
+  },
+};
 ---
 
-<CategoryPage id="iced-coffee" />
+<Layout title={title} description={description} ogImage={photo('iced-latte').src}>
+  <article class="mx-auto max-w-6xl px-5 py-14">
+    <JsonLd schema={schema} />
+    <Breadcrumbs trail={[{ label: 'Recipes', href: '/recipes/' }, { label: 'Iced Coffee' }]} />
+
+    <span class="eyebrow mt-6 block">Recipe collection</span>
+    <h1 class="mt-2 max-w-3xl font-display text-4xl font-medium text-balance">Iced Coffee Recipes</h1>
+    <p class="mt-4 max-w-2xl text-lg leading-relaxed text-ink-soft">{description}</p>
+
+    <nav aria-label="Recipe categories" class="mt-8 flex flex-wrap gap-2">
+      <a href="/recipes/" class="rounded-md border border-line px-3.5 py-1.5 text-sm text-ink-soft transition-colors hover:border-accent hover:text-ink">
+        All recipes
+      </a>
+      {
+        CATEGORIES.map((category) => (
+          <a
+            href={`/recipes/${category.slug}/`}
+            aria-current={category.id === 'iced-coffee' ? 'page' : undefined}
+            class:list={[
+              'rounded-md border px-3.5 py-1.5 text-sm transition-colors',
+              category.id === 'iced-coffee'
+                ? 'border-accent bg-accent text-accent-ink'
+                : 'border-line text-ink-soft hover:border-accent hover:text-ink',
+            ]}
+          >
+            {category.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <section class="mt-12 border-t border-line pt-8" aria-labelledby="iced-styles-heading">
+      <h2 id="iced-styles-heading" class="font-display text-2xl font-medium">What Counts as Iced Coffee?</h2>
+      <div class="mt-5 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <h3 class="font-medium">Iced coffee</h3>
+          <p class="mt-2 text-sm leading-relaxed text-ink-soft">The broad family: any brewed coffee or espresso drink deliberately served cold over ice.</p>
+        </div>
+        <div>
+          <h3 class="font-medium">Cold brew</h3>
+          <p class="mt-2 text-sm leading-relaxed text-ink-soft">Coffee extracted with cold water for hours, producing a smooth drink or concentrate.</p>
+        </div>
+        <div>
+          <h3 class="font-medium">Iced espresso drinks</h3>
+          <p class="mt-2 text-sm leading-relaxed text-ink-soft">Fresh espresso cooled with ice, water, tonic or a small amount of another ingredient.</p>
+        </div>
+        <div>
+          <h3 class="font-medium">Milk-based iced drinks</h3>
+          <p class="mt-2 text-sm leading-relaxed text-ink-soft">Espresso paired with cold milk, from an unsweetened latte to caramel and cold-foam variations.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-14" aria-labelledby="iced-recipes-heading">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <h2 id="iced-recipes-heading" class="font-display text-2xl font-medium">Eight Drinks to Make at Home</h2>
+        <p class="text-sm text-ink-soft">{cards.length} recipes</p>
+      </div>
+
+      <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          cards.map(({ recipe, slug, label, difficulty, method }) => (
+            <article class="flex min-w-0 flex-col overflow-hidden rounded-lg border border-line bg-card">
+              <a href={`/recipes/${slug}/`} aria-label={`${label} recipe`}>
+                <Photo
+                  name={recipe.data.image}
+                  alt={recipe.data.imageAlt}
+                  sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 92vw"
+                  class="aspect-[4/3] w-full object-cover"
+                  loading="lazy"
+                />
+              </a>
+              <div class="flex flex-1 flex-col p-5">
+                <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs font-medium text-ink-soft">
+                  <span>{difficulty}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{method}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{formatTimeShort(recipe.data)}</span>
+                </div>
+                <h3 class="mt-2 font-display text-xl font-medium">
+                  <a href={`/recipes/${slug}/`} class="hover:text-accent hover:underline">{label}</a>
+                </h3>
+                <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-ink-soft">{recipe.data.description}</p>
+                <a href={`/recipes/${slug}/`} class="mt-auto pt-4 text-sm font-semibold text-accent hover:underline">
+                  View {label} recipe
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="mt-14 border-t border-line pt-8" aria-labelledby="compare-iced-heading">
+      <h2 id="compare-iced-heading" class="font-display text-2xl font-medium">Compare Iced Coffee Styles</h2>
+      <table class="data-table mt-5">
+        <thead>
+          <tr>
+            <th>Drink</th>
+            <th>Coffee base</th>
+            <th>Milk</th>
+            <th>Typical flavour</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Drink"><a href="/recipes/iced-americano/" class="font-medium text-accent hover:underline">Iced Americano</a></td>
+            <td data-label="Coffee base">Espresso</td>
+            <td data-label="Milk">Optional</td>
+            <td data-label="Typical flavour">Clean and bold</td>
+          </tr>
+          <tr>
+            <td data-label="Drink"><a href="/recipes/iced-latte/" class="font-medium text-accent hover:underline">Iced Latte</a></td>
+            <td data-label="Coffee base">Espresso</td>
+            <td data-label="Milk">Yes</td>
+            <td data-label="Typical flavour">Creamy</td>
+          </tr>
+          <tr>
+            <td data-label="Drink"><a href="/recipes/cold-brew/" class="font-medium text-accent hover:underline">Cold Brew</a></td>
+            <td data-label="Coffee base">Cold extraction</td>
+            <td data-label="Milk">Optional</td>
+            <td data-label="Typical flavour">Smooth</td>
+          </tr>
+          <tr>
+            <td data-label="Drink"><a href="/recipes/espresso-tonic/" class="font-medium text-accent hover:underline">Espresso Tonic</a></td>
+            <td data-label="Coffee base">Espresso</td>
+            <td data-label="Milk">No</td>
+            <td data-label="Typical flavour">Bright and sparkling</td>
+          </tr>
+          <tr>
+            <td data-label="Drink"><a href="/recipes/vietnamese-iced-coffee/" class="font-medium text-accent hover:underline">Vietnamese Iced Coffee</a></td>
+            <td data-label="Coffee base">Strong coffee</td>
+            <td data-label="Milk">Condensed milk</td>
+            <td data-label="Typical flavour">Rich and sweet</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </article>
+</Layout>

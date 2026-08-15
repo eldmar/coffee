@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { recipeKeywords, recipeStepName, scaleRecipeMeasurements } from './recipes';
+import { extractFaqs, recipeKeywords, recipeStepName, scaleRecipeMeasurements } from './recipes';
 
 describe('recipe structured data helpers', () => {
   it('builds keyword descriptors without repeating the schema category or cuisine', () => {
@@ -11,6 +11,17 @@ describe('recipe structured data helpers', () => {
         milk: 'milk',
       }),
     ).toBe('Iced Latte recipe, espresso-based drink, served over ice, milk-based coffee');
+  });
+
+  it('does not repeat recipe when the editorial title already includes it', () => {
+    expect(
+      recipeKeywords({
+        title: 'Iced Americano Recipe',
+        brewMethod: 'espresso',
+        temperature: 'iced',
+        milk: 'black',
+      }),
+    ).toBe('Iced Americano Recipe, espresso-based drink, served over ice');
   });
 
   it('derives a short step name from the first action', () => {
@@ -64,5 +75,30 @@ describe('recipe serving helpers', () => {
 
   it('returns the original text for an invalid scale', () => {
     expect(scaleRecipeMeasurements('15 g coffee', 0)).toBe('15 g coffee');
+  });
+});
+
+describe('recipe FAQ extraction', () => {
+  it('uses the visible FAQ section as structured-data source', () => {
+    expect(
+      extractFaqs(`
+## Frequently asked questions
+
+### What is the ratio?
+
+Use **one part coffee** to two parts water.
+
+### Can I add milk?
+
+Yes. Read the [milk guide](/learn/milk/) first.
+`),
+    ).toEqual([
+      { question: 'What is the ratio?', answer: 'Use one part coffee to two parts water.' },
+      { question: 'Can I add milk?', answer: 'Yes. Read the milk guide first.' },
+    ]);
+  });
+
+  it('returns no FAQ data when the visible section is absent', () => {
+    expect(extractFaqs('## Steps\n\n1. Brew coffee.')).toEqual([]);
   });
 });

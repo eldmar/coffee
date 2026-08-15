@@ -21,7 +21,7 @@ vessel:
   name: "Tall glass"
   capacity: "300–350 ml"
 datePublished: 2026-07-18
-dateModified: 2026-07-18
+dateModified: 2026-08-15
 ingredients:
   - 60 g coarsely ground coffee
   - 600 ml cold filtered water
@@ -41,3 +41,7 @@ equipmentOptional:
 
 - Keeps up to a week in the fridge, so brew a big batch on Sunday.
 - Coarse grind is essential; fine grounds make it muddy and bitter.
+
+## Ready-to-Drink or Concentrate?
+
+Use the [Cold Brew ratio calculator and comparison chart](/learn/coffee-basics/coffee-to-water-ratio/) to choose between a ready-to-drink 1:8–1:12 brew and a 1:4–1:6 concentrate that is diluted after filtering.

@@ -205,6 +205,8 @@ const lessons = defineCollection({
     image: z.string().optional(),
     imageAlt: z.string().optional(),
     imageBrief: z.string().optional(),
+    // Only set when the lesson itself has been materially revised.
+    dateModified: z.coerce.date().optional(),
     // Where to go next once the lesson makes sense. Hand-picked per lesson;
     // hrefs are site-relative and checked by scripts/check-build.mjs.
     related: z

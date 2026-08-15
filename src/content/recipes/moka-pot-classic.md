@@ -20,7 +20,7 @@ vessel:
   name: "Small cup"
   capacity: "80–120 ml"
 datePublished: 2026-07-18
-dateModified: 2026-07-18
+dateModified: 2026-08-15
 ingredients:
   - 18 g medium-fine ground coffee (for a 3-cup pot)
   - Hot water to the safety valve
@@ -38,3 +38,7 @@ equipmentSet: moka-pot
 
 - Starting with hot water keeps the grounds from cooking while the pot heats up.
 - Rinse with warm water only, no soap — and dry fully before storing.
+
+## Why Moka Pot Has No Universal Ratio
+
+The basket and reservoir set the practical dose and water volume for each brewer size. The [coffee ratio guide for every brewing method](/learn/coffee-basics/coffee-to-water-ratio/) explains why filling to just below the safety valve is more accurate than forcing a universal number.

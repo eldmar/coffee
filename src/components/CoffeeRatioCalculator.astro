@@ -1,0 +1,211 @@
+---
+import { COFFEE_RATIO_METHODS } from '../lib/coffeeRatio';
+---
+
+<section class="ratio-calculator" aria-labelledby="ratio-calculator-title">
+  <div>
+    <p class="eyebrow">Interactive calculator</p>
+    <h2 id="ratio-calculator-title" class="mt-1 font-display text-2xl font-medium">
+      Calculate your brew water
+    </h2>
+  </div>
+
+  <form class="ratio-calculator__form" data-ratio-calculator>
+    <label class="ratio-calculator__field">
+      <span>Brewing method</span>
+      <select name="method" data-ratio-method>
+        {COFFEE_RATIO_METHODS.map((method) => <option value={method.id}>{method.label}</option>)}
+      </select>
+    </label>
+
+    <label class="ratio-calculator__field">
+      <span>Coffee</span>
+      <span class="ratio-calculator__input-unit">
+        <input
+          type="number"
+          name="coffee"
+          data-ratio-coffee
+          value="18"
+          min="1"
+          max="200"
+          step="0.5"
+          inputmode="decimal"
+        />
+        <span aria-hidden="true">g</span>
+      </span>
+    </label>
+
+    <label class="ratio-calculator__field">
+      <span>Desired strength</span>
+      <select name="strength" data-ratio-strength>
+        <option value="strong">Strong</option>
+        <option value="balanced" selected>Balanced</option>
+        <option value="light">Light</option>
+      </select>
+    </label>
+  </form>
+
+  <div class="ratio-calculator__result" aria-live="polite" aria-atomic="true">
+    <p class="eyebrow" data-ratio-result-label>Recommended espresso yield</p>
+    <output class="ratio-calculator__amount" data-ratio-result>36 g</output>
+    <p class="ratio-calculator__ratio" data-ratio-label>1:2 ratio</p>
+    <p class="ratio-calculator__note" data-ratio-note>
+      Espresso compares dry coffee with the beverage in the cup, not all water used by the machine.
+    </p>
+  </div>
+</section>
+
+<script>
+  import {
+    calculateCoffeeRatio,
+    type CoffeeRatioMethodId,
+    type RatioStrength,
+  } from '../lib/coffeeRatio';
+
+  document.querySelectorAll<HTMLFormElement>('[data-ratio-calculator]').forEach((form) => {
+    const method = form.querySelector<HTMLSelectElement>('[data-ratio-method]');
+    const coffee = form.querySelector<HTMLInputElement>('[data-ratio-coffee]');
+    const strength = form.querySelector<HTMLSelectElement>('[data-ratio-strength]');
+    const shell = form.closest<HTMLElement>('.ratio-calculator');
+    const resultLabel = shell?.querySelector<HTMLElement>('[data-ratio-result-label]');
+    const result = shell?.querySelector<HTMLOutputElement>('[data-ratio-result]');
+    const ratioLabel = shell?.querySelector<HTMLElement>('[data-ratio-label]');
+    const note = shell?.querySelector<HTMLElement>('[data-ratio-note]');
+
+    if (!method || !coffee || !strength || !resultLabel || !result || !ratioLabel || !note) {
+      return;
+    }
+
+    const update = () => {
+      const coffeeGrams = Number(coffee.value);
+      if (!Number.isFinite(coffeeGrams) || coffeeGrams < 1 || coffeeGrams > 200) {
+        coffee.setAttribute('aria-invalid', 'true');
+        resultLabel.textContent = 'Coffee dose needed';
+        result.textContent = 'Enter 1–200 g';
+        ratioLabel.textContent = '';
+        note.textContent = 'Use the dry coffee dose you plan to brew.';
+        return;
+      }
+
+      coffee.removeAttribute('aria-invalid');
+      const calculation = calculateCoffeeRatio(
+        method.value as CoffeeRatioMethodId,
+        coffeeGrams,
+        strength.value as RatioStrength,
+      );
+      if (!calculation) return;
+
+      strength.disabled = calculation.method.ratios === null;
+      resultLabel.textContent = calculation.method.resultLabel;
+      note.textContent = calculation.method.note;
+      if (calculation.amount === undefined || calculation.ratio === undefined) {
+        result.textContent = 'Use the brewer fill lines';
+        ratioLabel.textContent = 'Brewer-defined amounts';
+        return;
+      }
+
+      result.textContent = `${calculation.amount} ${calculation.method.unit}`;
+      ratioLabel.textContent = `1:${calculation.ratio} ratio`;
+    };
+
+    form.addEventListener('input', update);
+    form.addEventListener('change', update);
+    form.addEventListener('submit', (event) => event.preventDefault());
+    update();
+  });
+</script>
+
+<style>
+  .ratio-calculator {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: var(--color-card);
+  }
+
+  .ratio-calculator__form {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .ratio-calculator__field {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.4rem;
+    color: var(--color-ink-soft);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .ratio-calculator__field :where(input, select) {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    padding: 0 0.75rem;
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .ratio-calculator__input-unit {
+    position: relative;
+    display: block;
+  }
+
+  .ratio-calculator__input-unit input {
+    padding-right: 2.25rem;
+  }
+
+  .ratio-calculator__input-unit > span {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    color: var(--color-ink-soft);
+    transform: translateY(-50%);
+  }
+
+  .ratio-calculator__result {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .ratio-calculator__amount {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    font-weight: 500;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+  }
+
+  .ratio-calculator__ratio {
+    margin-top: 0.35rem;
+    color: var(--color-accent-dark);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .ratio-calculator__note {
+    max-width: 40rem;
+    margin-top: 0.75rem;
+    color: var(--color-ink-soft);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  @media (min-width: 40rem) {
+    .ratio-calculator__form {
+      grid-template-columns: 1.2fr 0.8fr 1fr;
+    }
+  }
+</style>

@@ -21,7 +21,7 @@ vessel:
   name: "Demitasse"
   capacity: "60–90 ml"
 datePublished: 2026-08-03
-dateModified: 2026-08-05
+dateModified: 2026-08-15
 ingredients:
   - 18 g freshly roasted coffee beans
 equipmentSet: espresso
@@ -63,3 +63,7 @@ Change only one variable at a time and keep the 18 g dose consistent while adjus
 - Keep the portafilter clean and dry before adding coffee.
 - Extraction time is a guide, not the final goal. Taste determines whether the shot is balanced.
 - Different coffees may taste better at ratios such as 1:1.5 or 1:2.5.
+
+## Understand the Espresso Ratio
+
+Espresso compares dry coffee with beverage yield rather than total machine water. Use the [Coffee-to-Water Ratio Calculator and brew guide](/learn/coffee-basics/coffee-to-water-ratio/) to compare a 1:2 espresso with filter and immersion methods.

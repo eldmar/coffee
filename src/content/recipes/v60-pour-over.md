@@ -20,7 +20,7 @@ vessel:
   name: "Mug"
   capacity: "300 ml"
 datePublished: 2026-07-18
-dateModified: 2026-07-18
+dateModified: 2026-08-15
 popular: true
 ingredients:
   - 15 g medium-fine ground coffee
@@ -44,3 +44,7 @@ cupScaling:
 
 - If the brew runs much faster than 2:45, grind finer; much slower than 3:30, grind coarser.
 - Use filtered water — with pour over, water quality is half the cup.
+
+## Scale the Recipe
+
+Use the [coffee-to-water calculator for pour over](/learn/coffee-basics/coffee-to-water-ratio/) to scale this recipe while keeping the starting ratio between 1:15 and 1:17.

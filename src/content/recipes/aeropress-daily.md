@@ -20,7 +20,7 @@ vessel:
   name: "Sturdy mug"
   capacity: "300 ml"
 datePublished: 2026-07-18
-dateModified: 2026-07-18
+dateModified: 2026-08-15
 ingredients:
   - 15 g medium ground coffee
   - 220 ml water at 90 °C
@@ -44,3 +44,7 @@ cupScaling:
 
 - Water just off the boil works, but 85–90 °C makes darker roasts noticeably sweeter.
 - Too intense? Just top up with hot water — an instant americano-style cup.
+
+## Choose an AeroPress Ratio
+
+AeroPress recipes can be direct-drinking brews or concentrates. Compare the useful 1:12–1:16 range with other methods in the [Coffee-to-Water Ratio Calculator](/learn/coffee-basics/coffee-to-water-ratio/).

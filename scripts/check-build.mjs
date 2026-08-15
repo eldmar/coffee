@@ -37,9 +37,69 @@ console.log(`Checking ${pages.length} pages in ${DIST}/`);
 const missingAssets = new Set();
 let onDemandImages = 0;
 let recipeSchemas = 0;
+let faqSchemas = 0;
+const indexableSeo = [];
+
+function decodeHtml(value = '') {
+  return value
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#(?:39|x27);/gi, "'")
+    .replace(/&#32;/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+}
+
+function visibleText(html) {
+  return decodeHtml(
+    html
+      .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
+      .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+      .replace(/<[^>]+>/g, ' '),
+  )
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function schemasIn(html) {
+  return [...html.matchAll(
+    /<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi,
+  )].flatMap((match) => {
+    try {
+      return [JSON.parse(match[1])];
+    } catch {
+      return [];
+    }
+  });
+}
 
 for (const page of pages) {
   const html = readFileSync(page, 'utf8');
+  const label = relative(DIST, page);
+  const text = visibleText(html);
+
+  const title = decodeHtml(html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? '').trim();
+  const description = decodeHtml(
+    html.match(/<meta\s+name="description"\s+content="([^"]*)"/i)?.[1] ?? '',
+  ).trim();
+  const canonical = decodeHtml(
+    html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1] ?? '',
+  ).trim();
+  const noindex = /<meta\s+name="robots"\s+content="[^"]*noindex/i.test(html);
+
+  if (!title) problems.push(`${label} is missing a title`);
+  if (!description) problems.push(`${label} is missing a meta description`);
+  if (!/^https:\/\/kavovo\.uk\//.test(canonical)) {
+    problems.push(`${label} is missing an absolute kavovo.uk canonical URL`);
+  }
+  for (const tag of ['og:title', 'og:description', 'og:url', 'og:image']) {
+    if (!html.includes(`property="${tag}"`)) problems.push(`${label} is missing ${tag}`);
+  }
+  for (const tag of ['twitter:card', 'twitter:title', 'twitter:description', 'twitter:image']) {
+    if (!html.includes(`name="${tag}"`)) problems.push(`${label} is missing ${tag}`);
+  }
+  if (!noindex) indexableSeo.push({ label, title, description, canonical });
 
   const headings = [...html.matchAll(/<h([1-6])\b/gi)].map((match) => Number(match[1]));
   const h1Count = headings.filter((level) => level === 1).length;
@@ -83,9 +143,31 @@ for (const page of pages) {
       problems.push(`${relative(DIST, page)} contains invalid JSON-LD`);
       continue;
     }
+    if (schema?.['@type'] === 'FAQPage') {
+      faqSchemas += 1;
+      if (!Array.isArray(schema.mainEntity) || schema.mainEntity.length === 0) {
+        problems.push(`${label} FAQPage schema has no questions`);
+        continue;
+      }
+      for (const [index, item] of schema.mainEntity.entries()) {
+        const question = item?.name;
+        const answer = item?.acceptedAnswer?.text;
+        if (item?.['@type'] !== 'Question' || typeof question !== 'string') {
+          problems.push(`${label} FAQ item ${index + 1} is not a named Question`);
+          continue;
+        }
+        if (item?.acceptedAnswer?.['@type'] !== 'Answer' || typeof answer !== 'string') {
+          problems.push(`${label} FAQ item ${index + 1} has no accepted Answer`);
+          continue;
+        }
+        if (!text.includes(question) || !text.includes(answer)) {
+          problems.push(`${label} FAQ item ${index + 1} is not fully visible on the page`);
+        }
+      }
+      continue;
+    }
     if (schema?.['@type'] !== 'Recipe') continue;
     recipeSchemas += 1;
-    const label = relative(DIST, page);
     if (!html.includes('data-recipe-experience')) {
       problems.push(`${label} is missing the interactive recipe experience`);
     }
@@ -100,6 +182,26 @@ for (const page of pages) {
     }
     if (typeof schema.keywords !== 'string' || schema.keywords.trim().length === 0) {
       problems.push(`${label} Recipe schema is missing keywords`);
+    }
+    for (const field of [
+      'name',
+      'description',
+      'image',
+      'author',
+      'datePublished',
+      'dateModified',
+      'prepTime',
+      'totalTime',
+      'recipeYield',
+      'recipeCategory',
+    ]) {
+      if (!schema[field]) problems.push(`${label} Recipe schema is missing ${field}`);
+    }
+    if (!Array.isArray(schema.recipeIngredient) || schema.recipeIngredient.length === 0) {
+      problems.push(`${label} Recipe schema is missing recipeIngredient`);
+    }
+    if ('aggregateRating' in schema || 'review' in schema || 'nutrition' in schema) {
+      problems.push(`${label} Recipe schema contains unsupported rating, review or nutrition data`);
     }
     if (!Array.isArray(schema.recipeInstructions) || schema.recipeInstructions.length === 0) {
       problems.push(`${label} Recipe schema is missing recipeInstructions`);
@@ -121,6 +223,131 @@ for (const page of pages) {
         problems.push(`${label} instruction ${index + 1} URL does not target a rendered step`);
       }
     }
+  }
+}
+
+for (const key of ['title', 'description', 'canonical']) {
+  const seen = new Map();
+  for (const entry of indexableSeo) {
+    const existing = seen.get(entry[key]);
+    if (existing) {
+      problems.push(`duplicate ${key} on ${existing} and ${entry.label}`);
+    } else {
+      seen.set(entry[key], entry.label);
+    }
+  }
+}
+
+function checkPageSeo(pathSegments, expected) {
+  const page = join(DIST, ...pathSegments, 'index.html');
+  const label = pathSegments.join('/');
+  if (!existsSync(page)) {
+    problems.push(`${label} was not built`);
+    return;
+  }
+
+  const html = readFileSync(page, 'utf8');
+  const title = decodeHtml(html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? '').trim();
+  const description = decodeHtml(
+    html.match(/<meta\s+name="description"\s+content="([^"]*)"/i)?.[1] ?? '',
+  ).trim();
+  const h1 = visibleText(html.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? '');
+
+  if (title !== expected.title) problems.push(`${label} has incorrect SEO title: ${title}`);
+  if (expected.description && description !== expected.description) {
+    problems.push(`${label} has incorrect meta description`);
+  }
+  if (expected.h1 && h1 !== expected.h1) problems.push(`${label} has incorrect h1: ${h1}`);
+  if (/<meta\s+name="robots"\s+content="[^"]*noindex/i.test(html)) {
+    problems.push(`${label} was accidentally marked noindex`);
+  }
+}
+
+for (const [pathSegments, expected] of [
+  [
+    ['recipes', 'iced-americano'],
+    {
+      title: 'Iced Americano Recipe: Ratio & Optional Milk | KAVOVO',
+      description:
+        'Make a refreshing Iced Americano with espresso, cold water and ice. Includes the exact ratio, optional milk and simple step-by-step instructions.',
+      h1: 'Iced Americano Recipe',
+    },
+  ],
+  [
+    ['recipes', 'iced-latte'],
+    {
+      title: 'Iced Latte Recipe: Espresso, Milk & Ice | KAVOVO',
+      description:
+        'Learn how to make an Iced Latte with espresso, cold milk and ice. Get the exact ratio, easy steps and variations for a café-style drink at home.',
+      h1: 'Iced Latte Recipe',
+    },
+  ],
+  [
+    ['recipes', 'irish-coffee'],
+    {
+      title: 'Irish Coffee Recipe: Ingredients, Whiskey & Cream | KAVOVO',
+      description:
+        'Make a classic Irish Coffee with hot coffee, Irish whiskey, sugar and softly whipped cream. Includes exact ingredients and tips for floating the cream.',
+      h1: 'Classic Irish Coffee Recipe',
+    },
+  ],
+  [
+    ['learn', 'coffee-basics', 'coffee-to-water-ratio'],
+    {
+      title: 'Coffee-to-Water Ratio Calculator & Brew Guide | KAVOVO',
+      description:
+        'Use our coffee-to-water ratio calculator and brew chart for espresso, French press, AeroPress, pour over, Moka Pot and cold brew.',
+      h1: 'Coffee-to-Water Ratio Calculator',
+    },
+  ],
+  [
+    ['recipes', 'iced-coffee'],
+    {
+      title: 'Iced Coffee Recipes: Easy Drinks to Make at Home | KAVOVO',
+      description:
+        'Explore easy iced coffee recipes including Iced Americano, Iced Latte, Cold Brew, Espresso Tonic and flavoured coffee drinks.',
+      h1: 'Iced Coffee Recipes',
+    },
+  ],
+  [
+    ['recipes', 'iced-caramel-latte'],
+    {
+      title: 'Iced Caramel Latte Recipe at Home | KAVOVO',
+      description:
+        'Make an Iced Caramel Latte with espresso, cold milk, ice and caramel syrup. Includes exact measurements and an easy less-sweet variation.',
+    },
+  ],
+  [
+    ['recipes', 'americano'],
+    {
+      title: 'Americano Recipe: Espresso & Hot Water Ratio | KAVOVO',
+      description:
+        'Make a hot Americano with double espresso and water. Includes the ideal espresso-to-water ratio and the difference between Americano and Long Black.',
+      h1: 'Americano Recipe',
+    },
+  ],
+  [['recipes', 'cortado'], { title: 'Cortado Coffee Recipe: Ratio, Size & Milk | KAVOVO' }],
+  [['recipes', 'cappuccino'], { title: 'Cappuccino Recipe: Espresso-to-Milk Ratio | KAVOVO' }],
+  [['recipes', 'caffe-mocha'], { title: 'Caffè Mocha Recipe: Chocolate, Espresso & Milk | KAVOVO' }],
+  [
+    ['learn', 'understand-your-beans', 'arabica-vs-robusta'],
+    { title: 'Arabica vs Robusta: Taste, Caffeine & Price | KAVOVO' },
+  ],
+]) {
+  checkPageSeo(pathSegments, expected);
+}
+
+for (const slug of ['iced-americano', 'iced-latte', 'irish-coffee']) {
+  const page = join(DIST, 'recipes', slug, 'index.html');
+  if (!existsSync(page)) continue;
+  const schemas = schemasIn(readFileSync(page, 'utf8'));
+  const types = schemas.map((schema) => schema?.['@type']);
+  for (const type of ['Recipe', 'FAQPage', 'BreadcrumbList']) {
+    if (!types.includes(type)) problems.push(`recipes/${slug} is missing ${type} schema`);
+  }
+  const faq = schemas.find((schema) => schema?.['@type'] === 'FAQPage');
+  if (faq?.mainEntity?.length !== 5) {
+    problems.push(`recipes/${slug} should expose exactly five visible FAQ items`);
   }
 }
 
@@ -234,7 +461,7 @@ if (existsSync(cloudFoamPage)) {
     }
   }
 
-  const relatedSlugs = ['iced-latte', 'vietnamese-iced-coffee', 'freddo-espresso'];
+  const relatedSlugs = ['iced-latte', 'iced-caramel-latte', 'vietnamese-iced-coffee'];
   const relatedStart = html.indexOf('Related recipes');
   const relatedPositions = relatedSlugs.map((slug) =>
     html.indexOf(`href="/recipes/${slug}/"`, relatedStart),
@@ -253,11 +480,45 @@ if (existsSync(cloudFoamPage)) {
 }
 
 const icedRecipesPage = join(DIST, 'recipes', 'iced-coffee', 'index.html');
-if (
-  existsSync(icedRecipesPage) &&
-  !readFileSync(icedRecipesPage, 'utf8').includes('Iced Salted Vanilla Cloud Foam')
-) {
-  problems.push('iced-coffee category is missing Iced Salted Vanilla Cloud Foam');
+if (existsSync(icedRecipesPage)) {
+  const html = readFileSync(icedRecipesPage, 'utf8');
+  const schemas = schemasIn(html);
+  const collection = schemas.find((schema) => schema?.['@type'] === 'CollectionPage');
+  if (collection?.mainEntity?.['@type'] !== 'ItemList') {
+    problems.push('iced-coffee hub is missing its CollectionPage with ItemList');
+  }
+  if (collection?.mainEntity?.numberOfItems !== 8) {
+    problems.push('iced-coffee hub ItemList should contain eight recipes');
+  }
+  if (schemas.some((schema) => schema?.['@type'] === 'Recipe')) {
+    problems.push('iced-coffee hub must not use Recipe schema for the collection');
+  }
+
+  const hubSlugs = [
+    'iced-americano',
+    'iced-latte',
+    'iced-caramel-latte',
+    'iced-salted-vanilla-cloud-foam',
+    'cold-brew',
+    'vietnamese-iced-coffee',
+    'freddo-espresso',
+    'espresso-tonic',
+  ];
+  const positions = hubSlugs.map((slug) => html.indexOf(`href="/recipes/${slug}/"`));
+  if (
+    positions.some((position) => position === -1) ||
+    positions.some((position, index) => index > 0 && position <= positions[index - 1])
+  ) {
+    problems.push('iced-coffee hub recipes are missing or out of editorial order');
+  }
+  for (const detail of ['Beginner', 'Intermediate', 'Espresso + cold foam', 'Cold extraction']) {
+    if (!html.includes(detail)) problems.push(`iced-coffee hub is missing card detail: ${detail}`);
+  }
+  if (!html.includes('Compare Iced Coffee Styles') || !html.includes('Typical flavour')) {
+    problems.push('iced-coffee hub is missing its comparison table');
+  }
+} else {
+  problems.push('Iced Coffee hub was not built');
 }
 
 if (
@@ -265,6 +526,37 @@ if (
   !readFileSync(searchPage, 'utf8').includes('Iced Salted Vanilla Cloud Foam')
 ) {
   problems.push('search index is missing Iced Salted Vanilla Cloud Foam');
+}
+if (existsSync(searchPage) && !readFileSync(searchPage, 'utf8').includes('Recipe collection')) {
+  problems.push('search index is missing the Iced Coffee recipe collection');
+}
+
+const ratioPage = join(DIST, 'learn', 'coffee-basics', 'coffee-to-water-ratio', 'index.html');
+if (existsSync(ratioPage)) {
+  const html = readFileSync(ratioPage, 'utf8');
+  for (const control of [
+    'data-ratio-calculator',
+    'data-ratio-method',
+    'data-ratio-coffee',
+    'data-ratio-strength',
+    'data-ratio-result',
+    'value="moka-pot"',
+    'value="cold-brew-concentrate"',
+  ]) {
+    if (!html.includes(control)) problems.push(`coffee ratio calculator is missing ${control}`);
+  }
+  for (const slug of [
+    'espresso',
+    'v60-pour-over',
+    'classic-french-press',
+    'aeropress-daily',
+    'moka-pot-classic',
+    'cold-brew',
+  ]) {
+    if (!html.includes(`href="/recipes/${slug}/"`)) {
+      problems.push(`coffee ratio lesson is missing recipe link: ${slug}`);
+    }
+  }
 }
 
 const shopPage = join(DIST, 'shop', 'index.html');
@@ -337,6 +629,7 @@ if (!cloudFoamInSitemap) {
 
 for (const asset of missingAssets) problems.push(`referenced but not emitted: ${asset}`);
 if (recipeSchemas === 0) problems.push('no Recipe schemas found in the production build');
+if (faqSchemas < 3) problems.push(`expected at least 3 FAQPage schemas; found ${faqSchemas}`);
 
 // Internal links. Lessons hand-pick their "put it into practice" links, and a
 // typo there is invisible until someone clicks it.
@@ -389,4 +682,4 @@ if (variants === 0) {
   if (!warnOnly) process.exit(1);
 }
 console.log(`Build check passed: ${pages.length} pages, ${variants} image variants served statically.`);
-console.log(`Structured data check passed: ${recipeSchemas} Recipe schemas.`);
+console.log(`Structured data check passed: ${recipeSchemas} Recipe and ${faqSchemas} FAQPage schemas.`);

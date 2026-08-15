@@ -20,7 +20,7 @@ vessel:
   name: "Mug"
   capacity: "250–300 ml"
 datePublished: 2026-07-18
-dateModified: 2026-07-18
+dateModified: 2026-08-15
 ingredients:
   - 30 g coarsely ground coffee
   - 500 ml water at 94 °C
@@ -40,3 +40,7 @@ cupScaling:
 
 - Leaving coffee sitting on the grounds keeps extracting it — decant everything at once.
 - If the cup feels muddy, grind coarser or pour more slowly, leaving the last sip in the press.
+
+## Adjust the Brew Ratio
+
+The [French Press coffee ratio guide and calculator](/learn/coffee-basics/coffee-to-water-ratio/) helps scale the dose for a different press size or make the cup stronger or lighter.

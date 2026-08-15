@@ -4,6 +4,7 @@ import Layout from '../../../layouts/Layout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import Photo from '../../../components/Photo.astro';
 import JsonLd from '../../../components/JsonLd.astro';
+import CoffeeRatioCalculator from '../../../components/CoffeeRatioCalculator.astro';
 import { photo } from '../../../lib/photos';
 import { pathBySlug, readingMinutes } from '../../../lib/learn';
 
@@ -31,6 +32,7 @@ export async function getStaticPaths() {
 const { lesson, total, previous, next } = Astro.props;
 const { Content, headings } = await render(lesson);
 const { data } = lesson;
+const isRatioLesson = lesson.id === 'coffee-basics/coffee-to-water-ratio';
 
 // Contents lists the real sections only. The three callouts are h2 for document
 // structure, but they are not places a reader jumps to.
@@ -64,6 +66,9 @@ const schema = {
   author: { '@type': 'Organization', name: 'KAVOVO', url: `${site}/about/` },
   publisher: { '@type': 'Organization', name: 'KAVOVO' },
   mainEntityOfPage: url,
+  ...(data.dateModified
+    ? { dateModified: data.dateModified.toISOString().slice(0, 10) }
+    : {}),
 };
 ---
 
@@ -72,6 +77,7 @@ const schema = {
   description={data.seoDescription}
   ogImage={ogImagePath}
   ogType="article"
+  modifiedTime={data.dateModified}
 >
   <article class="mx-auto max-w-3xl px-5 py-12">
     <JsonLd schema={schema} />
@@ -131,6 +137,8 @@ const schema = {
         </nav>
       )
     }
+
+    {isRatioLesson && <CoffeeRatioCalculator />}
 
     <div class="prose-body mt-10">
       <Content />

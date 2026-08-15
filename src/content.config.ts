@@ -172,6 +172,7 @@ const journal = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/journal' }),
   schema: z.object({
     title: z.string(),
+    seoTitle: z.string().optional(),
     // description is the meta description; excerpt is the lede on the page.
     description: z.string(),
     excerpt: z.string().optional(),

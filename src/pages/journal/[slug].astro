@@ -47,7 +47,7 @@ const schema = {
 ---
 
 <Layout
-  title={`${data.title} — KAVOVO`}
+  title={data.seoTitle ?? `${data.title} — KAVOVO`}
   description={data.description}
   ogType="article"
   ogImage={ogImagePath}

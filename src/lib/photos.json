@@ -2383,5 +2383,44 @@
       }
     ],
     "src": "/img/journal-why-we-built-kavovo.2321ffae-800.jpg"
+  },
+  "journal-ice-is-an-ingredient": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/journal-ice-is-an-ingredient.8645a8b0-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/journal-ice-is-an-ingredient.8645a8b0-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/journal-ice-is-an-ingredient.8645a8b0-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/journal-ice-is-an-ingredient.8645a8b0-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/journal-ice-is-an-ingredient.8645a8b0-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/journal-ice-is-an-ingredient.8645a8b0-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/journal-ice-is-an-ingredient.8645a8b0-800.jpg"
   }
 }

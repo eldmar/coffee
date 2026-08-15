@@ -70,6 +70,7 @@ An [Iced Americano](/recipes/iced-americano/) dilutes espresso with cold water, 
 
 ## Flavoured Iced Latte Variations
 
+- For a lighter, coffee-forward drink, shake espresso with ice and brown sugar in the [Brown Sugar Shaken Espresso recipe](/recipes/brown-sugar-shaken-espresso/).
 - For caramel sweetness, make the [Iced Caramel Latte](/recipes/iced-caramel-latte/) with a measured amount of syrup.
 - For airy cold foam and a savoury edge, try the [Iced Salted Vanilla Cloud Foam](/recipes/iced-salted-vanilla-cloud-foam/).
 - For a richer drink made with condensed milk, use the [Vietnamese Iced Coffee recipe](/recipes/vietnamese-iced-coffee/).

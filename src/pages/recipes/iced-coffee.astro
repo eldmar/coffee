@@ -8,11 +8,12 @@ import { CATEGORIES, formatTimeShort } from '../../lib/recipes';
 import { photo } from '../../lib/photos';
 
 const title = 'Iced Coffee Recipes: Easy Drinks to Make at Home | KAVOVO';
-const description = 'Explore easy iced coffee recipes including Iced Americano, Iced Latte, Cold Brew, Espresso Tonic and flavoured coffee drinks.';
+const description = 'Explore easy iced coffee recipes including Iced Americano, Iced Latte, shaken espresso, Cold Brew, Espresso Tonic and flavoured coffee drinks.';
 
 const featured = [
   { slug: 'iced-americano', label: 'Iced Americano', difficulty: 'Beginner', method: 'Espresso' },
   { slug: 'iced-latte', label: 'Iced Latte', difficulty: 'Beginner', method: 'Espresso' },
+  { slug: 'brown-sugar-shaken-espresso', label: 'Brown Sugar Shaken Espresso', difficulty: 'Beginner', method: 'Shaken espresso' },
   { slug: 'iced-caramel-latte', label: 'Iced Caramel Latte', difficulty: 'Beginner', method: 'Espresso' },
   { slug: 'iced-salted-vanilla-cloud-foam', label: 'Iced Salted Vanilla Cloud Foam', difficulty: 'Intermediate', method: 'Espresso + cold foam' },
   { slug: 'cold-brew', label: 'Cold Brew', difficulty: 'Beginner', method: 'Cold extraction' },
@@ -105,7 +106,7 @@ const schema = {
 
     <section class="mt-14" aria-labelledby="iced-recipes-heading">
       <div class="flex flex-wrap items-end justify-between gap-3">
-        <h2 id="iced-recipes-heading" class="font-display text-2xl font-medium">Eight Drinks to Make at Home</h2>
+        <h2 id="iced-recipes-heading" class="font-display text-2xl font-medium">Nine Drinks to Make at Home</h2>
         <p class="text-sm text-ink-soft">{cards.length} recipes</p>
       </div>
 
@@ -167,6 +168,12 @@ const schema = {
             <td data-label="Coffee base">Espresso</td>
             <td data-label="Milk">Yes</td>
             <td data-label="Typical flavour">Creamy</td>
+          </tr>
+          <tr>
+            <td data-label="Drink"><a href="/recipes/brown-sugar-shaken-espresso/" class="font-medium text-accent hover:underline">Brown Sugar Shaken Espresso</a></td>
+            <td data-label="Coffee base">Shaken espresso</td>
+            <td data-label="Milk">A little</td>
+            <td data-label="Typical flavour">Strong and lightly sweet</td>
           </tr>
           <tr>
             <td data-label="Drink"><a href="/recipes/cold-brew/" class="font-medium text-accent hover:underline">Cold Brew</a></td>

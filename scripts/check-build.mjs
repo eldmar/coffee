@@ -305,7 +305,7 @@ for (const [pathSegments, expected] of [
     {
       title: 'Iced Coffee Recipes: Easy Drinks to Make at Home | KAVOVO',
       description:
-        'Explore easy iced coffee recipes including Iced Americano, Iced Latte, Cold Brew, Espresso Tonic and flavoured coffee drinks.',
+        'Explore easy iced coffee recipes including Iced Americano, Iced Latte, shaken espresso, Cold Brew, Espresso Tonic and flavoured coffee drinks.',
       h1: 'Iced Coffee Recipes',
     },
   ],
@@ -412,6 +412,9 @@ if (existsSync(recipesPage)) {
   if (!html.includes('Iced Salted Vanilla Cloud Foam')) {
     problems.push('recipes/index.html is missing Iced Salted Vanilla Cloud Foam');
   }
+  if (!html.includes('Brown Sugar Shaken Espresso')) {
+    problems.push('recipes/index.html is missing Brown Sugar Shaken Espresso');
+  }
 }
 
 const cloudFoamPage = join(DIST, 'recipes', 'iced-salted-vanilla-cloud-foam', 'index.html');
@@ -479,6 +482,69 @@ if (existsSync(cloudFoamPage)) {
   problems.push('Iced Salted Vanilla Cloud Foam recipe page was not built');
 }
 
+const shakenEspressoPage = join(DIST, 'recipes', 'brown-sugar-shaken-espresso', 'index.html');
+if (existsSync(shakenEspressoPage)) {
+  const html = readFileSync(shakenEspressoPage, 'utf8');
+  if (!html.includes('<title>Brown Sugar Shaken Espresso Recipe | KAVOVO</title>')) {
+    problems.push('brown sugar shaken espresso is missing its exact SEO title');
+  }
+  if (
+    !/<link rel="canonical" href="https:\/\/kavovo\.uk\/recipes\/brown-sugar-shaken-espresso\/">/i.test(
+      html,
+    )
+  ) {
+    problems.push('brown sugar shaken espresso canonical URL is incorrect');
+  }
+  if (
+    !/<meta property="og:image" content="https:\/\/kavovo\.uk\/img\/brown-sugar-shaken-espresso\.[^"]+">/i.test(
+      html,
+    )
+  ) {
+    problems.push('brown sugar shaken espresso is missing its Open Graph image');
+  }
+  if (!html.includes('<meta property="og:type" content="article">')) {
+    problems.push('brown sugar shaken espresso should use the article Open Graph type');
+  }
+
+  const recipeScript = schemasIn(html).find((schema) => schema?.['@type'] === 'Recipe');
+  if (
+    recipeScript?.prepTime !== 'PT7M' ||
+    recipeScript?.totalTime !== 'PT7M' ||
+    recipeScript?.recipeYield !== '1 drink' ||
+    recipeScript?.recipeCuisine !== 'International' ||
+    recipeScript?.recipeInstructions?.length !== 6
+  ) {
+    problems.push('brown sugar shaken espresso Recipe schema has incorrect core fields');
+  }
+  for (const keyword of [
+    'brown sugar shaken espresso',
+    'iced shaken espresso',
+    'shaken espresso recipe',
+    'brown sugar iced coffee',
+    'oat milk shaken espresso',
+    'homemade shaken espresso',
+  ]) {
+    if (!recipeScript?.keywords?.includes(keyword)) {
+      problems.push(`brown sugar shaken espresso Recipe schema is missing keyword: ${keyword}`);
+    }
+  }
+  for (const href of [
+    '/recipes/iced-latte/',
+    '/recipes/iced-americano/',
+    '/journal/ice-is-an-ingredient/',
+    '/learn/coffee-basics/coffee-to-water-ratio/',
+  ]) {
+    if (!html.includes(`href="${href}"`)) {
+      problems.push(`brown sugar shaken espresso is missing internal link: ${href}`);
+    }
+  }
+  if (!html.includes('Shake safely: Never shake hot espresso')) {
+    problems.push('brown sugar shaken espresso is missing its visible safety notice');
+  }
+} else {
+  problems.push('Brown Sugar Shaken Espresso recipe page was not built');
+}
+
 const icedRecipesPage = join(DIST, 'recipes', 'iced-coffee', 'index.html');
 if (existsSync(icedRecipesPage)) {
   const html = readFileSync(icedRecipesPage, 'utf8');
@@ -487,8 +553,8 @@ if (existsSync(icedRecipesPage)) {
   if (collection?.mainEntity?.['@type'] !== 'ItemList') {
     problems.push('iced-coffee hub is missing its CollectionPage with ItemList');
   }
-  if (collection?.mainEntity?.numberOfItems !== 8) {
-    problems.push('iced-coffee hub ItemList should contain eight recipes');
+  if (collection?.mainEntity?.numberOfItems !== 9) {
+    problems.push('iced-coffee hub ItemList should contain nine recipes');
   }
   if (schemas.some((schema) => schema?.['@type'] === 'Recipe')) {
     problems.push('iced-coffee hub must not use Recipe schema for the collection');
@@ -497,6 +563,7 @@ if (existsSync(icedRecipesPage)) {
   const hubSlugs = [
     'iced-americano',
     'iced-latte',
+    'brown-sugar-shaken-espresso',
     'iced-caramel-latte',
     'iced-salted-vanilla-cloud-foam',
     'cold-brew',
@@ -526,6 +593,12 @@ if (
   !readFileSync(searchPage, 'utf8').includes('Iced Salted Vanilla Cloud Foam')
 ) {
   problems.push('search index is missing Iced Salted Vanilla Cloud Foam');
+}
+if (
+  existsSync(searchPage) &&
+  !readFileSync(searchPage, 'utf8').includes('Brown Sugar Shaken Espresso')
+) {
+  problems.push('search index is missing Brown Sugar Shaken Espresso');
 }
 if (existsSync(searchPage) && !readFileSync(searchPage, 'utf8').includes('Recipe collection')) {
   problems.push('search index is missing the Iced Coffee recipe collection');

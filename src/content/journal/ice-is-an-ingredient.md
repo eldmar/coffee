@@ -199,6 +199,7 @@ The goal is not to stop that change. The goal is to account for it.
 
 ## Continue Exploring
 
+* [Brown Sugar Shaken Espresso](/recipes/brown-sugar-shaken-espresso/)
 * [Iced Americano](/recipes/iced-americano/)
 * [Iced Latte](/recipes/iced-latte/)
 * [Iced Caramel Latte](/recipes/iced-caramel-latte/)

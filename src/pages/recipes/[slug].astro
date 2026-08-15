@@ -74,6 +74,9 @@ const share = shareText(data, steps, recipeUrl);
   title={data.seoTitle ?? `${data.title} Recipe — KAVOVO`}
   description={data.seoDescription ?? data.description}
   ogImage={ogImagePath}
+  ogType="article"
+  publishedTime={data.datePublished}
+  modifiedTime={data.dateModified}
 >
   <article class="recipe mx-auto max-w-3xl px-5 py-12">
     <RecipeSchema recipe={recipe} />
@@ -385,6 +388,33 @@ const share = shareText(data, steps, recipeUrl);
     }, 3000);
   }
 
+  async function copyShareText(text: string): Promise<boolean> {
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        // A local fallback still works when clipboard permissions are denied.
+      }
+    }
+
+    const field = document.createElement('textarea');
+    field.value = text;
+    field.readOnly = true;
+    field.style.position = 'fixed';
+    field.style.opacity = '0';
+    document.body.append(field);
+    field.select();
+    field.setSelectionRange(0, field.value.length);
+
+    try {
+      return document.execCommand('copy');
+    } finally {
+      field.remove();
+      shareButton?.focus();
+    }
+  }
+
   shareButton?.addEventListener('click', async () => {
     const text = shareButton.dataset.shareText ?? '';
     const url = shareButton.dataset.shareUrl ?? window.location.href;
@@ -399,11 +429,7 @@ const share = shareText(data, steps, recipeUrl);
       }
     }
 
-    try {
-      await navigator.clipboard.writeText(text);
-      announce('Recipe copied!');
-    } catch {
-      announce('Could not copy — select and copy the page instead.');
-    }
+    const copied = await copyShareText(text);
+    announce(copied ? 'Recipe copied!' : 'Could not copy — select and copy the page instead.');
   });
 </script>

@@ -133,7 +133,7 @@ export function extractFaqs(body: string): RecipeFaq[] {
   if (!heading || heading.index === undefined) return [];
 
   const rest = body.slice(heading.index + heading[0].length);
-  const nextSection = rest.search(/^##\s+/m);
+  const nextSection = rest.search(/^(?:##\s+|<div\b)/m);
   const section = nextSection === -1 ? rest : rest.slice(0, nextSection);
   const questions = [...section.matchAll(/^###\s+(.+?\?)\s*$/gm)];
 

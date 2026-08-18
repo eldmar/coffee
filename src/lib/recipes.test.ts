@@ -101,4 +101,24 @@ Yes. Read the [milk guide](/learn/milk/) first.
   it('returns no FAQ data when the visible section is absent', () => {
     expect(extractFaqs('## Steps\n\n1. Brew coffee.')).toEqual([]);
   });
+
+  it('stops before a following HTML callout', () => {
+    expect(
+      extractFaqs(`
+## Frequently asked questions
+
+### Can I use a paper filter?
+
+Yes, rinse it first.
+
+<div class="callout">
+
+## Key takeaway
+
+Keep the recipe repeatable.
+`),
+    ).toEqual([
+      { question: 'Can I use a paper filter?', answer: 'Yes, rinse it first.' },
+    ]);
+  });
 });

@@ -301,6 +301,15 @@ for (const [pathSegments, expected] of [
     },
   ],
   [
+    ['learn', 'coffee-basics', 'filter-coffee'],
+    {
+      title: 'How to Make Filter Coffee: Ratio, Grind & Methods | KAVOVO',
+      description:
+        'Learn how to make filter coffee with the right ratio, grind size and water temperature. Includes V60, drip machine, Chemex and AeroPress methods.',
+      h1: 'How to Make Filter Coffee',
+    },
+  ],
+  [
     ['recipes', 'iced-coffee'],
     {
       title: 'Iced Coffee Recipes: Easy Drinks to Make at Home | KAVOVO',
@@ -326,6 +335,15 @@ for (const [pathSegments, expected] of [
       h1: 'Americano Recipe',
     },
   ],
+  [
+    ['recipes', 'flat-white'],
+    {
+      title: 'Flat White Coffee Recipe: Ratio, Size & Milk | KAVOVO',
+      description:
+        'Make a Flat White with a double espresso and silky microfoam. Learn the correct ratio, cup size and differences from a latte or cappuccino.',
+      h1: 'Flat White Coffee Recipe',
+    },
+  ],
   [['recipes', 'cortado'], { title: 'Cortado Coffee Recipe: Ratio, Size & Milk | KAVOVO' }],
   [['recipes', 'cappuccino'], { title: 'Cappuccino Recipe: Espresso-to-Milk Ratio | KAVOVO' }],
   [['recipes', 'caffe-mocha'], { title: 'Caffè Mocha Recipe: Chocolate, Espresso & Milk | KAVOVO' }],
@@ -337,7 +355,13 @@ for (const [pathSegments, expected] of [
   checkPageSeo(pathSegments, expected);
 }
 
-for (const slug of ['iced-americano', 'iced-latte', 'irish-coffee']) {
+for (const [slug, expectedFaqs] of [
+  ['iced-americano', 5],
+  ['iced-latte', 5],
+  ['irish-coffee', 6],
+  ['americano', 5],
+  ['flat-white', 5],
+]) {
   const page = join(DIST, 'recipes', slug, 'index.html');
   if (!existsSync(page)) continue;
   const schemas = schemasIn(readFileSync(page, 'utf8'));
@@ -346,9 +370,57 @@ for (const slug of ['iced-americano', 'iced-latte', 'irish-coffee']) {
     if (!types.includes(type)) problems.push(`recipes/${slug} is missing ${type} schema`);
   }
   const faq = schemas.find((schema) => schema?.['@type'] === 'FAQPage');
-  if (faq?.mainEntity?.length !== 5) {
-    problems.push(`recipes/${slug} should expose exactly five visible FAQ items`);
+  if (faq?.mainEntity?.length !== expectedFaqs) {
+    problems.push(`recipes/${slug} should expose exactly ${expectedFaqs} visible FAQ items`);
   }
+  if (slug === 'irish-coffee') {
+    const recipeSchema = schemas.find((schema) => schema?.['@type'] === 'Recipe');
+    if (recipeSchema?.recipeInstructions?.length !== 7) {
+      problems.push('recipes/irish-coffee should expose exactly seven recipe steps');
+    }
+  }
+}
+
+const filterCoffeePage = join(DIST, 'learn', 'coffee-basics', 'filter-coffee', 'index.html');
+if (existsSync(filterCoffeePage)) {
+  const html = readFileSync(filterCoffeePage, 'utf8');
+  const schemas = schemasIn(html);
+  for (const type of ['Article', 'LearningResource', 'FAQPage', 'BreadcrumbList']) {
+    if (!schemas.some((schema) => {
+      const schemaType = schema?.['@type'];
+      return schemaType === type || (Array.isArray(schemaType) && schemaType.includes(type));
+    })) {
+      problems.push(`filter coffee guide is missing ${type} schema`);
+    }
+  }
+  const faq = schemas.find((schema) => schema?.['@type'] === 'FAQPage');
+  if (faq?.mainEntity?.length !== 6) {
+    problems.push('filter coffee guide should expose exactly six visible FAQ items');
+  }
+  for (const marker of [
+    'Best Coffee-to-Water Ratio for Filter Coffee',
+    'Filter Coffee Methods',
+    'Basic Filter Coffee Recipe',
+    'Filter Coffee vs Americano',
+    'Common Filter Coffee Problems',
+  ]) {
+    if (!html.includes(marker)) problems.push(`filter coffee guide is missing section: ${marker}`);
+  }
+  for (const href of [
+    '/learn/coffee-basics/coffee-to-water-ratio/',
+    '/recipes/aeropress-daily/',
+    '/recipes/classic-french-press/',
+    '/recipes/americano/',
+    '/learn/coffee-basics/grind-size/',
+    '/learn/coffee-basics/brewing-temperature/',
+    '/learn/understand-your-beans/coffee-freshness-roast-dates/',
+  ]) {
+    if (!html.includes(`href="${href}"`)) {
+      problems.push(`filter coffee guide is missing internal link: ${href}`);
+    }
+  }
+} else {
+  problems.push('Filter Coffee guide was not built');
 }
 
 const v60GuidePage = join(DIST, 'guides', 'v60', 'index.html');
@@ -559,6 +631,9 @@ if (existsSync(icedRecipesPage)) {
   if (schemas.some((schema) => schema?.['@type'] === 'Recipe')) {
     problems.push('iced-coffee hub must not use Recipe schema for the collection');
   }
+  if (!schemas.some((schema) => schema?.['@type'] === 'BreadcrumbList')) {
+    problems.push('iced-coffee hub is missing BreadcrumbList schema');
+  }
 
   const hubSlugs = [
     'iced-americano',
@@ -578,11 +653,40 @@ if (existsSync(icedRecipesPage)) {
   ) {
     problems.push('iced-coffee hub recipes are missing or out of editorial order');
   }
-  for (const detail of ['Beginner', 'Intermediate', 'Espresso + cold foam', 'Cold extraction']) {
+  for (const detail of [
+    'Beginner',
+    'Intermediate',
+    'Espresso + cold foam',
+    'Cold extraction',
+    'Coffee base',
+    'Condensed milk',
+  ]) {
     if (!html.includes(detail)) problems.push(`iced-coffee hub is missing card detail: ${detail}`);
   }
-  if (!html.includes('Compare Iced Coffee Styles') || !html.includes('Typical flavour')) {
+  if (!html.includes('Compare Iced Coffee Styles') || !html.includes('Main character')) {
     problems.push('iced-coffee hub is missing its comparison table');
+  }
+  for (const section of [
+    'Iced Coffee vs Cold Brew',
+    'Iced Coffee vs Iced Latte',
+    'How to Stop Iced Coffee Becoming Watery',
+    'Best Ice for Coffee',
+    'Can Hot Coffee Be Poured Over Ice?',
+  ]) {
+    if (!html.includes(section)) problems.push(`iced-coffee hub is missing section: ${section}`);
+  }
+  if (!html.includes('href="/journal/ice-is-an-ingredient/"')) {
+    problems.push('iced-coffee hub is missing its Ice Is an Ingredient link');
+  }
+
+  for (const slug of hubSlugs) {
+    const recipePage = join(DIST, 'recipes', slug, 'index.html');
+    if (
+      !existsSync(recipePage) ||
+      !readFileSync(recipePage, 'utf8').includes('href="/recipes/iced-coffee/"')
+    ) {
+      problems.push(`recipes/${slug} is missing its return link to the iced-coffee hub`);
+    }
   }
 } else {
   problems.push('Iced Coffee hub was not built');
@@ -603,16 +707,33 @@ if (
 if (existsSync(searchPage) && !readFileSync(searchPage, 'utf8').includes('Recipe collection')) {
   problems.push('search index is missing the Iced Coffee recipe collection');
 }
+if (existsSync(searchPage) && !readFileSync(searchPage, 'utf8').includes('How to Make Filter Coffee')) {
+  problems.push('search index is missing the Filter Coffee guide');
+}
 
 const ratioPage = join(DIST, 'learn', 'coffee-basics', 'coffee-to-water-ratio', 'index.html');
 if (existsSync(ratioPage)) {
   const html = readFileSync(ratioPage, 'utf8');
+  const schemas = schemasIn(html);
+  if (
+    !schemas.some((schema) =>
+      Array.isArray(schema?.['@type']) && schema['@type'].includes('Article')
+    )
+  ) {
+    problems.push('coffee ratio lesson is missing Article schema');
+  }
+  if (!schemas.some((schema) => schema?.['@type'] === 'BreadcrumbList')) {
+    problems.push('coffee ratio lesson is missing BreadcrumbList schema');
+  }
   for (const control of [
     'data-ratio-calculator',
     'data-ratio-method',
     'data-ratio-coffee',
     'data-ratio-strength',
+    'data-ratio-units',
+    'data-ratio-unit',
     'data-ratio-result',
+    'value="filter-coffee"',
     'value="moka-pot"',
     'value="cold-brew-concentrate"',
   ]) {
@@ -629,6 +750,14 @@ if (existsSync(ratioPage)) {
     if (!html.includes(`href="/recipes/${slug}/"`)) {
       problems.push(`coffee ratio lesson is missing recipe link: ${slug}`);
     }
+  }
+  for (const marker of [
+    'Filter Coffee',
+    'Why Grind Size Still Matters',
+    'Why Water Temperature Matters',
+    'Ratio Examples for 1, 2 and 4 Cups',
+  ]) {
+    if (!html.includes(marker)) problems.push(`coffee ratio lesson is missing section: ${marker}`);
   }
 }
 
@@ -680,6 +809,7 @@ for (const contentPage of [
 }
 
 let cloudFoamInSitemap = false;
+let filterCoffeeInSitemap = false;
 for (const entry of readdirSync(DIST, { withFileTypes: true })) {
   if (!entry.isFile() || !entry.name.endsWith('.xml')) continue;
   const xml = readFileSync(join(DIST, entry.name), 'utf8');
@@ -690,6 +820,9 @@ for (const entry of readdirSync(DIST, { withFileTypes: true })) {
   ) {
     cloudFoamInSitemap = true;
   }
+  if (xml.includes('<loc>https://kavovo.uk/learn/coffee-basics/filter-coffee/</loc>')) {
+    filterCoffeeInSitemap = true;
+  }
   for (const excludedPath of ['/404/', '/search/', '/shop/', '/subscription-confirmed/']) {
     if (xml.includes(`<loc>https://kavovo.uk${excludedPath}</loc>`)) {
       problems.push(`${entry.name} includes excluded page ${excludedPath}`);
@@ -698,6 +831,9 @@ for (const entry of readdirSync(DIST, { withFileTypes: true })) {
 }
 if (!cloudFoamInSitemap) {
   problems.push('sitemap is missing Iced Salted Vanilla Cloud Foam');
+}
+if (!filterCoffeeInSitemap) {
+  problems.push('sitemap is missing the Filter Coffee guide');
 }
 
 for (const asset of missingAssets) problems.push(`referenced but not emitted: ${asset}`);

@@ -57,3 +57,5 @@ Traditional Vietnamese coffee often uses robusta, which gives the drink enough s
 **The coffee barely drips.** Grind coarser or reduce pressure on the insert.
 
 **The drink is too sweet.** Reduce the condensed milk to 20 g rather than adding more coffee.
+
+Explore more cold espresso and filter drinks in the [Iced Coffee recipe collection](/recipes/iced-coffee/).

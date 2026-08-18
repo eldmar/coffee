@@ -5,11 +5,11 @@ title: Coffee-to-Water Ratio Calculator
 seoTitle: Coffee-to-Water Ratio Calculator & Brew Guide | KAVOVO
 seoDescription: Use our coffee-to-water ratio calculator and brew chart for espresso, French press, AeroPress, pour over, Moka Pot and cold brew.
 excerpt: Calculate the right amount of water for your coffee dose, then use the brew chart to adjust strength for every major method.
-readingTime: 8
+readingTime: 9
 image: lesson-coffee-to-water-ratio
 imageBrief: Ground coffee on a digital scale beside a glass server and measured water, photographed in the KAVOVO visual style.
 imageAlt: Ground coffee and brewing water being measured with a digital scale.
-dateModified: 2026-08-15
+dateModified: 2026-08-18
 related:
   - label: V60 Pour Over recipe
     href: /recipes/v60-pour-over/
@@ -45,15 +45,18 @@ These are reliable starting ranges, not fixed laws. Coffee, grinder, roast and p
 
 | Method | Starting ratio |
 | --- | --- |
-| Espresso | 1:2 |
+| Filter Coffee | 1:15–1:17 |
 | Pour Over | 1:15–1:17 |
 | French Press | 1:15 |
 | AeroPress | 1:12–1:16 |
+| Espresso | 1:2 beverage yield |
 | Moka Pot | Set by basket and reservoir capacity |
 | Cold Brew | 1:8–1:12 |
 | Cold Brew Concentrate | 1:4–1:6 |
 
 For Moka Pot, fill the coffee basket level without tamping and add water to just below the safety valve. A universal ratio would be misleading because the brewer's construction fixes both capacities.
+
+For everyday [filter coffee](/learn/coffee-basics/filter-coffee/), 60 g per litre is an easy number to scale: 15 g coffee for 250 ml water, 30 g for 500 ml or 60 g for one litre.
 
 ## Stronger vs Weaker Coffee
 
@@ -87,9 +90,16 @@ Typical espresso ranges are approximately 1:1–1:1.5 for ristretto, 1:2 for esp
 
 Ratio controls strength, while grind size strongly affects how quickly water extracts flavour. If a brew has the right strength but tastes sour, try a slightly finer grind. If it tastes bitter, dry or hollow, try slightly coarser. Change one variable at a time so the result tells you something useful.
 
+## Why Water Temperature Matters
+
+Water temperature changes how quickly coffee compounds dissolve. For most hot filter and immersion brews, start around **92-96°C**. Light roasts often benefit from the hotter end of the range, while dark roasts may taste smoother with slightly cooler water.
+
+Temperature does not replace ratio or grind adjustment. Set a repeatable dose and ratio first, then use the [coffee brewing temperature guide](/learn/coffee-basics/brewing-temperature/) when the coffee remains sour or harsh after a sensible grind change.
+
 ## Recipes for Every Brewing Method
 
 - Use a 1:2 beverage ratio in the [Espresso recipe](/recipes/espresso/).
+- Start at 60 g per litre with the [Filter Coffee guide](/learn/coffee-basics/filter-coffee/).
 - Start around 1:16 in the [V60 Pour Over recipe](/recipes/v60-pour-over/).
 - Brew a full immersion with the [Classic French Press recipe](/recipes/classic-french-press/).
 - Explore a more concentrated range in the [AeroPress Daily recipe](/recipes/aeropress-daily/).

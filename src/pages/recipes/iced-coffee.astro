@@ -9,17 +9,18 @@ import { photo } from '../../lib/photos';
 
 const title = 'Iced Coffee Recipes: Easy Drinks to Make at Home | KAVOVO';
 const description = 'Explore easy iced coffee recipes including Iced Americano, Iced Latte, shaken espresso, Cold Brew, Espresso Tonic and flavoured coffee drinks.';
+const intro = 'Iced coffee can mean several different drinks, from espresso poured over ice to slow-brewed cold brew and milk-based iced lattes. This guide helps you choose the right recipe and understand how each method changes the flavour.';
 
 const featured = [
-  { slug: 'iced-americano', label: 'Iced Americano', difficulty: 'Beginner', method: 'Espresso' },
-  { slug: 'iced-latte', label: 'Iced Latte', difficulty: 'Beginner', method: 'Espresso' },
-  { slug: 'brown-sugar-shaken-espresso', label: 'Brown Sugar Shaken Espresso', difficulty: 'Beginner', method: 'Shaken espresso' },
-  { slug: 'iced-caramel-latte', label: 'Iced Caramel Latte', difficulty: 'Beginner', method: 'Espresso' },
-  { slug: 'iced-salted-vanilla-cloud-foam', label: 'Iced Salted Vanilla Cloud Foam', difficulty: 'Intermediate', method: 'Espresso + cold foam' },
-  { slug: 'cold-brew', label: 'Cold Brew', difficulty: 'Beginner', method: 'Cold extraction' },
-  { slug: 'vietnamese-iced-coffee', label: 'Vietnamese Iced Coffee', difficulty: 'Intermediate', method: 'Phin' },
-  { slug: 'freddo-espresso', label: 'Freddo Espresso', difficulty: 'Intermediate', method: 'Whipped espresso' },
-  { slug: 'espresso-tonic', label: 'Espresso Tonic', difficulty: 'Beginner', method: 'Espresso' },
+  { slug: 'iced-americano', label: 'Iced Americano', difficulty: 'Beginner', method: 'Espresso', milk: 'Optional' },
+  { slug: 'iced-latte', label: 'Iced Latte', difficulty: 'Beginner', method: 'Espresso', milk: 'Yes' },
+  { slug: 'brown-sugar-shaken-espresso', label: 'Brown Sugar Shaken Espresso', difficulty: 'Beginner', method: 'Shaken espresso', milk: 'Small amount' },
+  { slug: 'iced-caramel-latte', label: 'Iced Caramel Latte', difficulty: 'Beginner', method: 'Espresso', milk: 'Yes' },
+  { slug: 'iced-salted-vanilla-cloud-foam', label: 'Iced Salted Vanilla Cloud Foam', difficulty: 'Intermediate', method: 'Espresso + cold foam', milk: 'Yes' },
+  { slug: 'cold-brew', label: 'Overnight Cold Brew', difficulty: 'Beginner', method: 'Cold extraction', milk: 'Optional' },
+  { slug: 'vietnamese-iced-coffee', label: 'Vietnamese Iced Coffee', difficulty: 'Intermediate', method: 'Phin', milk: 'Condensed milk' },
+  { slug: 'freddo-espresso', label: 'Freddo Espresso', difficulty: 'Intermediate', method: 'Whipped espresso', milk: 'No' },
+  { slug: 'espresso-tonic', label: 'Espresso Tonic', difficulty: 'Beginner', method: 'Espresso', milk: 'No' },
 ] as const;
 
 const recipes = await getCollection('recipes');
@@ -58,7 +59,7 @@ const schema = {
 
     <span class="eyebrow mt-6 block">Recipe collection</span>
     <h1 class="mt-2 max-w-3xl font-display text-4xl font-medium text-balance">Iced Coffee Recipes</h1>
-    <p class="mt-4 max-w-2xl text-lg leading-relaxed text-ink-soft">{description}</p>
+    <p class="mt-4 max-w-3xl text-lg leading-relaxed text-ink-soft">{intro}</p>
 
     <nav aria-label="Recipe categories" class="mt-8 flex flex-wrap gap-2">
       <a href="/recipes/" class="rounded-md border border-line px-3.5 py-1.5 text-sm text-ink-soft transition-colors hover:border-accent hover:text-ink">
@@ -112,29 +113,40 @@ const schema = {
 
       <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
-          cards.map(({ recipe, slug, label, difficulty, method }) => (
+          cards.map(({ recipe, slug, label, difficulty, method, milk }) => (
             <article class="flex min-w-0 flex-col overflow-hidden rounded-lg border border-line bg-card">
               <a href={`/recipes/${slug}/`} aria-label={`${label} recipe`}>
                 <Photo
                   name={recipe.data.image}
                   alt={recipe.data.imageAlt}
                   sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 92vw"
-                  class="aspect-[4/3] w-full object-cover"
+                  class="aspect-[4/3] w-full bg-line object-cover"
                   loading="lazy"
                 />
               </a>
               <div class="flex flex-1 flex-col p-5">
-                <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs font-medium text-ink-soft">
-                  <span>{difficulty}</span>
-                  <span aria-hidden="true">·</span>
-                  <span>{method}</span>
-                  <span aria-hidden="true">·</span>
-                  <span>{formatTimeShort(recipe.data)}</span>
-                </div>
-                <h3 class="mt-2 font-display text-xl font-medium">
+                <h3 class="font-display text-xl font-medium">
                   <a href={`/recipes/${slug}/`} class="hover:text-accent hover:underline">{label}</a>
                 </h3>
                 <p class="mt-2 line-clamp-3 text-sm leading-relaxed text-ink-soft">{recipe.data.description}</p>
+                <dl class="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-line pt-4 text-sm">
+                  <div>
+                    <dt class="text-xs text-ink-soft">Time</dt>
+                    <dd class="mt-0.5 font-medium">{formatTimeShort(recipe.data)}</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-ink-soft">Difficulty</dt>
+                    <dd class="mt-0.5 font-medium">{difficulty}</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-ink-soft">Coffee base</dt>
+                    <dd class="mt-0.5 font-medium">{method}</dd>
+                  </div>
+                  <div>
+                    <dt class="text-xs text-ink-soft">Milk</dt>
+                    <dd class="mt-0.5 font-medium">{milk}</dd>
+                  </div>
+                </dl>
                 <a href={`/recipes/${slug}/`} class="mt-auto pt-4 text-sm font-semibold text-accent hover:underline">
                   View {label} recipe
                 </a>
@@ -153,7 +165,7 @@ const schema = {
             <th>Drink</th>
             <th>Coffee base</th>
             <th>Milk</th>
-            <th>Typical flavour</th>
+            <th>Main character</th>
           </tr>
         </thead>
         <tbody>
@@ -161,40 +173,61 @@ const schema = {
             <td data-label="Drink"><a href="/recipes/iced-americano/" class="font-medium text-accent hover:underline">Iced Americano</a></td>
             <td data-label="Coffee base">Espresso</td>
             <td data-label="Milk">Optional</td>
-            <td data-label="Typical flavour">Clean and bold</td>
+            <td data-label="Main character">Clean and bold</td>
           </tr>
           <tr>
             <td data-label="Drink"><a href="/recipes/iced-latte/" class="font-medium text-accent hover:underline">Iced Latte</a></td>
             <td data-label="Coffee base">Espresso</td>
             <td data-label="Milk">Yes</td>
-            <td data-label="Typical flavour">Creamy</td>
-          </tr>
-          <tr>
-            <td data-label="Drink"><a href="/recipes/brown-sugar-shaken-espresso/" class="font-medium text-accent hover:underline">Brown Sugar Shaken Espresso</a></td>
-            <td data-label="Coffee base">Shaken espresso</td>
-            <td data-label="Milk">A little</td>
-            <td data-label="Typical flavour">Strong and lightly sweet</td>
+            <td data-label="Main character">Creamy</td>
           </tr>
           <tr>
             <td data-label="Drink"><a href="/recipes/cold-brew/" class="font-medium text-accent hover:underline">Cold Brew</a></td>
             <td data-label="Coffee base">Cold extraction</td>
             <td data-label="Milk">Optional</td>
-            <td data-label="Typical flavour">Smooth</td>
+            <td data-label="Main character">Smooth</td>
+          </tr>
+          <tr>
+            <td data-label="Drink"><a href="/recipes/brown-sugar-shaken-espresso/" class="font-medium text-accent hover:underline">Shaken Espresso</a></td>
+            <td data-label="Coffee base">Espresso</td>
+            <td data-label="Milk">Small amount</td>
+            <td data-label="Main character">Frothy and strong</td>
           </tr>
           <tr>
             <td data-label="Drink"><a href="/recipes/espresso-tonic/" class="font-medium text-accent hover:underline">Espresso Tonic</a></td>
             <td data-label="Coffee base">Espresso</td>
             <td data-label="Milk">No</td>
-            <td data-label="Typical flavour">Bright and sparkling</td>
-          </tr>
-          <tr>
-            <td data-label="Drink"><a href="/recipes/vietnamese-iced-coffee/" class="font-medium text-accent hover:underline">Vietnamese Iced Coffee</a></td>
-            <td data-label="Coffee base">Strong coffee</td>
-            <td data-label="Milk">Condensed milk</td>
-            <td data-label="Typical flavour">Rich and sweet</td>
+            <td data-label="Main character">Bright and sparkling</td>
           </tr>
         </tbody>
       </table>
     </section>
+
+    <div class="mt-14 grid gap-x-12 gap-y-10 border-t border-line pt-8 md:grid-cols-2">
+      <section aria-labelledby="iced-vs-cold-brew-heading">
+        <h2 id="iced-vs-cold-brew-heading" class="font-display text-2xl font-medium">Iced Coffee vs Cold Brew</h2>
+        <p class="mt-3 leading-relaxed text-ink-soft">Iced coffee is a broad category and is often brewed hot before being chilled. <a href="/recipes/cold-brew/" class="font-medium text-accent hover:underline">Cold Brew</a> extracts with cold water for many hours, creating a smoother drink with a different flavour and much longer preparation time.</p>
+      </section>
+
+      <section aria-labelledby="iced-vs-latte-heading">
+        <h2 id="iced-vs-latte-heading" class="font-display text-2xl font-medium">Iced Coffee vs Iced Latte</h2>
+        <p class="mt-3 leading-relaxed text-ink-soft">An iced coffee can be black or served with a small splash of milk. An <a href="/recipes/iced-latte/" class="font-medium text-accent hover:underline">Iced Latte</a> is specifically made with espresso, a larger amount of cold milk and ice, so it tastes creamier and less coffee-forward.</p>
+      </section>
+
+      <section aria-labelledby="stop-watery-heading">
+        <h2 id="stop-watery-heading" class="font-display text-2xl font-medium">How to Stop Iced Coffee Becoming Watery</h2>
+        <p class="mt-3 leading-relaxed text-ink-soft">Start with cold water or milk, fill the glass with properly frozen ice and reduce added water before reducing the ice. Build the drink slightly stronger than its hot equivalent so a controlled amount of melting brings it into balance. Read <a href="/journal/ice-is-an-ingredient/" class="font-medium text-accent hover:underline">why iced coffee becomes watery</a> for a full dilution guide.</p>
+      </section>
+
+      <section aria-labelledby="best-ice-heading">
+        <h2 id="best-ice-heading" class="font-display text-2xl font-medium">Best Ice for Coffee</h2>
+        <p class="mt-3 leading-relaxed text-ink-soft">Use clean, dense, fully frozen cubes. Large cubes generally melt more slowly than small or hollow ones, while enough ice chills the drink quickly and slows further dilution. Discard ice that has absorbed freezer odours.</p>
+      </section>
+
+      <section aria-labelledby="hot-coffee-over-ice-heading">
+        <h2 id="hot-coffee-over-ice-heading" class="font-display text-2xl font-medium">Can Hot Coffee Be Poured Over Ice?</h2>
+        <p class="mt-3 leading-relaxed text-ink-soft">Yes. Hot espresso or filter coffee can be poured over ice when the recipe accounts for the water released as the ice melts. Use plenty of hard ice, chill the other ingredients and make the hot coffee slightly stronger instead of treating dilution as an accident.</p>
+      </section>
+    </div>
   </article>
 </Layout>

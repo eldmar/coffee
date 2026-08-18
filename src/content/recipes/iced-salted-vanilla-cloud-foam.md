@@ -87,3 +87,5 @@ Reduce the vanilla syrup from 10 ml to 5 ml. Do not compensate by adding more sa
 ## More Iced Latte Recipes
 
 For a simpler milk-and-espresso balance, start with the [Iced Latte recipe](/recipes/iced-latte/). For a sweeter drink without foam, make the [Iced Caramel Latte](/recipes/iced-caramel-latte/).
+
+Browse all nine drinks in the [Iced Coffee recipe collection](/recipes/iced-coffee/).

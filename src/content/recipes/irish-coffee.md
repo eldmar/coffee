@@ -1,6 +1,6 @@
 ---
 title: Classic Irish Coffee Recipe
-description: A classic Irish Coffee drink combines hot coffee, Irish whiskey, sugar and a floating layer of cold cream. It is a warm coffee cocktail built around temperature and texture contrast.
+description: Learn how to make a classic Irish Coffee with hot coffee, Irish whiskey, brown sugar and lightly whipped cream. The key is balancing the sweetness, serving the coffee hot and floating cool cream gently over the surface.
 seoTitle: "Irish Coffee Recipe: Ingredients, Whiskey & Cream | KAVOVO"
 seoDescription: Make a classic Irish Coffee with hot coffee, Irish whiskey, sugar and softly whipped cream. Includes exact ingredients and tips for floating the cream.
 seoKeywords:
@@ -21,18 +21,17 @@ activeTime: 8
 totalTime: 8
 yield: "1 drink"
 dose: "10 g"
-drinkYield: "≈190 ml"
+drinkYield: "≈200 ml"
 vessel:
   name: "Heatproof Irish coffee glass"
   capacity: "200–240 ml"
 datePublished: 2026-08-06
-dateModified: 2026-08-15
+dateModified: 2026-08-18
 ingredients:
-  - 10 g freshly ground coffee
-  - 150 g filtered water
-  - 35 ml Irish whiskey
-  - 10 g brown or demerara sugar
-  - 30 g cold double cream
+  - 120–150 ml freshly brewed hot coffee
+  - 40 ml Irish whiskey
+  - 8–10 g brown or demerara sugar
+  - 30 ml cold double cream, lightly whipped
 equipmentSet: filter
 equipmentExtra:
   - Small whisk or cocktail shaker
@@ -42,28 +41,31 @@ equipmentExtra:
 ## Steps
 
 1. Preheat the heatproof glass with hot water, then empty and dry it.
-2. Brew the coffee using 10 g of coffee and 150 g of water.
-3. Add the brown sugar and Irish whiskey to the warm glass.
-4. Pour in approximately 120 g of freshly brewed coffee.
-5. Stir until the sugar is completely dissolved.
-6. Lightly whip the cold cream until it thickens but remains pourable.
-7. Hold a spoon just above the coffee and slowly pour the cream over its back.
-8. Serve immediately without stirring the cream into the coffee.
+2. Add 8–10 g of brown or demerara sugar to the warm glass.
+3. Pour in 120–150 ml of freshly brewed hot coffee and stir until the sugar dissolves.
+4. Add 40 ml of Irish whiskey and stir once more.
+5. Lightly whip 30 ml of cold double cream until it thickens but remains pourable.
+6. Hold a spoon just above the coffee and slowly pour the cream over its back.
+7. Serve immediately without stirring the cream into the coffee.
 
 ## Irish Coffee Ingredients
 
-The four essential ingredients are:
+For one drink, use:
 
-- freshly brewed hot coffee;
-- Irish whiskey;
-- brown or demerara sugar;
-- lightly whipped double cream.
+- **120–150 ml freshly brewed hot coffee**;
+- **40 ml Irish whiskey**;
+- **8–10 g brown or demerara sugar**;
+- **30 ml cold double cream, lightly whipped**.
 
-Use a clean, balanced filter coffee. It needs enough flavour to remain present beside the whiskey, but an extremely dark or bitter brew can make the finished drink harsh.
+Use a clean, balanced [filter coffee](/learn/coffee-basics/filter-coffee/). It needs enough flavour to remain present beside the whiskey, but an extremely dark or bitter brew can make the finished drink harsh. The [coffee-to-water ratio calculator](/learn/coffee-basics/coffee-to-water-ratio/) can help you scale the coffee before building the cocktail.
+
+## How to Make Irish Coffee
+
+Warm the glass first, dissolve the sugar completely in the hot coffee, then add the whiskey. Keep the coffee hot and the cream cold: that contrast helps the cream float and gives the finished drink its characteristic texture.
 
 ## What Alcohol Is Used in Irish Coffee?
 
-Classic Irish Coffee uses Irish whiskey. A 35 ml measure gives the drink warmth and aroma without burying the coffee. Bourbon, rum or cream liqueur can make enjoyable coffee cocktails, but they are different drinks rather than traditional Irish Coffee.
+Traditional Irish Coffee is made with Irish whiskey. A 40 ml measure gives the drink warmth and aroma without burying the coffee. Bourbon, Scotch or coffee liqueur will produce a different drink.
 
 ## Is Irish Coffee a Cocktail?
 
@@ -75,12 +77,13 @@ Yes. Irish Coffee belongs to the family of hot coffee cocktails: coffee is combi
 - Whip only until the cream is lightly thickened and still flows from a spoon.
 - Hold the back of a spoon close to the coffee surface and pour slowly over it.
 - Do not make the cream stiff; thick peaks fall in clumps and break the clean layer.
+- Keep the coffee hot so it remains less dense than the chilled cream layer.
 
 The sugar also matters. Fully dissolved sugar slightly increases the density of the coffee, helping the cold cream remain on top.
 
 ## Alcohol-Free Variation
 
-For an alcohol-free coffee inspired by the classic presentation, dissolve 10 g brown sugar in 150 ml freshly brewed coffee and float lightly whipped cream on top. A small amount of alcohol-free whiskey-style syrup can add vanilla and oak notes. It is not a classic Irish Coffee, but it preserves the hot-coffee-through-cold-cream experience.
+For an alcohol-free coffee inspired by the classic presentation, dissolve 8–10 g brown sugar in 150 ml freshly brewed coffee and float lightly whipped cream on top. A small amount of alcohol-free whiskey-style syrup can add vanilla and oak notes. This is an Irish Coffee variation, not the classic cocktail, but it preserves the hot-coffee-through-cold-cream experience. For a non-alcoholic black coffee with a similar serving size, try the [Americano recipe](/recipes/americano/).
 
 ## Barista tip
 
@@ -92,26 +95,30 @@ Drink the hot coffee through the cold cream. That temperature and texture contra
 
 **The drink is too sweet.** Reduce the sugar, not the whiskey.
 
-**The alcohol dominates.** Increase the coffee to 130–140 g or reduce the whiskey to 25 ml.
+**The alcohol dominates.** Increase the coffee towards 150 ml or reduce the whiskey slightly.
 
 ## Frequently asked questions
 
 ### What are the ingredients in Irish Coffee?
 
-Classic Irish Coffee contains freshly brewed hot coffee, Irish whiskey, brown or demerara sugar and lightly whipped cold double cream.
+Classic Irish Coffee contains 120–150 ml freshly brewed hot coffee, 40 ml Irish whiskey, 8–10 g brown or demerara sugar and 30 ml lightly whipped cold double cream.
 
-### What alcohol goes into Irish Coffee?
+### How do you make Irish Coffee at home?
 
-Irish whiskey is the traditional alcohol. Its cereal, vanilla and oak notes complement coffee without overwhelming it.
+Preheat a heatproof glass, dissolve sugar in hot coffee, stir in Irish whiskey and slowly float lightly whipped cold cream over the back of a spoon. Serve it without stirring.
+
+### What whiskey is best for Irish Coffee?
+
+Irish whiskey is the traditional choice. A balanced, approachable bottle with cereal, vanilla and gentle oak notes complements the coffee without overwhelming it.
+
+### How do you float cream on Irish Coffee?
+
+Use well-chilled cream, whip it only until lightly thickened and still pourable, then pour it slowly over the back of a spoon held just above the hot coffee.
 
 ### Is Irish Coffee a cocktail?
 
 Yes. Irish Coffee is a hot coffee cocktail because it combines coffee with whiskey, sugar and cream in a deliberately built mixed drink.
 
-### Does Irish Coffee always contain alcohol?
+### Can Irish Coffee be made without alcohol?
 
 A classic Irish Coffee contains Irish whiskey. You can make an alcohol-free coffee with sugar and floating cream, but it should be described as an Irish Coffee-inspired variation rather than the classic drink.
-
-### How do you stop the cream from sinking?
-
-Use well-chilled cream, whip it only until lightly thickened and still pourable, then pour it slowly over the back of a spoon held just above the coffee.

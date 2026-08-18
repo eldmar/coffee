@@ -134,3 +134,5 @@ Reduce the oat milk to 50–60 ml or use a slightly shorter espresso yield.
 ## More Iced Espresso Ideas
 
 For a cold black coffee, make an [Iced Americano](/recipes/iced-americano/). For a sweeter milk drink without shaking, try the [Iced Caramel Latte](/recipes/iced-caramel-latte/), or add a lighter topping with the [Iced Salted Vanilla Cloud Foam](/recipes/iced-salted-vanilla-cloud-foam/).
+
+Browse all nine drinks in the [Iced Coffee recipe collection](/recipes/iced-coffee/).

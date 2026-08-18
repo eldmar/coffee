@@ -31,7 +31,7 @@ import { COFFEE_RATIO_METHODS } from '../lib/coffeeRatio';
           step="0.5"
           inputmode="decimal"
         />
-        <span aria-hidden="true">g</span>
+        <span data-ratio-unit aria-hidden="true">g</span>
       </span>
     </label>
 
@@ -43,14 +43,22 @@ import { COFFEE_RATIO_METHODS } from '../lib/coffeeRatio';
         <option value="light">Light</option>
       </select>
     </label>
+
+    <label class="ratio-calculator__field">
+      <span>Units</span>
+      <select name="units" data-ratio-units>
+        <option value="metric" selected>Metric (g / ml)</option>
+        <option value="imperial">US customary (oz / fl oz)</option>
+      </select>
+    </label>
   </form>
 
   <div class="ratio-calculator__result" aria-live="polite" aria-atomic="true">
-    <p class="eyebrow" data-ratio-result-label>Recommended espresso yield</p>
-    <output class="ratio-calculator__amount" data-ratio-result>36 g</output>
-    <p class="ratio-calculator__ratio" data-ratio-label>1:2 ratio</p>
+    <p class="eyebrow" data-ratio-result-label>Recommended water</p>
+    <output class="ratio-calculator__amount" data-ratio-result>301 ml</output>
+    <p class="ratio-calculator__ratio" data-ratio-label>1:16.7 ratio</p>
     <p class="ratio-calculator__note" data-ratio-note>
-      Espresso compares dry coffee with the beverage in the cup, not all water used by the machine.
+      Use the calculated water as the total amount added during the brew.
     </p>
   </div>
 </section>
@@ -58,36 +66,71 @@ import { COFFEE_RATIO_METHODS } from '../lib/coffeeRatio';
 <script>
   import {
     calculateCoffeeRatio,
+    coffeeDoseFromGrams,
+    coffeeDoseToGrams,
+    ratioResultForUnits,
     type CoffeeRatioMethodId,
     type RatioStrength,
+    type RatioUnitSystem,
   } from '../lib/coffeeRatio';
 
   document.querySelectorAll<HTMLFormElement>('[data-ratio-calculator]').forEach((form) => {
     const method = form.querySelector<HTMLSelectElement>('[data-ratio-method]');
     const coffee = form.querySelector<HTMLInputElement>('[data-ratio-coffee]');
     const strength = form.querySelector<HTMLSelectElement>('[data-ratio-strength]');
+    const units = form.querySelector<HTMLSelectElement>('[data-ratio-units]');
+    const coffeeUnit = form.querySelector<HTMLElement>('[data-ratio-unit]');
     const shell = form.closest<HTMLElement>('.ratio-calculator');
     const resultLabel = shell?.querySelector<HTMLElement>('[data-ratio-result-label]');
     const result = shell?.querySelector<HTMLOutputElement>('[data-ratio-result]');
     const ratioLabel = shell?.querySelector<HTMLElement>('[data-ratio-label]');
     const note = shell?.querySelector<HTMLElement>('[data-ratio-note]');
 
-    if (!method || !coffee || !strength || !resultLabel || !result || !ratioLabel || !note) {
+    if (!method || !coffee || !strength || !units || !coffeeUnit || !resultLabel || !result || !ratioLabel || !note) {
       return;
     }
 
+    let activeUnitSystem = units.value as RatioUnitSystem;
+
+    const formatAmount = (amount: number) =>
+      Number.isInteger(amount) ? String(amount) : amount.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+
+    const syncUnitSystem = () => {
+      const nextUnitSystem = units.value as RatioUnitSystem;
+      if (nextUnitSystem !== activeUnitSystem) {
+        const currentAmount = Number(coffee.value);
+        if (Number.isFinite(currentAmount)) {
+          const currentGrams = coffeeDoseToGrams(currentAmount, activeUnitSystem);
+          const converted = coffeeDoseFromGrams(currentGrams, nextUnitSystem);
+          coffee.value = formatAmount(Math.round(converted * 100) / 100);
+        }
+        activeUnitSystem = nextUnitSystem;
+      }
+
+      const isMetric = activeUnitSystem === 'metric';
+      coffee.min = isMetric ? '1' : '0.04';
+      coffee.max = isMetric ? '200' : '7';
+      coffee.step = isMetric ? '0.5' : '0.01';
+      coffeeUnit.textContent = isMetric ? 'g' : 'oz';
+    };
+
     const update = () => {
-      const coffeeGrams = Number(coffee.value);
-      if (!Number.isFinite(coffeeGrams) || coffeeGrams < 1 || coffeeGrams > 200) {
+      syncUnitSystem();
+      const coffeeAmount = Number(coffee.value);
+      const minimum = activeUnitSystem === 'metric' ? 1 : 0.04;
+      const maximum = activeUnitSystem === 'metric' ? 200 : 7;
+      const unit = activeUnitSystem === 'metric' ? 'g' : 'oz';
+      if (!Number.isFinite(coffeeAmount) || coffeeAmount < minimum || coffeeAmount > maximum) {
         coffee.setAttribute('aria-invalid', 'true');
         resultLabel.textContent = 'Coffee dose needed';
-        result.textContent = 'Enter 1–200 g';
+        result.textContent = `Enter ${minimum}–${maximum} ${unit}`;
         ratioLabel.textContent = '';
         note.textContent = 'Use the dry coffee dose you plan to brew.';
         return;
       }
 
       coffee.removeAttribute('aria-invalid');
+      const coffeeGrams = coffeeDoseToGrams(coffeeAmount, activeUnitSystem);
       const calculation = calculateCoffeeRatio(
         method.value as CoffeeRatioMethodId,
         coffeeGrams,
@@ -104,7 +147,12 @@ import { COFFEE_RATIO_METHODS } from '../lib/coffeeRatio';
         return;
       }
 
-      result.textContent = `${calculation.amount} ${calculation.method.unit}`;
+      const converted = ratioResultForUnits(
+        calculation.amount,
+        calculation.method.unit,
+        activeUnitSystem,
+      );
+      result.textContent = `${formatAmount(converted.amount)} ${converted.unit}`;
       ratioLabel.textContent = `1:${calculation.ratio} ratio`;
     };
 
@@ -205,7 +253,7 @@ import { COFFEE_RATIO_METHODS } from '../lib/coffeeRatio';
 
   @media (min-width: 40rem) {
     .ratio-calculator__form {
-      grid-template-columns: 1.2fr 0.8fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 </style>

@@ -18,12 +18,13 @@ const { revealAfterScroll = false } = Astro.props;
     aria-haspopup="dialog"
     aria-expanded="false"
     aria-controls="brew-widget-dialog"
+    title="Fix my coffee"
     data-brew-widget-trigger
   >
     <span class="brew-widget-trigger-mark" aria-hidden="true">
       <img src="/images/kavovo-mark.svg" alt="" width="30" height="15" />
     </span>
-    <span>Fix my coffee</span>
+    <span class="brew-widget-trigger-label">Fix my coffee</span>
   </button>
 
   <dialog
@@ -1273,7 +1274,39 @@ const { revealAfterScroll = false } = Astro.props;
     overflow: hidden;
   }
 
+  @media (max-width: 79.4375rem) {
+    .brew-assistant-widget[data-brew-widget-reveal='immediate'] {
+      display: flex;
+      justify-content: flex-end;
+      padding: 12px 20px 0;
+    }
+
+    .brew-assistant-widget[data-brew-widget-reveal='immediate'] .brew-widget-trigger {
+      position: static;
+    }
+  }
+
+  @media (min-width: 79.5rem) and (max-width: 96rem) {
+    .brew-widget-trigger {
+      right: 8px;
+      width: 52px;
+      min-width: 52px;
+      padding: 8px;
+    }
+
+    .brew-widget-trigger-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+  }
+
   @media (max-width: 40rem) {
+
     .brew-widget-trigger {
       right: 16px;
       bottom: calc(16px + env(safe-area-inset-bottom));

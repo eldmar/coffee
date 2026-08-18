@@ -78,3 +78,5 @@ Garnish the drink with a small sprig of rosemary. Gently clap the rosemary betwe
 ### Sweeter Espresso Tonic
 
 Add 5–10 ml of simple syrup before adding the tonic. Stir the syrup and tonic together, then finish with the espresso.
+
+Find more black, milk-based and shaken drinks in the [Iced Coffee recipe collection](/recipes/iced-coffee/).

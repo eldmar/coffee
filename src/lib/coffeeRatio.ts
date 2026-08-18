@@ -1,14 +1,20 @@
 export const RATIO_STRENGTHS = ['strong', 'balanced', 'light'] as const;
 export type RatioStrength = (typeof RATIO_STRENGTHS)[number];
 
+export const RATIO_UNIT_SYSTEMS = ['metric', 'imperial'] as const;
+export type RatioUnitSystem = (typeof RATIO_UNIT_SYSTEMS)[number];
+
+const GRAMS_PER_OUNCE = 28.349523125;
+const MILLILITRES_PER_FLUID_OUNCE = 29.5735295625;
+
 export const COFFEE_RATIO_METHODS = [
   {
-    id: 'espresso',
-    label: 'Espresso',
-    ratios: { strong: 1.5, balanced: 2, light: 2.5 },
-    resultLabel: 'Recommended espresso yield',
-    unit: 'g',
-    note: 'Espresso compares dry coffee with the beverage in the cup, not all water used by the machine.',
+    id: 'filter-coffee',
+    label: 'Filter Coffee',
+    ratios: { strong: 15, balanced: 16.7, light: 17 },
+    resultLabel: 'Recommended water',
+    unit: 'ml',
+    note: 'Use the calculated water as the total amount added during the brew.',
   },
   {
     id: 'pour-over',
@@ -33,6 +39,14 @@ export const COFFEE_RATIO_METHODS = [
     resultLabel: 'Recommended water',
     unit: 'ml',
     note: 'This is a direct-drinking recipe; concentrated AeroPress recipes may use less water and dilute afterwards.',
+  },
+  {
+    id: 'espresso',
+    label: 'Espresso',
+    ratios: { strong: 1.5, balanced: 2, light: 2.5 },
+    resultLabel: 'Recommended espresso yield',
+    unit: 'g',
+    note: 'Espresso compares dry coffee with the beverage in the cup, not all water used by the machine.',
   },
   {
     id: 'moka-pot',
@@ -61,6 +75,28 @@ export const COFFEE_RATIO_METHODS = [
 ] as const;
 
 export type CoffeeRatioMethodId = (typeof COFFEE_RATIO_METHODS)[number]['id'];
+
+export function coffeeDoseToGrams(amount: number, unitSystem: RatioUnitSystem) {
+  return unitSystem === 'imperial' ? amount * GRAMS_PER_OUNCE : amount;
+}
+
+export function coffeeDoseFromGrams(grams: number, unitSystem: RatioUnitSystem) {
+  return unitSystem === 'imperial' ? grams / GRAMS_PER_OUNCE : grams;
+}
+
+export function ratioResultForUnits(
+  amount: number,
+  metricUnit: 'g' | 'ml',
+  unitSystem: RatioUnitSystem,
+) {
+  if (unitSystem === 'metric') return { amount, unit: metricUnit };
+
+  const divisor = metricUnit === 'g' ? GRAMS_PER_OUNCE : MILLILITRES_PER_FLUID_OUNCE;
+  return {
+    amount: Math.round((amount / divisor) * 100) / 100,
+    unit: metricUnit === 'g' ? 'oz' : 'fl oz',
+  };
+}
 
 export function calculateCoffeeRatio(
   methodId: CoffeeRatioMethodId,

@@ -4,9 +4,11 @@ import Layout from '../../../layouts/Layout.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import Photo from '../../../components/Photo.astro';
 import JsonLd from '../../../components/JsonLd.astro';
+import FaqSchema from '../../../components/FaqSchema.astro';
 import CoffeeRatioCalculator from '../../../components/CoffeeRatioCalculator.astro';
 import { photo } from '../../../lib/photos';
 import { pathBySlug, readingMinutes } from '../../../lib/learn';
+import { extractFaqs } from '../../../lib/recipes';
 
 export async function getStaticPaths() {
   const lessons = await getCollection('lessons');
@@ -33,6 +35,7 @@ const { lesson, total, previous, next } = Astro.props;
 const { Content, headings } = await render(lesson);
 const { data } = lesson;
 const isRatioLesson = lesson.id === 'coffee-basics/coffee-to-water-ratio';
+const faqs = extractFaqs(lesson.body ?? '');
 
 // Contents lists the real sections only. The three callouts are h2 for document
 // structure, but they are not places a reader jumps to.
@@ -50,7 +53,7 @@ const ogImagePath = photo(data.image ?? 'hero').src;
 
 const schema = {
   '@context': 'https://schema.org',
-  '@type': 'LearningResource',
+  '@type': ['Article', 'LearningResource'],
   '@id': url,
   url,
   name: data.title,
@@ -143,6 +146,8 @@ const schema = {
     <div class="prose-body mt-10">
       <Content />
     </div>
+
+    <FaqSchema items={faqs} />
 
     {
       data.related.length > 0 && (

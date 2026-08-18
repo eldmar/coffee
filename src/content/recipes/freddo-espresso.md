@@ -55,3 +55,5 @@ Use separate ice for shaking and serving. The first batch chills the espresso; t
 **There is no foam.** Shake more vigorously while the espresso is still hot.
 
 **The coffee tastes harsh.** Adjust the espresso extraction before adding more sugar.
+
+Compare this shaken black coffee with the other drinks in the [Iced Coffee recipe collection](/recipes/iced-coffee/).

@@ -45,3 +45,5 @@ equipmentOptional:
 ## Ready-to-Drink or Concentrate?
 
 Use the [Cold Brew ratio calculator and comparison chart](/learn/coffee-basics/coffee-to-water-ratio/) to choose between a ready-to-drink 1:8–1:12 brew and a 1:4–1:6 concentrate that is diluted after filtering.
+
+Compare this method with espresso-based drinks in the [Iced Coffee recipe collection](/recipes/iced-coffee/).

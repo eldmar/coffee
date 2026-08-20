@@ -59,14 +59,14 @@ const commonFilterRules: Rule[] = [
     id: 'filter_ratio_weak',
     priority: 40,
     // Weak without the sharpness of under-extraction: a dilution problem.
-    test: (input, m) => has(input, 'weak') && !has(input, 'sour', 'hollow') && m.ratio > 17.5,
+    test: (input) => has(input, 'weak') && !has(input, 'sour', 'hollow'),
     build: (input) => ({
       ...base(input),
-      diagnosis: 'The brew is balanced but there is more water than the coffee can fill.',
+      diagnosis: 'The brew is weak without the sharpness of under-extraction.',
       adjustment: { variable: 'dose', direction: 'increase', title: 'Use a little more coffee' },
       keepConstant: ['Grind', 'Water', 'Temperature'],
       nextTarget: {
-        dose: round((input.water ?? 0) / TARGET_RATIO, 0.5),
+        dose: round(input.dose + 1, 0.5),
         water: input.water,
         timeMin: window(input)[0],
         timeMax: window(input)[1],
@@ -192,7 +192,7 @@ export const v60Rules: Rule[] = [
       ...base(input),
       diagnosis: 'Water seems to have found its own route through the bed.',
       adjustment: {
-        variable: 'technique',
+        variable: 'agitation',
         direction: 'improve',
         title: 'Pour more slowly, in smaller circles',
       },
@@ -267,12 +267,12 @@ export const aeropressRules: Rule[] = [
     build: (input) => ({
       ...base(input),
       diagnosis: 'The steep was short for the grind you used.',
-      adjustment: { variable: 'time', direction: 'increase', title: 'Steep for longer' },
-      keepConstant: ['Grind', 'Dose', 'Water', 'Temperature'],
-      nextTarget: { ...unchanged(input), timeMin: 180, timeMax: 240 },
+      adjustment: { variable: 'grind', direction: 'finer', title: 'Grind slightly finer' },
+      keepConstant: ['Dose', 'Water', 'Steep time', 'Temperature'],
+      nextTarget: { dose: input.dose, water: input.water },
       reasons: [
         'Extraction happens during the steep, not the press, so a short steep leaves the coffee sharp.',
-        'Try three to four minutes before touching the grinder — it is the easier change to read.',
+        'A finer grind extracts more during the same short steep, so the timing can stay unchanged.',
       ],
       relatedContent: ['aeropressGuide', 'ratio'],
       ruleId: 'aeropress_short_steep_sour',
@@ -285,12 +285,12 @@ export const aeropressRules: Rule[] = [
     build: (input) => ({
       ...base(input),
       diagnosis: 'The steep ran long for the grind you used.',
-      adjustment: { variable: 'time', direction: 'decrease', title: 'Steep for less time' },
-      keepConstant: ['Grind', 'Dose', 'Water', 'Temperature'],
-      nextTarget: { ...unchanged(input), timeMin: 120, timeMax: 180 },
+      adjustment: { variable: 'grind', direction: 'coarser', title: 'Grind slightly coarser' },
+      keepConstant: ['Dose', 'Water', 'Steep time', 'Temperature'],
+      nextTarget: { dose: input.dose, water: input.water },
       reasons: [
         'The longer the coffee sits in water, the more bitter material comes with it.',
-        'Shortening the steep is a smaller change than moving the grinder, so try it first.',
+        'A coarser grind extracts less during the same steep, keeping the test to one controlled change.',
       ],
       relatedContent: ['aeropressGuide', 'grindSize'],
       ruleId: 'aeropress_long_steep_bitter',
@@ -367,12 +367,12 @@ export const frenchPressRules: Rule[] = [
     build: (input) => ({
       ...base(input),
       diagnosis: 'The steep was short for a full-immersion brew.',
-      adjustment: { variable: 'time', direction: 'increase', title: 'Steep for longer' },
-      keepConstant: ['Grind', 'Dose', 'Water', 'Temperature'],
-      nextTarget: { ...unchanged(input), timeMin: 240, timeMax: 300 },
+      adjustment: { variable: 'grind', direction: 'finer', title: 'Grind slightly finer' },
+      keepConstant: ['Dose', 'Water', 'Steep time', 'Temperature'],
+      nextTarget: { dose: input.dose, water: input.water },
       reasons: [
         'In a press the steep is the whole extraction, so a short one leaves the cup thin and sharp.',
-        'Four minutes is the reference. Extend the time before you change the grind.',
+        'A finer grind extracts more during the same steep, so every other part of the recipe can stay fixed.',
       ],
       relatedContent: ['frenchPressGuide', 'ratio'],
       ruleId: 'french_press_short_steep_sour',

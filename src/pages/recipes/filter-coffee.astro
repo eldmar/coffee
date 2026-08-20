@@ -1,5 +1,220 @@
 ---
-import CategoryPage from '../../components/CategoryPage.astro';
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FaqSchema from '../../components/FaqSchema.astro';
+import JsonLd from '../../components/JsonLd.astro';
+import RecipeCard from '../../components/RecipeCard.astro';
+import { CATEGORIES } from '../../lib/recipes';
+
+const title = 'Filter Coffee Recipes: V60, AeroPress & French Press | KAVOVO';
+const description =
+  'Browse filter coffee recipes for V60, AeroPress and French Press. Compare brew time, grind size and cup style, then choose the right method for your routine.';
+
+const methodOrder = ['v60', 'aeropress', 'french-press'];
+const recipes = (await getCollection('recipes'))
+  .filter((recipe) => recipe.data.category === 'filter-coffee')
+  .sort(
+    (a, b) =>
+      methodOrder.indexOf(a.data.brewMethod) - methodOrder.indexOf(b.data.brewMethod),
+  );
+
+const faqs = [
+  {
+    question: 'Which filter coffee method is easiest for beginners?',
+    answer:
+      'AeroPress is the most forgiving starting point because it brews quickly and is less sensitive to pouring technique. French Press is also simple when you want a larger batch.',
+  },
+  {
+    question: 'What is the difference between V60 and French Press coffee?',
+    answer:
+      'A V60 uses a paper filter for a clean, bright cup. French Press keeps more oils and fine particles in the drink, so it tastes richer and more textured.',
+  },
+  {
+    question: 'What coffee-to-water ratio should I start with?',
+    answer:
+      'Start with about 60 g of coffee per litre of water, or 15 g for a 250 ml cup. Then follow the chosen recipe before adjusting one variable at a time.',
+  },
+  {
+    question: 'Which filter coffee recipe is best for a larger serving?',
+    answer:
+      'French Press is the easiest option for two or three cups because the brewer handles a larger batch without requiring several controlled pours.',
+  },
+];
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const url = `${site}/recipes/filter-coffee/`;
+const itemListId = `${url}#recipes`;
+
+const collectionSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': url,
+  url,
+  name: 'Filter Coffee Recipes',
+  description,
+  mainEntity: { '@id': itemListId },
+};
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': itemListId,
+  name: 'V60, AeroPress and French Press recipes',
+  numberOfItems: recipes.length,
+  itemListElement: recipes.map((recipe, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: recipe.data.title,
+    url: `${site}/recipes/${recipe.id}/`,
+  })),
+};
 ---
 
-<CategoryPage id="filter-coffee" />
+<Layout title={title} description={description} ogImage="/social/filter-coffee-recipes.webp">
+  <article class="mx-auto max-w-6xl px-5 py-14">
+    <JsonLd schema={collectionSchema} />
+    <JsonLd schema={itemListSchema} />
+    <FaqSchema items={faqs} />
+    <Breadcrumbs trail={[{ label: 'Recipes', href: '/recipes/' }, { label: 'Filter Coffee' }]} />
+
+    <span class="eyebrow mt-6 block">Recipe collection</span>
+    <h1 class="mt-2 max-w-3xl font-display text-4xl font-medium text-balance">
+      Filter Coffee Recipes
+    </h1>
+    <p class="mt-4 max-w-3xl text-lg leading-relaxed text-ink-soft">
+      Choose a filter coffee recipe by the cup you want and the time you have. V60 rewards a
+      careful pour with a clean, bright drink; AeroPress is quick, flexible and easy to repeat;
+      French Press makes a rich, textured batch with very little hands-on work. Each KAVOVO recipe
+      gives you a measured dose, water target, grind starting point and timed steps, so you can brew
+      it once before changing anything. Compare the three methods below, then open the recipe that
+      best fits your coffee, serving size and morning routine.
+    </p>
+
+    <nav aria-label="Recipe categories" class="mt-8 flex flex-wrap gap-2">
+      <a
+        href="/recipes/"
+        class="rounded-md border border-line px-3.5 py-1.5 text-sm text-ink-soft transition-colors hover:border-accent hover:text-ink"
+      >
+        All recipes
+      </a>
+      {
+        CATEGORIES.map((category) => (
+          <a
+            href={`/recipes/${category.slug}/`}
+            aria-current={category.id === 'filter-coffee' ? 'page' : undefined}
+            class:list={[
+              'rounded-md border px-3.5 py-1.5 text-sm transition-colors',
+              category.id === 'filter-coffee'
+                ? 'border-accent bg-accent text-accent-ink'
+                : 'border-line text-ink-soft hover:border-accent hover:text-ink',
+            ]}
+          >
+            {category.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <section class="mt-12" aria-labelledby="filter-recipes-heading">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <h2 id="filter-recipes-heading" class="font-display text-2xl font-medium">
+          Choose a Filter Coffee Recipe
+        </h2>
+        <p class="text-sm text-ink-soft">{recipes.length} recipes</p>
+      </div>
+      <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          recipes.map((recipe) => (
+            <RecipeCard
+              slug={recipe.id}
+              title={recipe.data.title}
+              image={recipe.data.image}
+              category={recipe.data.category}
+              activeTime={recipe.data.activeTime}
+              totalTime={recipe.data.totalTime}
+              totalTimeLabel={recipe.data.totalTimeLabel}
+              headingLevel="h3"
+            />
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="mt-14 border-t border-line pt-8" aria-labelledby="filter-compare-heading">
+      <h2 id="filter-compare-heading" class="font-display text-2xl font-medium">
+        Compare Filter Coffee Methods
+      </h2>
+      <table class="data-table mt-5">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Cup style</th>
+            <th>Brew time</th>
+            <th>Grind</th>
+            <th>Best for</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Method"><a href="/recipes/v60-pour-over/" class="font-medium text-accent hover:underline">V60</a></td>
+            <td data-label="Cup style">Clean and bright</td>
+            <td data-label="Brew time">3–4 min</td>
+            <td data-label="Grind">Medium</td>
+            <td data-label="Best for">Light roasts</td>
+          </tr>
+          <tr>
+            <td data-label="Method"><a href="/recipes/aeropress-daily/" class="font-medium text-accent hover:underline">AeroPress</a></td>
+            <td data-label="Cup style">Clean to full-bodied</td>
+            <td data-label="Brew time">2–4 min</td>
+            <td data-label="Grind">Medium-fine</td>
+            <td data-label="Best for">Fast brewing</td>
+          </tr>
+          <tr>
+            <td data-label="Method"><a href="/recipes/classic-french-press/" class="font-medium text-accent hover:underline">French Press</a></td>
+            <td data-label="Cup style">Rich and textured</td>
+            <td data-label="Brew time">6–8 min</td>
+            <td data-label="Grind">Medium-coarse</td>
+            <td data-label="Best for">Larger servings</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <aside class="mt-14 border-y border-line bg-ivory px-5 py-8 sm:px-8" aria-labelledby="new-filter-heading">
+      <span class="eyebrow">New to filter coffee?</span>
+      <h2 id="new-filter-heading" class="mt-2 font-display text-2xl font-medium">
+        Learn the ratio, grind and basic technique
+      </h2>
+      <p class="mt-3 max-w-2xl text-ink-soft">
+        Start with the principles behind every method, then return here when you are ready to pick
+        a brewer and follow a complete recipe.
+      </p>
+      <a
+        href="/learn/coffee-basics/filter-coffee/"
+        class="mt-5 inline-flex min-h-11 items-center font-semibold text-accent hover:underline"
+      >
+        Read How to Make Filter Coffee&nbsp;&#8594;
+      </a>
+    </aside>
+
+    <section class="mt-14" aria-labelledby="filter-faq-heading">
+      <h2 id="filter-faq-heading" class="font-display text-2xl font-medium">
+        Filter Coffee Recipe Questions
+      </h2>
+      <div class="mt-5 divide-y divide-line border-y border-line">
+        {
+          faqs.map((faq) => (
+            <details class="group py-4">
+              <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 font-medium">
+                <span>{faq.question}</span>
+                <span aria-hidden="true" class="text-accent group-open:rotate-45">+</span>
+              </summary>
+              <p class="max-w-3xl pb-2 pr-8 text-sm leading-relaxed text-ink-soft">{faq.answer}</p>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+  </article>
+</Layout>

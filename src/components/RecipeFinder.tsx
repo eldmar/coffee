@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { formatTimeShort } from "../lib/recipes";
 import type { CardImage } from "../lib/cardImage";
+import { serialiseRecipeFilters } from '../lib/recipe-filters';
 
 export interface FinderRecipe {
   slug: string;
@@ -52,11 +53,7 @@ const selectClass =
 const FINDER_RESULT_LIMIT = 6;
 
 function catalogHref(method: string, temp: string, milk: string): string {
-  const params = new URLSearchParams();
-  if (method !== 'any') params.set('method', method);
-  if (temp !== 'any') params.set('temp', temp);
-  if (milk !== 'any') params.set('milk', milk);
-  const query = params.toString();
+  const query = serialiseRecipeFilters({ method, temp, milk });
   return query ? `/recipes/?${query}` : '/recipes/';
 }
 
@@ -251,7 +248,7 @@ export default function RecipeFinder({ recipes, embedded = false }: Props) {
                   </li>
                 ))}
               </ul>
-              {resultSet.matches.length > FINDER_RESULT_LIMIT && (
+              {resultSet.matches.length > 0 && (
                 <a
                   href={resultSet.href}
                   className="mt-4 inline-flex min-h-11 items-center rounded-md font-medium text-accent hover:underline"

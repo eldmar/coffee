@@ -34,7 +34,7 @@ afterEach(() => {
 describe('analytics switched off', () => {
   it('logs instead of sending', async () => {
     const { trackBrewEvent } = await loadAnalytics(false);
-    trackBrewEvent('brew_assistant_opened', { entry_point: 'homepage' });
+    trackBrewEvent('brew_assistant_opened', {});
     expect(capture).not.toHaveBeenCalled();
     expect(console.info).toHaveBeenCalled();
   });
@@ -46,8 +46,8 @@ describe('switched on without configuration', () => {
       PUBLIC_POSTHOG_KEY: '',
       PUBLIC_POSTHOG_HOST: '',
     });
-    trackBrewEvent('brew_assistant_opened', { entry_point: 'homepage' });
-    trackBrewEvent('brew_assistant_opened', { entry_point: 'homepage' });
+    trackBrewEvent('brew_assistant_opened', {});
+    trackBrewEvent('brew_assistant_opened', {});
     await vi.waitFor(() => expect(console.warn).toHaveBeenCalledTimes(1));
     expect(capture).not.toHaveBeenCalled();
   });
@@ -61,7 +61,7 @@ describe('switched on with configuration', () => {
 
   it('stamps every event with the schema version', async () => {
     const { trackTypedBrewEvent } = await loadAnalytics(true, env);
-    trackTypedBrewEvent('brew_method_selected', { method: 'espresso', entry_point: 'homepage' });
+    trackTypedBrewEvent('brew_method_selected', { method: 'espresso' });
     await vi.waitFor(() =>
       expect(capture).toHaveBeenCalledWith(
         'brew_method_selected',
@@ -74,19 +74,21 @@ describe('switched on with configuration', () => {
     const { trackTypedBrewEvent } = await loadAnalytics(true, env);
     trackTypedBrewEvent('brew_diagnosis_completed', {
       method: 'espresso',
-      issue: 'sour',
-      recommendation_id: 'espresso_fast_sour',
-      adjustment_type: 'grind-finer',
-      entry_point: 'floating_widget',
+      issue_category: 'sour',
+      rule_id: 'espresso_fast_sour',
+      adjustment_variable: 'grind',
+      adjustment_direction: 'finer',
+      attempt_number: 1,
     });
     await vi.waitFor(() =>
       expect(capture).toHaveBeenCalledWith('brew_diagnosis_completed', {
         analytics_version: 1,
         method: 'espresso',
-        issue: 'sour',
-        recommendation_id: 'espresso_fast_sour',
-        adjustment_type: 'grind-finer',
-        entry_point: 'floating_widget',
+        issue_category: 'sour',
+        rule_id: 'espresso_fast_sour',
+        adjustment_variable: 'grind',
+        adjustment_direction: 'finer',
+        attempt_number: 1,
       }),
     );
   });
@@ -94,23 +96,31 @@ describe('switched on with configuration', () => {
   it('captures only an observed next-brew result as widget feedback', async () => {
     const { trackTypedBrewEvent } = await loadAnalytics(true, env);
     trackTypedBrewEvent('brew_feedback_submitted', {
-      recommendation_id: 'espresso_fast_sour',
-      result: 'better',
-      entry_point: 'floating_widget',
+      method: 'espresso',
+      issue_category: 'sour',
+      rule_id: 'espresso_fast_sour',
+      adjustment_variable: 'grind',
+      adjustment_direction: 'finer',
+      attempt_number: 1,
+      helpful: true,
     });
     await vi.waitFor(() =>
       expect(capture).toHaveBeenCalledWith('brew_feedback_submitted', {
         analytics_version: 1,
-        recommendation_id: 'espresso_fast_sour',
-        result: 'better',
-        entry_point: 'floating_widget',
+        method: 'espresso',
+        issue_category: 'sour',
+        rule_id: 'espresso_fast_sour',
+        adjustment_variable: 'grind',
+        adjustment_direction: 'finer',
+        attempt_number: 1,
+        helpful: true,
       }),
     );
   });
 
   it('initialises with autocapture, profiles and replay all off', async () => {
     const { trackTypedBrewEvent } = await loadAnalytics(true, env);
-    trackTypedBrewEvent('brew_method_selected', { method: 'v60', entry_point: 'direct' });
+    trackTypedBrewEvent('brew_method_selected', { method: 'v60' });
     await vi.waitFor(() =>
       expect(init).toHaveBeenCalledWith(
         'phc_test',
@@ -131,6 +141,8 @@ describe('switched on with configuration', () => {
     trackBrewEvent('brew_diagnosis_completed', { method: 'espresso', notes: 'tasted odd' });
     trackBrewEvent('brew_diagnosis_completed', { method: 'espresso', session_id: 'abc' });
     trackBrewEvent('brew_diagnosis_completed', { method: 'espresso', brew_time: 28 });
+    trackBrewEvent('brew_diagnosis_completed', { method: 'espresso', entry_point: 'homepage' });
+    trackBrewEvent('brew_diagnosis_completed', { method: 'espresso', content_ref: 'recipe' });
     expect(capture).not.toHaveBeenCalled();
   });
 
@@ -140,7 +152,7 @@ describe('switched on with configuration', () => {
       throw new Error('blocked');
     });
     expect(() =>
-      trackTypedBrewEvent('brew_method_selected', { method: 'espresso', entry_point: 'direct' }),
+      trackTypedBrewEvent('brew_method_selected', { method: 'espresso' }),
     ).not.toThrow();
     await vi.waitFor(() => expect(capture).toHaveBeenCalledTimes(1));
   });

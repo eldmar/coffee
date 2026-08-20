@@ -43,13 +43,12 @@ describe('widget engine acceptance routes', () => {
   it('separates balanced weak espresso from under-extraction', () => {
     const result = recommendation(state('espresso', 'weak', { sharpness: 'no' }));
     expect(result.adjustmentType).toBe('change-ratio');
-    expect(result.adjustment).toBe('Stop the shot earlier');
+    expect(result.adjustment).toBe('Increase the dose slightly');
   });
 
   it('does not dial in by crema when the espresso tastes good', () => {
-    const result = recommendation(state('espresso', 'crema', { 'crema-taste': 'good' }));
-    expect(result.adjustmentType).toBe('check-freshness');
-    expect(result.id).toBe('espresso_low_crema_good_taste');
+    const result = diagnoseWidget(state('espresso', 'crema', { 'crema-taste': 'good' }));
+    expect(result.kind).toBe('needs-details');
   });
 
   it('sends sour, fast V60 finer', () => {

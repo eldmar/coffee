@@ -11,6 +11,8 @@ import Troubleshooting from '../components/Troubleshooting.astro';
 import Newsletter from '../components/Newsletter.astro';
 import ShopComingSoon from '../components/ShopComingSoon.astro';
 import JsonLd from '../components/JsonLd.astro';
+import Photo from '../components/Photo.astro';
+import { readingMinutes } from '../lib/learn';
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 
@@ -42,6 +44,13 @@ const website = {
 
 const recipes = await getCollection('recipes');
 const popular = recipes.filter((r) => r.data.popular).slice(0, 3);
+
+const journalPosts = (await getCollection('journal'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 2);
+
+const formatJournalDate = (date: Date) =>
+  date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
 const finderRecipes = recipes.map((r) => ({
   slug: r.id,
@@ -91,6 +100,62 @@ const finderRecipes = recipes.map((r) => ({
   <BrewMethods />
   <LearningPaths />
   <Troubleshooting />
+  <section class="mx-auto max-w-6xl px-5 py-16" aria-labelledby="journal-home-heading">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <span class="eyebrow">Journal</span>
+        <h2 id="journal-home-heading" class="mt-2 font-display text-3xl font-medium">
+          From the Journal
+        </h2>
+      </div>
+      <a href="/journal/" class="text-sm font-medium text-accent hover:underline">
+        View all Journal stories &#8594;
+      </a>
+    </div>
+
+    <div class="mt-8 grid gap-6 md:grid-cols-2">
+      {
+        journalPosts.map((post) => (
+          <article class="flex min-w-0 flex-col overflow-hidden rounded-lg border border-line bg-card">
+            {post.data.image && (
+              <a href={`/journal/${post.id}/`} aria-label={post.data.title}>
+                <Photo
+                  name={post.data.image}
+                  alt={post.data.imageAlt ?? ''}
+                  sizes="(min-width: 768px) 550px, 92vw"
+                  class="aspect-[16/9] w-full bg-line object-cover"
+                  loading="lazy"
+                />
+              </a>
+            )}
+            <div class="flex flex-1 flex-col p-6">
+              <p class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-soft">
+                {post.data.category && <span class="eyebrow">{post.data.category}</span>}
+                {post.data.category && <span aria-hidden="true">&#183;</span>}
+                <time datetime={post.data.date.toISOString()}>{formatJournalDate(post.data.date)}</time>
+                {post.data.readingTime && <span aria-hidden="true">&#183;</span>}
+                {post.data.readingTime && <span>{readingMinutes(post.data.readingTime)} read</span>}
+              </p>
+              <h3 class="mt-3 font-display text-2xl font-medium text-balance">
+                <a href={`/journal/${post.id}/`} class="hover:text-accent hover:underline">
+                  {post.data.title}
+                </a>
+              </h3>
+              <p class="mt-3 line-clamp-3 text-sm leading-relaxed text-ink-soft">
+                {post.data.excerpt ?? post.data.description}
+              </p>
+              <a
+                href={`/journal/${post.id}/`}
+                class="mt-auto pt-5 text-sm font-semibold text-accent hover:underline"
+              >
+                Read the story &#8594;
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
   <div id="newsletter">
     <Newsletter />
   </div>

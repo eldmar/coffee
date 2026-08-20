@@ -7,7 +7,7 @@
  * silent degradation into a failed build, and also catches any asset the HTML
  * references but the build never emitted.
  */
-import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 // --warn-only reports problems without failing the build. Used on the host
@@ -39,6 +39,7 @@ let onDemandImages = 0;
 let recipeSchemas = 0;
 let faqSchemas = 0;
 const indexableSeo = [];
+const recipeGuideLabels = new Set();
 
 function decodeHtml(value = '') {
   return value
@@ -131,6 +132,30 @@ for (const page of pages) {
       const url = candidate.trim().split(/\s+/)[0];
       if (/^\/(?:_astro|img)\//.test(url) && !existsSync(join(DIST, url))) missingAssets.add(url);
     }
+  }
+
+  const recipeGuideBlock = html.match(
+    /<p\b[^>]*data-recipe-guide-link[^>]*>([\s\S]*?)<\/p>/i,
+  );
+  if (recipeGuideBlock) {
+    const rendered = visibleText(recipeGuideBlock[1]);
+    const guideLink = recipeGuideBlock[1].match(
+      /<a\b[^>]*href="(\/guides\/([^"]+)\/)"[^>]*>([\s\S]*?)<\/a>/i,
+    );
+    const guideLabel = visibleText(guideLink?.[3] ?? '');
+    const expected = `New to this method? The ${guideLabel} covers the technique behind this recipe.`;
+
+    if (!guideLink) problems.push(`${label} recipe guide link is not clickable`);
+    if (rendered !== expected) {
+      problems.push(`${label} has malformed recipe guide text: ${rendered}`);
+    }
+    if (!/The <a\b/i.test(recipeGuideBlock[1]) || !/<\/a> covers/i.test(recipeGuideBlock[1])) {
+      problems.push(`${label} recipe guide link is missing physical SSR spaces`);
+    }
+    if (/The(?:Espresso|V60|AeroPress|French Press|Moka Pot)|guidecovers/.test(rendered)) {
+      problems.push(`${label} recipe guide text contains joined words`);
+    }
+    if (guideLabel) recipeGuideLabels.add(guideLabel);
   }
 
   for (const match of html.matchAll(
@@ -226,6 +251,46 @@ for (const page of pages) {
   }
 }
 
+for (const guideLabel of [
+  'Espresso brew guide',
+  'AeroPress brew guide',
+  'V60 brew guide',
+  'French Press brew guide',
+  'Moka Pot brew guide',
+]) {
+  if (!recipeGuideLabels.has(guideLabel)) {
+    problems.push(`shared recipe guide block was not exercised for ${guideLabel}`);
+  }
+}
+
+for (const [pathSegments, imageName] of [
+  [['recipes'], 'recipes.webp'],
+  [['guides'], 'brew-guides.webp'],
+  [['learn'], 'learn.webp'],
+  [['journal'], 'journal.webp'],
+  [['recipes', 'filter-coffee'], 'filter-coffee-recipes.webp'],
+]) {
+  const imagePath = join('public', 'social', imageName);
+  const pagePath = join(DIST, ...pathSegments, 'index.html');
+  const label = pathSegments.join('/');
+  if (!existsSync(imagePath)) {
+    problems.push(`${label} is missing social image ${imageName}`);
+    continue;
+  }
+  if (statSync(imagePath).size >= 250 * 1024) {
+    problems.push(`${imageName} exceeds the 250 KB social image limit`);
+  }
+  if (!existsSync(pagePath)) continue;
+  const html = readFileSync(pagePath, 'utf8');
+  const expectedUrl = `https://kavovo.uk/social/${imageName}`;
+  if (!html.includes(`<meta property="og:image" content="${expectedUrl}">`)) {
+    problems.push(`${label} does not use ${imageName} for og:image`);
+  }
+  if (!html.includes(`<meta name="twitter:image" content="${expectedUrl}">`)) {
+    problems.push(`${label} does not use ${imageName} for twitter:image`);
+  }
+}
+
 for (const key of ['title', 'description', 'canonical']) {
   const seen = new Map();
   for (const entry of indexableSeo) {
@@ -307,6 +372,15 @@ for (const [pathSegments, expected] of [
       description:
         'Learn how to make filter coffee with the right ratio, grind size and water temperature. Includes V60, drip machine, Chemex and AeroPress methods.',
       h1: 'How to Make Filter Coffee',
+    },
+  ],
+  [
+    ['recipes', 'filter-coffee'],
+    {
+      title: 'Filter Coffee Recipes: V60, AeroPress & French Press | KAVOVO',
+      description:
+        'Browse filter coffee recipes for V60, AeroPress and French Press. Compare brew time, grind size and cup style, then choose the right method for your routine.',
+      h1: 'Filter Coffee Recipes',
     },
   ],
   [
@@ -414,6 +488,7 @@ if (existsSync(filterCoffeePage)) {
     '/learn/coffee-basics/grind-size/',
     '/learn/coffee-basics/brewing-temperature/',
     '/learn/understand-your-beans/coffee-freshness-roast-dates/',
+    '/recipes/filter-coffee/',
   ]) {
     if (!html.includes(`href="${href}"`)) {
       problems.push(`filter coffee guide is missing internal link: ${href}`);
@@ -421,6 +496,39 @@ if (existsSync(filterCoffeePage)) {
   }
 } else {
   problems.push('Filter Coffee guide was not built');
+}
+
+const filterRecipesPage = join(DIST, 'recipes', 'filter-coffee', 'index.html');
+if (existsSync(filterRecipesPage)) {
+  const html = readFileSync(filterRecipesPage, 'utf8');
+  const schemas = schemasIn(html);
+  for (const type of ['CollectionPage', 'ItemList', 'FAQPage', 'BreadcrumbList']) {
+    if (!schemas.some((schema) => schema?.['@type'] === type)) {
+      problems.push(`filter coffee recipe hub is missing ${type} schema`);
+    }
+  }
+  const itemList = schemas.find((schema) => schema?.['@type'] === 'ItemList');
+  if (itemList?.numberOfItems !== 3 || itemList?.itemListElement?.length !== 3) {
+    problems.push('filter coffee recipe hub should expose exactly three recipes');
+  }
+  const faq = schemas.find((schema) => schema?.['@type'] === 'FAQPage');
+  if (faq?.mainEntity?.length !== 4) {
+    problems.push('filter coffee recipe hub should expose exactly four visible FAQ items');
+  }
+  for (const marker of [
+    'Compare Filter Coffee Methods',
+    'Clean and bright',
+    'Clean to full-bodied',
+    'Rich and textured',
+    'New to filter coffee?',
+  ]) {
+    if (!html.includes(marker)) problems.push(`filter coffee recipe hub is missing: ${marker}`);
+  }
+  if (!html.includes('href="/learn/coffee-basics/filter-coffee/"')) {
+    problems.push('filter coffee recipe hub is missing its Learn guide link');
+  }
+} else {
+  problems.push('Filter Coffee recipe hub was not built');
 }
 
 const v60GuidePage = join(DIST, 'guides', 'v60', 'index.html');
@@ -486,6 +594,34 @@ if (existsSync(recipesPage)) {
   }
   if (!html.includes('Brown Sugar Shaken Espresso')) {
     problems.push('recipes/index.html is missing Brown Sugar Shaken Espresso');
+  }
+}
+
+const homepage = join(DIST, 'index.html');
+if (existsSync(homepage)) {
+  const html = readFileSync(homepage, 'utf8');
+  for (const marker of [
+    'From the Journal',
+    'View all Journal stories',
+    'Ice Is an Ingredient: Why Your Iced Coffee Tastes Watery',
+    'Why We Built KAVOVO',
+  ]) {
+    if (!html.includes(marker)) problems.push(`homepage Journal section is missing: ${marker}`);
+  }
+  if ((html.match(/Read the story/g) ?? []).length !== 2) {
+    problems.push('homepage Journal section should show exactly two latest stories');
+  }
+}
+
+for (const page of pages) {
+  const html = readFileSync(page, 'utf8');
+  if (!html.includes('data-brew-widget')) continue;
+  if (
+    !html.includes('aria-label="Fix my coffee"') ||
+    !html.includes('aria-describedby="brew-widget-tooltip"') ||
+    !html.includes('id="brew-widget-tooltip"')
+  ) {
+    problems.push(`${relative(DIST, page)} is missing the accessible Brew Assistant tooltip`);
   }
 }
 

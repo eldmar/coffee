@@ -11,8 +11,10 @@
     "preview": "astro preview",
     "astro": "astro",
     "images": "node scripts/build-images.mjs",
+    "social-images": "node scripts/build-social-images.mjs",
+    "check:en-gb": "node scripts/check-en-gb.mjs",
     "check:worker": "WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log wrangler deploy --dry-run",
-    "verify": "vitest run && astro build && node scripts/check-build.mjs && npm run check:worker",
+    "verify": "npm run check:en-gb && vitest run && astro build && node scripts/check-build.mjs && npm run check:worker",
     "test": "vitest run",
     "deploy": "npm run verify && wrangler deploy"
   },

@@ -34,98 +34,64 @@ export type BrewAdjustment =
   | 'dose'
   | 'yield'
   | 'water'
-  | 'time'
   | 'temperature'
-  | 'technique'
-  | 'freshness';
+  | 'agitation'
+  | 'puck_preparation';
 
 export type BrewDirection = 'finer' | 'coarser' | 'increase' | 'decrease' | 'improve';
 
 export type BrewAnalyticsEventMap = {
-  brew_widget_opened: {
-    page_type: 'home' | 'recipe' | 'guide' | 'learn' | 'journal' | 'other';
-    pathname: string;
-  };
+  brew_widget_opened: Record<never, never>;
   brew_widget_closed: {
-    step: 'welcome' | 'method' | 'issue' | 'follow-up' | 'recommendation' | 'feedback';
-    has_recommendation: boolean;
+    method?: BrewMethod;
+    issue_category?: BrewIssue;
+    attempt_number?: number;
   };
   brew_widget_full_assistant_opened: {
     method: BrewMethod;
-    issue: BrewIssue;
-    source_step: 'issue' | 'follow-up' | 'recommendation' | 'feedback';
+    issue_category: BrewIssue;
   };
-  brew_assistant_opened: {
-    entry_point: BrewEntryPoint;
-    returning_brewer: boolean;
-  };
+  brew_assistant_opened: Record<never, never>;
   brew_assistant_started: {
-    entry_point: BrewEntryPoint;
-    method_group?: 'espresso' | 'filter';
-    initial_issue?: BrewIssue;
+    method?: BrewMethod;
+    issue_category?: BrewIssue;
   };
   brew_method_selected: {
     method: BrewMethod;
-    entry_point: BrewEntryPoint;
   };
-  brew_diagnosis_completed:
-    | {
-        method: BrewMethod;
-        rule_id: string;
-        adjustment: BrewAdjustment;
-        direction: BrewDirection;
-        attempt_number: number;
-        entry_point: BrewEntryPoint;
-      }
-    | {
-        method: BrewMethod;
-        issue: BrewIssue;
-        recommendation_id: string;
-        adjustment_type: string;
-        entry_point: 'floating_widget';
-      };
-  brew_next_attempt_started:
-    | {
-        method: BrewMethod;
-        previous_rule_id: string;
-        attempt_number: number;
-      }
-    | {
-        method: BrewMethod;
-        entry_point: 'floating_widget';
-      };
-  brew_next_attempt_completed:
-    | {
-        method: BrewMethod;
-        rule_id: string;
-        attempt_number: number;
-      }
-    | {
-        recommendation_id: string;
-        entry_point: 'floating_widget';
-      };
-  brew_feedback_submitted:
-    | {
-        method: BrewMethod;
-        rule_id: string;
-        helpful: boolean;
-        attempt_number: number;
-      }
-    | {
-        recommendation_id: string;
-        result: 'better' | 'same' | 'worse';
-        entry_point: 'floating_widget';
-      };
+  brew_diagnosis_completed: {
+    method: BrewMethod;
+    issue_category: BrewIssue;
+    rule_id: string;
+    adjustment_variable: BrewAdjustment;
+    adjustment_direction: BrewDirection;
+    attempt_number: number;
+  };
+  brew_next_attempt_started: {
+    method: BrewMethod;
+    rule_id: string;
+    attempt_number: number;
+  };
+  brew_next_attempt_completed: {
+    method: BrewMethod;
+    rule_id: string;
+    attempt_number: number;
+  };
+  brew_feedback_submitted: {
+    method: BrewMethod;
+    issue_category: BrewIssue;
+    rule_id: string;
+    adjustment_variable: BrewAdjustment;
+    adjustment_direction: BrewDirection;
+    attempt_number: number;
+    helpful: boolean;
+  };
   brew_related_content_clicked: {
     method: BrewMethod;
     rule_id: string;
-    content_type: 'learn' | 'guide' | 'recipe';
-    content_slug: string;
   };
   brew_validation_failed: {
     method: BrewMethod;
-    step: 'method' | 'recipe' | 'taste';
-    error_category: string;
   };
 };
 
@@ -158,6 +124,16 @@ const PROHIBITED = new Set([
   'origin',
   'referrer',
   'url',
+]);
+
+const ALLOWED_PROPERTIES = new Set([
+  'method',
+  'issue_category',
+  'rule_id',
+  'adjustment_variable',
+  'adjustment_direction',
+  'attempt_number',
+  'helpful',
 ]);
 
 type PostHogClient = (typeof import('posthog-js'))['default'];
@@ -211,10 +187,12 @@ export function initAnalytics(): void {
 }
 
 export function trackBrewEvent(event: string, properties: AnalyticsProperties = {}): void {
-  const leaked = Object.keys(properties).filter((key) => PROHIBITED.has(key));
-  if (leaked.length > 0) {
+  const rejected = Object.keys(properties).filter(
+    (key) => PROHIBITED.has(key) || !ALLOWED_PROPERTIES.has(key),
+  );
+  if (rejected.length > 0) {
     if (import.meta.env.DEV) {
-      console.error(`[Analytics] refusing to send ${event}: ${leaked.join(', ')}`);
+      console.error(`[Analytics] refusing to send ${event}: ${rejected.join(', ')}`);
     }
     return;
   }

@@ -68,9 +68,9 @@ export const LEARN_PATHS = [
     id: 'beans',
     slug: 'understand-your-beans',
     title: 'Understand Your Beans',
-    short: 'Origin, processing, roast, and flavor.',
+    short: 'Origin, processing, roast, and flavour.',
     description:
-      'Origin, processing, roast level, and flavor — how to read a bag of coffee and pick beans you will love.',
+      'Origin, processing, roast level, and flavour — how to read a bag of coffee and pick beans you will love.',
     image: '/images/learn-beans.jpg',
     status: 'published',
     seoTitle: 'Understand Your Coffee Beans — KAVOVO',

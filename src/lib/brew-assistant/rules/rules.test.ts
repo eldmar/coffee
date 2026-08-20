@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { diagnose, RULES } from './index';
+import { changedVariables, diagnose, RULES } from './index';
 import { CONTENT } from '../content';
 import { parseNumber, validate, hasBlockingError } from '../validation';
 import type { BrewInput } from '../types';
@@ -26,75 +26,98 @@ const filter = (method: BrewInput['method'], over: Partial<BrewInput> = {}): Bre
   ...over,
 });
 
+const recommendation = (input: BrewInput) => {
+  const result = diagnose(input);
+  if (result.needsClarification) throw new Error(`Expected recommendation, got ${result.ruleId}`);
+  return result;
+};
+
 describe('espresso rules', () => {
   it('sends a fast, sour shot finer', () => {
-    const result = diagnose(espresso({ yieldOut: 40, time: 22, tastes: ['sour', 'weak'] }));
+    const result = recommendation(espresso({ yieldOut: 40, time: 22, tastes: ['sour', 'weak'] }));
     expect(result.adjustment.variable).toBe('grind');
     expect(result.adjustment.direction).toBe('finer');
   });
 
   it('sends a slow, bitter shot coarser', () => {
-    const result = diagnose(espresso({ time: 40, tastes: ['bitter', 'dry'] }));
+    const result = recommendation(espresso({ time: 40, tastes: ['bitter', 'dry'] }));
     expect(result.adjustment.direction).toBe('coarser');
   });
 
   it('blames puck preparation, not the grinder, when a shot sprays', () => {
-    const result = diagnose(espresso({ behaviour: 'espresso-spraying', tastes: ['bitter'] }));
-    expect(result.adjustment.variable).toBe('technique');
+    const result = recommendation(espresso({ behaviour: 'espresso-spraying', tastes: ['bitter'] }));
+    expect(result.adjustment.variable).toBe('puck_preparation');
     expect(result.ruleId).toBe('espresso_channeling');
   });
 
   it('treats sour and bitter together as uneven extraction', () => {
-    const result = diagnose(espresso({ tastes: ['sour', 'bitter'] }));
-    expect(result.adjustment.variable).toBe('technique');
+    const result = recommendation(espresso({ tastes: ['sour', 'bitter'] }));
+    expect(result.adjustment.variable).toBe('puck_preparation');
   });
 
-  it('raises the temperature for a sour light roast at a normal flow', () => {
-    const result = diagnose(espresso({ roast: 'light', tastes: ['sour'], time: 28 }));
+  it('raises the temperature for a hollow light roast at a normal flow', () => {
+    const result = recommendation(espresso({ roast: 'light', tastes: ['hollow'], time: 28 }));
     expect(result.adjustment.variable).toBe('temperature');
     expect(result.adjustment.direction).toBe('increase');
   });
 
-  it('checks freshness instead of changing extraction for good espresso with little crema', () => {
+  it('asks about freshness instead of changing extraction for good espresso with little crema', () => {
     const result = diagnose(espresso({ behaviour: 'espresso-low-crema', tastes: [] }));
-    expect(result.adjustment.variable).toBe('freshness');
+    expect(result.needsClarification).toBe(true);
+    expect(result.adjustment).toBeNull();
     expect(result.ruleId).toBe('espresso_low_crema_good_taste');
   });
 
   // The scenario the spec calls out by name.
   it('matches the required acceptance scenario', () => {
-    const result = diagnose(
-      espresso({ roast: 'light', dose: 18, yieldOut: 40, time: 22, tastes: ['sour', 'weak'] }),
-    );
+    const input = espresso({ dose: 18, yieldOut: 36, time: 20, tastes: ['sour'] });
+    const result = recommendation(input);
     expect(result.adjustment.title).toBe('Grind slightly finer');
     expect(result.keepConstant).toContain('Dose');
     expect(result.nextTarget.dose).toBe(18);
-    // 18 g at the 1:2.1 starting zone, which is the 38 g the spec asks for.
-    expect(result.nextTarget.yieldOut).toBe(38);
+    expect(result.nextTarget.yieldOut).toBe(36);
     expect(result.nextTarget.timeMin).toBe(27);
     expect(result.nextTarget.timeMax).toBe(30);
+    expect(changedVariables(input, result)).toEqual(['grind']);
+  });
+
+  it('keeps dose and yield unchanged for a slow, bitter 18 g shot', () => {
+    const input = espresso({ dose: 18, yieldOut: 36, time: 40, tastes: ['bitter'] });
+    const result = recommendation(input);
+    expect(result.adjustment.direction).toBe('coarser');
+    expect(result.nextTarget.dose).toBe(18);
+    expect(result.nextTarget.yieldOut).toBe(36);
+    expect(changedVariables(input, result)).toEqual(['grind']);
+  });
+
+  it('changes only puck preparation for a spraying 18 g shot', () => {
+    const input = espresso({ dose: 18, yieldOut: 36, behaviour: 'espresso-spraying' });
+    const result = recommendation(input);
+    expect(result.adjustment.variable).toBe('puck_preparation');
+    expect(result.adjustment.title).not.toMatch(/grind/i);
+    expect(changedVariables(input, result)).toEqual(['puck_preparation']);
   });
 });
 
 describe('filter rules', () => {
   it('sends a fast, sour V60 finer', () => {
-    const result = diagnose(filter('v60', { behaviour: 'v60-fast', tastes: ['sour'] }));
+    const result = recommendation(filter('v60', { behaviour: 'v60-fast', tastes: ['sour'] }));
     expect(result.adjustment.direction).toBe('finer');
   });
 
   it('sends a stalled, bitter V60 coarser', () => {
-    const result = diagnose(filter('v60', { behaviour: 'v60-stalled', tastes: ['bitter'] }));
+    const result = recommendation(filter('v60', { behaviour: 'v60-stalled', tastes: ['bitter'] }));
     expect(result.adjustment.direction).toBe('coarser');
   });
 
-  it('extends the steep for a weak AeroPress brewed briefly', () => {
-    const result = diagnose(filter('aeropress', { time: 60, tastes: ['sour'] }));
-    expect(result.adjustment.variable).toBe('time');
-    expect(result.adjustment.direction).toBe('increase');
+  it('goes finer for a sour AeroPress while keeping a short steep unchanged', () => {
+    const result = recommendation(filter('aeropress', { time: 60, tastes: ['sour'] }));
+    expect(result.adjustment.variable).toBe('grind');
+    expect(result.adjustment.direction).toBe('finer');
   });
 
   it('adds bypass water to strong AeroPress that is not bitter', () => {
-    const result = diagnose(
+    const result = recommendation(
       filter('aeropress', { dose: 20, water: 250, tastes: ['strong'], time: 180 }),
     );
     expect(result.adjustment.variable).toBe('water');
@@ -103,13 +126,13 @@ describe('filter rules', () => {
   });
 
   it('sends muddy AeroPress coarser', () => {
-    const result = diagnose(filter('aeropress', { tastes: ['muddy'] }));
+    const result = recommendation(filter('aeropress', { tastes: ['muddy'] }));
     expect(result.adjustment.direction).toBe('coarser');
     expect(result.ruleId).toBe('aeropress_muddy');
   });
 
   it('sends a gritty French press coarser', () => {
-    const result = diagnose(
+    const result = recommendation(
       filter('french-press', { behaviour: 'french-press-sediment', tastes: ['muddy'], time: 300 }),
     );
     expect(result.adjustment.direction).toBe('coarser');
@@ -122,6 +145,7 @@ describe('thin or contradictory answers', () => {
     const result = diagnose(espresso({ tastes: ['unsure'], behaviour: 'none' }));
     expect(result.needsClarification).toBe(true);
     expect(result.clarificationQuestion).toBeTruthy();
+    expect(result.adjustment).toBeNull();
   });
 
   it('asks a question when the shot is called fast but took 45 seconds', () => {
@@ -142,8 +166,8 @@ describe('every answer carries exactly one adjustment', () => {
 
   it.each(inputs)('returns one adjustment for %o', (input) => {
     const result = diagnose(input);
-    expect(result.adjustment).toBeTruthy();
-    expect(typeof result.adjustment.title).toBe('string');
+    expect(changedVariables(input, result).length).toBeLessThanOrEqual(1);
+    if (!result.needsClarification) expect(typeof result.adjustment.title).toBe('string');
   });
 });
 

@@ -30,6 +30,18 @@ export type Behaviour =
   | 'french-press-hard'
   | 'none';
 
+/** The one recipe control a recommendation is allowed to move. */
+export type AdjustableVariable =
+  | 'grind'
+  | 'dose'
+  | 'yield'
+  | 'temperature'
+  | 'water'
+  | 'agitation'
+  | 'puck_preparation';
+
+export type AdjustmentDirection = 'increase' | 'decrease' | 'finer' | 'coarser' | 'improve';
+
 export interface BrewInput {
   method: Method;
   /** Grams of dry coffee. */
@@ -57,22 +69,9 @@ export interface BrewInput {
   aeropressStyle?: 'standard' | 'inverted' | 'unknown';
 }
 
-export interface BrewDiagnosis {
+interface BrewDiagnosisBase {
   method: Method;
   diagnosis: string;
-  adjustment: {
-    variable:
-      | 'grind'
-      | 'dose'
-      | 'yield'
-      | 'water'
-      | 'time'
-      | 'temperature'
-      | 'technique'
-      | 'freshness';
-    direction: 'increase' | 'decrease' | 'finer' | 'coarser' | 'improve';
-    title: string;
-  };
   keepConstant: string[];
   nextTarget: {
     dose?: number;
@@ -87,9 +86,25 @@ export interface BrewDiagnosis {
   reasons: string[];
   relatedContent: string[];
   ruleId: string;
-  needsClarification: boolean;
-  clarificationQuestion?: string;
 }
+
+export interface BrewRecommendation extends BrewDiagnosisBase {
+  adjustment: {
+    variable: AdjustableVariable;
+    direction: AdjustmentDirection;
+    title: string;
+  };
+  needsClarification: false;
+  clarificationQuestion?: never;
+}
+
+export interface BrewClarification extends BrewDiagnosisBase {
+  adjustment: null;
+  needsClarification: true;
+  clarificationQuestion: string;
+}
+
+export type BrewDiagnosis = BrewRecommendation | BrewClarification;
 
 /** A single recorded brew plus whatever the assistant suggested afterwards. */
 export interface BrewAttempt {

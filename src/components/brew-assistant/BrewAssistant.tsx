@@ -8,7 +8,6 @@ import {
   newSession,
   saveAttempt,
   storageAvailable,
-  updateSession,
 } from '../../lib/brew-assistant/storage';
 import type {
   Behaviour,
@@ -22,7 +21,6 @@ import type {
 import {
   analyticsIssue,
   analyticsMethod,
-  contentRef,
   normaliseEntryPoint,
   trackTypedBrewEvent,
   type BrewEntryPoint,
@@ -172,19 +170,16 @@ export default function BrewAssistant() {
   const [tastes, setTastes] = useState<Taste[]>([]);
   const [behaviour, setBehaviour] = useState<Behaviour>('none');
   const [session, setSession] = useState<BrewSession | null>(null);
-  const [feedback, setFeedback] = useState<'yes' | 'not_yet'>();
   const [showErrors, setShowErrors] = useState(false);
   const [changedField, setChangedField] = useState<string | null>(null);
   const stepHeading = useRef<HTMLHeadingElement>(null);
   const [history, setHistory] = useState<BrewSession[]>([]);
-  const [entryPoint, setEntryPoint] = useState<BrewEntryPoint>('direct');
   /**
    * Rerenders, Strict Mode and the back button must not each count as another
    * diagnosis, so every reported result is keyed by session, attempt and rule.
    */
   const reportedDiagnoses = useRef(new Set<string>());
   const startReported = useRef(false);
-  const feedbackReported = useRef(new Set<string>());
 
   useEffect(() => {
     setStorageStatus(storageAvailable() ? 'available' : 'unavailable');
@@ -192,13 +187,9 @@ export default function BrewAssistant() {
     setHistory(saved);
 
     const arrivedFrom = fromUrl().entry;
-    setEntryPoint(arrivedFrom);
     // The homepage already reported the open before it navigated here.
     if (arrivedFrom !== 'homepage') {
-      trackTypedBrewEvent('brew_assistant_opened', {
-        entry_point: arrivedFrom,
-        returning_brewer: saved.length > 0,
-      });
+      trackTypedBrewEvent('brew_assistant_opened', {});
     } else {
       startReported.current = true;
     }
@@ -234,7 +225,9 @@ export default function BrewAssistant() {
 
   // Moving between steps must be announced, not just rendered.
   useEffect(() => {
-    if (step > 0) stepHeading.current?.focus();
+    if (step === 0) return;
+    const frame = window.requestAnimationFrame(() => stepHeading.current?.focus());
+    return () => window.cancelAnimationFrame(frame);
   }, [step]);
 
   /** Safe to use once past step 0, which cannot be left until a method is picked. */
@@ -279,15 +272,13 @@ export default function BrewAssistant() {
     if (method === null) return;
     trackTypedBrewEvent('brew_method_selected', {
       method: analyticsMethod(method),
-      entry_point: entryPoint,
     });
     // Arriving straight at /assistant/, the first step forward is the start.
     if (!startReported.current) {
       startReported.current = true;
       trackTypedBrewEvent('brew_assistant_started', {
-        entry_point: entryPoint,
-        method_group: method === 'espresso' ? 'espresso' : 'filter',
-        initial_issue: analyticsIssue(tastes[0] ?? null),
+        method: analyticsMethod(method),
+        issue_category: analyticsIssue(tastes[0] ?? null),
       });
     }
     setStep(1);
@@ -298,13 +289,8 @@ export default function BrewAssistant() {
     if (hasBlockingError(issues)) {
       // Reported on the attempt to continue, not on every keystroke, and the
       // rejected value itself is never sent.
-      const first = issues.find((issue) => issue.severity === 'error');
       trackTypedBrewEvent('brew_validation_failed', {
         method: analyticsMethod(chosen),
-        step: 'recipe',
-        error_category: first?.message.startsWith('This one is needed')
-          ? 'missing_required_field'
-          : 'invalid_numeric_range',
       });
       return;
     }
@@ -330,11 +316,11 @@ export default function BrewAssistant() {
         reportedDiagnoses.current.add(key);
         trackTypedBrewEvent('brew_diagnosis_completed', {
           method: analyticsMethod(result.method),
+          issue_category: analyticsIssue(tastes[0] ?? behaviour),
           rule_id: result.ruleId,
-          adjustment: result.adjustment.variable,
-          direction: result.adjustment.direction,
+          adjustment_variable: result.adjustment.variable,
+          adjustment_direction: result.adjustment.direction,
           attempt_number: attemptNumber,
-          entry_point: entryPoint,
         });
         if (attemptNumber > 1) {
           trackTypedBrewEvent('brew_next_attempt_completed', {
@@ -348,23 +334,35 @@ export default function BrewAssistant() {
 
     setSession(saved);
     setHistory(loadSessions());
-    setFeedback(undefined);
     setStep(3);
   };
 
   /** Keep everything except the variable the last answer asked you to move. */
   const recordNextAttempt = () => {
     const last = session?.attempts.at(-1)?.diagnosis;
-    setChangedField(last?.adjustment.variable ?? null);
-    if (session && last) {
+    setChangedField(last?.adjustment?.variable ?? null);
+    if (session && last && !last.needsClarification) {
       trackTypedBrewEvent('brew_next_attempt_started', {
         method: analyticsMethod(session.method),
-        previous_rule_id: last.ruleId,
+        rule_id: last.ruleId,
         attempt_number: session.attempts.length + 1,
       });
     }
-    if (last?.nextTarget.yieldOut !== undefined) {
-      setDraft((d) => ({ ...d, yieldOut: String(last.nextTarget.yieldOut) }));
+    if (last) {
+      setDraft((current) => ({
+        ...current,
+        dose: last.nextTarget.dose !== undefined ? String(last.nextTarget.dose) : current.dose,
+        yieldOut:
+          last.nextTarget.yieldOut !== undefined
+            ? String(last.nextTarget.yieldOut)
+            : current.yieldOut,
+        water:
+          last.nextTarget.water !== undefined ? String(last.nextTarget.water) : current.water,
+        temperature:
+          last.nextTarget.temperature !== undefined
+            ? String(last.nextTarget.temperature)
+            : current.temperature,
+      }));
     }
     setTastes([]);
     setBehaviour('none');
@@ -380,31 +378,6 @@ export default function BrewAssistant() {
     setChangedField(null);
     setShowErrors(false);
     setStep(0);
-  };
-
-  const recordFeedback = (value: 'yes' | 'not_yet') => {
-    setFeedback(value);
-    if (!session) return;
-    const rated = session.attempts.at(-1)?.diagnosis;
-    const key = `${session.id}:${session.attempts.length}`;
-    // One submission per diagnosis: changing your mind is allowed, a second
-    // event is not.
-    if (rated && !feedbackReported.current.has(key)) {
-      feedbackReported.current.add(key);
-      trackTypedBrewEvent('brew_feedback_submitted', {
-        method: analyticsMethod(session.method),
-        rule_id: rated.ruleId,
-        helpful: value === 'yes',
-        attempt_number: session.attempts.length,
-      });
-    }
-    const attempts = [...session.attempts];
-    const last = attempts.at(-1);
-    if (last) attempts[attempts.length - 1] = { ...last, helpful: value };
-    const updated = { ...session, attempts, updatedAt: new Date().toISOString() };
-    setSession(updated);
-    updateSession(updated);
-    setHistory(loadSessions());
   };
 
   const attempts = session?.attempts ?? [];
@@ -680,15 +653,11 @@ export default function BrewAssistant() {
             diagnosis={diagnosis}
             onNextAttempt={recordNextAttempt}
             onRestart={restart}
-            onFeedback={recordFeedback}
-            feedback={feedback}
-            onContentClick={(href) => {
-              const ref = contentRef(href);
-              if (!ref || !session) return;
+            onContentClick={() => {
+              if (!session) return;
               trackTypedBrewEvent('brew_related_content_clicked', {
                 method: analyticsMethod(session.method),
                 rule_id: diagnosis.ruleId,
-                ...ref,
               });
             }}
           />

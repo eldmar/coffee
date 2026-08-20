@@ -4,7 +4,6 @@ import {
   analyticsIssue,
   trackTypedBrewEvent,
 } from '../lib/analytics';
-import { loadSessions } from '../lib/brew-assistant/storage';
 
 /**
  * "Filter coffee" is three brewers, so it travels as a group and the assistant
@@ -47,11 +46,7 @@ export default function TaskSelector({ recipes }: { recipes: FinderRecipe[] }) {
   useEffect(() => {
     if (tab !== 'fix' || openedReported.current) return;
     openedReported.current = true;
-    trackTypedBrewEvent('brew_assistant_opened', {
-      entry_point: 'homepage',
-      // Whether anything is saved locally, never what or which.
-      returning_brewer: loadSessions().length > 0,
-    });
+    trackTypedBrewEvent('brew_assistant_opened', {});
   }, [tab]);
 
   const ready = method !== null && issue !== null;
@@ -178,9 +173,8 @@ export default function TaskSelector({ recipes }: { recipes: FinderRecipe[] }) {
               // Sent before navigation; capture() is fire-and-forget, so the
               // link is never held up waiting for it.
               trackTypedBrewEvent('brew_assistant_started', {
-                entry_point: 'homepage',
-                method_group: method === 'mode=espresso' ? 'espresso' : 'filter',
-                initial_issue: analyticsIssue(issue),
+                ...(method === 'mode=espresso' ? { method: 'espresso' as const } : {}),
+                issue_category: analyticsIssue(issue),
               });
             }}
             className={`flex min-h-11 items-center justify-center rounded-md px-5 text-sm font-medium transition-colors ${

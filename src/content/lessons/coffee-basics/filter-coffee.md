@@ -174,3 +174,13 @@ Brew 15 g of coffee with 250 ml of water. If the cup is not balanced, change onl
 Start filter coffee at 1:16.7 with a medium grind and 92-96°C water. Weigh the recipe, rinse the filter and use taste plus brew time to guide one adjustment at a time.
 
 </div>
+
+<div class="callout callout--answer">
+
+## Ready to brew?
+
+[Browse Filter Coffee Recipes](/recipes/filter-coffee/)
+
+**V60 · AeroPress · French Press**
+
+</div>

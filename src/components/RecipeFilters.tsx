@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { categoryLabel, formatTimeShort } from "../lib/recipes";
 import type { CardImage } from "../lib/cardImage";
+import { parseRecipeFilterSearch, serialiseRecipeFilters } from '../lib/recipe-filters';
 
 interface CatalogRecipe {
   slug: string;
@@ -54,27 +55,24 @@ export default function RecipeFilters({ recipes }: Props) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setQuery(params.get('q') ?? '');
-    const m = params.get('method');
-    if (m && methodOptions.some(([value]) => value === m)) setMethod(m);
-    const t = params.get('temp');
-    if (t === 'hot' || t === 'iced') setTemp(t);
-    const mk = params.get('milk');
-    if (mk === 'black' || mk === 'milk') setMilk(mk);
+    const applyUrlFilters = () => {
+      const parsed = parseRecipeFilterSearch(window.location.search);
+      setQuery(parsed.query);
+      setMethod(parsed.method);
+      setTemp(parsed.temp);
+      setMilk(parsed.milk);
+      setVisibleCount(INITIAL_RESULT_COUNT);
+    };
+
+    applyUrlFilters();
     setReady(true);
+    window.addEventListener('popstate', applyUrlFilters);
+    return () => window.removeEventListener('popstate', applyUrlFilters);
   }, []);
 
   useEffect(() => {
     if (!ready) return;
-    const params = new URLSearchParams();
-    const cleanQuery = query.trim();
-    if (cleanQuery) params.set('q', cleanQuery);
-    if (method !== 'any') params.set('method', method);
-    if (temp !== 'any') params.set('temp', temp);
-    if (milk !== 'any') params.set('milk', milk);
-
-    const search = params.toString();
+    const search = serialiseRecipeFilters({ query, method, temp, milk });
     const href = `${window.location.pathname}${search ? `?${search}` : ''}${window.location.hash}`;
     window.history.replaceState(window.history.state, '', href);
   }, [ready, query, method, temp, milk]);

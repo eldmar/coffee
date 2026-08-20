@@ -218,11 +218,11 @@ const share = shareText(data, steps, recipeUrl);
     {
       guide && (
         <aside class="mt-10 rounded-lg border border-line bg-card p-5 print:hidden">
-          <p class="text-sm text-ink-soft">
-            New to this method? The
+          <p class="text-sm text-ink-soft" data-recipe-guide-link>
+            New to this method? The{' '}
             <a href={`/guides/${guide.id}/`} class="font-medium text-accent hover:underline">
               {guide.data.title} brew guide
-            </a>
+            </a>{' '}
             covers the technique behind this recipe.
           </p>
         </aside>

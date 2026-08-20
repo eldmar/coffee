@@ -1,4 +1,4 @@
-import type { BrewDiagnosis, BrewInput } from '../types';
+import type { BrewInput } from '../types';
 import { has, round, tastesOver, tastesUnder, type Metrics, type Rule } from './shared';
 
 /**
@@ -24,9 +24,9 @@ const ranFast = (input: BrewInput, m: Metrics) =>
 const ranSlow = (input: BrewInput, m: Metrics) =>
   input.behaviour === 'espresso-slow' || (comparableTime(input) > 35 && m.ratio <= 2.4);
 
-const base = (input: BrewInput): Pick<BrewDiagnosis, 'method' | 'needsClarification'> => ({
+const base = (input: BrewInput) => ({
   method: input.method,
-  needsClarification: false,
+  needsClarification: false as const,
 });
 
 export const espressoRules: Rule[] = [
@@ -39,24 +39,14 @@ export const espressoRules: Rule[] = [
     build: (input) => ({
       ...base(input),
       diagnosis: 'The espresso tastes good, so crema alone is not a reason to change the recipe.',
-      adjustment: {
-        variable: 'freshness',
-        direction: 'improve',
-        title: "Check the coffee's freshness",
-      },
-      keepConstant: ['Grind', 'Dose', 'Yield', 'Temperature'],
-      nextTarget: {
-        dose: input.dose,
-        yieldOut: input.yieldOut,
-        timeMin: TARGET_TIME[0],
-        timeMax: TARGET_TIME[1],
-      },
-      reasons: [
-        'Crema changes with roast level, bean variety and time since roasting, even when extraction is good.',
-        'Keep the recipe where it is and check the roast date before moving the grinder.',
-      ],
+      adjustment: null,
+      keepConstant: [],
+      nextTarget: {},
+      reasons: [],
       relatedContent: ['freshness', 'doseYieldTime'],
       ruleId: 'espresso_low_crema_good_taste',
+      needsClarification: true,
+      clarificationQuestion: 'How recently were the coffee beans roasted?',
     }),
   },
 
@@ -72,7 +62,7 @@ export const espressoRules: Rule[] = [
       ...base(input),
       diagnosis: 'The shot suggests water found an easy path through the puck.',
       adjustment: {
-        variable: 'technique',
+        variable: 'puck_preparation',
         direction: 'improve',
         title: 'Level the coffee before you tamp',
       },
@@ -96,15 +86,15 @@ export const espressoRules: Rule[] = [
   {
     id: 'espresso_fast_sour',
     priority: 30,
-    test: (input, m) => ranFast(input, m) && tastesUnder(input),
+    test: (input, m) => ranFast(input, m) && has(input, 'sour'),
     build: (input) => ({
       ...base(input),
       diagnosis: 'The shot ran quickly and tasted under-extracted.',
       adjustment: { variable: 'grind', direction: 'finer', title: 'Grind slightly finer' },
-      keepConstant: ['Dose', 'Temperature', 'Puck preparation'],
+      keepConstant: ['Dose', 'Yield', 'Temperature', 'Puck preparation'],
       nextTarget: {
         dose: input.dose,
-        yieldOut: targetYield(input),
+        yieldOut: input.yieldOut,
         timeMin: TARGET_TIME[0],
         timeMax: TARGET_TIME[1],
       },
@@ -124,10 +114,10 @@ export const espressoRules: Rule[] = [
       ...base(input),
       diagnosis: 'The shot ran slowly and tasted over-extracted.',
       adjustment: { variable: 'grind', direction: 'coarser', title: 'Grind slightly coarser' },
-      keepConstant: ['Dose', 'Temperature', 'Puck preparation'],
+      keepConstant: ['Dose', 'Yield', 'Temperature', 'Puck preparation'],
       nextTarget: {
         dose: input.dose,
-        yieldOut: targetYield(input),
+        yieldOut: input.yieldOut,
         timeMin: TARGET_TIME[0],
         timeMax: TARGET_TIME[1],
       },
@@ -137,6 +127,84 @@ export const espressoRules: Rule[] = [
       ],
       relatedContent: ['sourVsBitter', 'grindFinerOrCoarser'],
       ruleId: 'espresso_slow_bitter',
+    }),
+  },
+
+  {
+    id: 'espresso_normal_sour',
+    priority: 35,
+    test: (input, m) => !ranFast(input, m) && !ranSlow(input, m) && has(input, 'sour'),
+    build: (input) => ({
+      ...base(input),
+      diagnosis: 'The shot ran in a normal window but still tastes under-extracted.',
+      adjustment: {
+        variable: 'yield',
+        direction: 'increase',
+        title: 'Increase the yield slightly',
+      },
+      keepConstant: ['Grind', 'Dose', 'Temperature', 'Puck preparation'],
+      nextTarget: {
+        dose: input.dose,
+        yieldOut: round((input.yieldOut ?? targetYield(input)) + 2, 1),
+        timeMin: TARGET_TIME[0],
+        timeMax: TARGET_TIME[1],
+      },
+      reasons: [
+        'The flow is already in a useful range, so moving the grinder would disturb a variable that is working.',
+        'A slightly longer yield gives the water a little more opportunity to extract sweetness.',
+      ],
+      relatedContent: ['doseYieldTime', 'sourVsBitter'],
+      ruleId: 'espresso_normal_sour',
+    }),
+  },
+  {
+    id: 'espresso_normal_dry',
+    priority: 35,
+    test: (input, m) => !ranFast(input, m) && !ranSlow(input, m) && has(input, 'dry'),
+    build: (input) => ({
+      ...base(input),
+      diagnosis: 'The shot ran in a normal window but finishes dry and astringent.',
+      adjustment: {
+        variable: 'yield',
+        direction: 'decrease',
+        title: 'Reduce the yield slightly',
+      },
+      keepConstant: ['Grind', 'Dose', 'Temperature', 'Puck preparation'],
+      nextTarget: {
+        dose: input.dose,
+        yieldOut: Math.max(input.dose, round((input.yieldOut ?? targetYield(input)) - 2, 1)),
+        timeMin: TARGET_TIME[0],
+        timeMax: TARGET_TIME[1],
+      },
+      reasons: [
+        'The flow is already in a useful range, so the dry finish is better tested with a shorter ratio.',
+        'Stopping a little earlier reduces the late, drying part of the extraction.',
+      ],
+      relatedContent: ['doseYieldTime', 'sourVsBitter'],
+      ruleId: 'espresso_normal_dry',
+    }),
+  },
+  {
+    id: 'espresso_weak_not_sour',
+    priority: 35,
+    test: (input) => has(input, 'weak') && !has(input, 'sour', 'hollow'),
+    build: (input) => ({
+      ...base(input),
+      diagnosis: 'The shot is weak without the sharpness of under-extraction.',
+      adjustment: { variable: 'dose', direction: 'increase', title: 'Increase the dose slightly' },
+      keepConstant: ['Grind', 'Yield', 'Temperature', 'Puck preparation'],
+      nextTarget: {
+        dose: round(input.dose + 1, 0.5),
+        yieldOut: input.yieldOut,
+        timeMin: TARGET_TIME[0],
+        timeMax: TARGET_TIME[1],
+      },
+      reasons: [
+        'Without sourness, this reads as a strength problem rather than an extraction problem.',
+        'A little more coffee strengthens the shot while the yield and grinder stay readable.',
+      ],
+      relatedContent: ['doseYieldTime', 'ratio'],
+      ruleId: 'espresso_weak_not_sour',
     }),
   },
 

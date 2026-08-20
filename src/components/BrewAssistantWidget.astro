@@ -18,7 +18,8 @@ const { revealAfterScroll = false } = Astro.props;
     aria-haspopup="dialog"
     aria-expanded="false"
     aria-controls="brew-widget-dialog"
-    title="Fix my coffee"
+    aria-label="Fix my coffee"
+    aria-describedby="brew-widget-tooltip"
     data-brew-widget-trigger
   >
     <span class="brew-widget-trigger-mark" aria-hidden="true">
@@ -26,6 +27,9 @@ const { revealAfterScroll = false } = Astro.props;
     </span>
     <span class="brew-widget-trigger-label">Fix my coffee</span>
   </button>
+  <span id="brew-widget-tooltip" class="brew-widget-tooltip" role="tooltip">
+    Fix my coffee
+  </span>
 
   <dialog
     id="brew-widget-dialog"
@@ -80,7 +84,6 @@ const { revealAfterScroll = false } = Astro.props;
   import {
     analyticsIssue,
     analyticsMethod,
-    contentRef,
     trackTypedBrewEvent,
   } from '../lib/analytics';
   import {
@@ -164,15 +167,6 @@ const { revealAfterScroll = false } = Astro.props;
       saveWidgetState(sessionStore, state);
     }
 
-    function pageType(pathname: string) {
-      if (pathname === '/') return 'home' as const;
-      if (pathname.startsWith('/recipes/')) return 'recipe' as const;
-      if (pathname.startsWith('/guides/')) return 'guide' as const;
-      if (pathname.startsWith('/learn/')) return 'learn' as const;
-      if (pathname.startsWith('/journal/')) return 'journal' as const;
-      return 'other' as const;
-    }
-
     function make<K extends keyof HTMLElementTagNameMap>(
       tag: K,
       className?: string,
@@ -250,14 +244,9 @@ const { revealAfterScroll = false } = Astro.props;
       const issue = engine.resolvedWidgetIssue(state.issue, state.answers) ?? state.issue;
       fullAssistantLink.href = engine.buildFullAssistantHref(state.method, issue);
       fullAssistantLink.onclick = () => {
-        const sourceStep =
-          state.step === 'follow-up' || state.step === 'feedback' || state.step === 'recommendation'
-            ? state.step
-            : 'issue';
         trackTypedBrewEvent('brew_widget_full_assistant_opened', {
           method: analyticsMethod(state.method as Method),
-          issue: analyticsIssue(issue),
-          source_step: sourceStep,
+          issue_category: analyticsIssue(issue),
         });
       };
     }
@@ -341,9 +330,7 @@ const { revealAfterScroll = false } = Astro.props;
               startedAt,
               updatedAt: startedAt,
             });
-            trackTypedBrewEvent('brew_assistant_started', {
-              entry_point: 'floating_widget',
-            });
+            trackTypedBrewEvent('brew_assistant_started', {});
             void render();
           },
           'primary',
@@ -379,7 +366,6 @@ const { revealAfterScroll = false } = Astro.props;
           });
           trackTypedBrewEvent('brew_method_selected', {
             method: analyticsMethod(method),
-            entry_point: 'floating_widget',
           });
           void render();
         }),
@@ -436,8 +422,7 @@ const { revealAfterScroll = false } = Astro.props;
       link.addEventListener('click', () => {
         trackTypedBrewEvent('brew_widget_full_assistant_opened', {
           method: analyticsMethod(state.method as Method),
-          issue: analyticsIssue(issue),
-          source_step: state.step === 'feedback' ? 'feedback' : 'recommendation',
+          issue_category: analyticsIssue(issue),
         });
       });
       return link;
@@ -473,12 +458,9 @@ const { revealAfterScroll = false } = Astro.props;
       const link = make('a', 'brew-widget-related', recommendation.relatedLabel);
       link.href = recommendation.relatedPath;
       link.addEventListener('click', () => {
-        const ref = contentRef(recommendation.relatedPath as string);
-        if (!ref) return;
         trackTypedBrewEvent('brew_related_content_clicked', {
           method: analyticsMethod(recommendation.method),
           rule_id: recommendation.id,
-          ...ref,
         });
       });
       return link;
@@ -638,10 +620,11 @@ const { revealAfterScroll = false } = Astro.props;
       actions.append(
         actionButton('Try another problem', () => {
           const nextAttempt = (state.attemptNumber ?? 1) + 1;
-          if (state.method) {
+          if (state.method && state.recommendationId) {
             trackTypedBrewEvent('brew_next_attempt_started', {
               method: analyticsMethod(state.method),
-              entry_point: 'floating_widget',
+              rule_id: state.recommendationId,
+              attempt_number: nextAttempt,
             });
           }
           commit({
@@ -693,9 +676,13 @@ const { revealAfterScroll = false } = Astro.props;
       if (!reportedFeedback.has(key)) {
         reportedFeedback.add(key);
         trackTypedBrewEvent('brew_feedback_submitted', {
-          entry_point: 'floating_widget',
-          recommendation_id: recommendation.id,
-          result: feedback,
+          method: analyticsMethod(recommendation.method),
+          issue_category: analyticsIssue(recommendation.issue),
+          rule_id: recommendation.id,
+          adjustment_variable: recommendation.adjustmentVariable,
+          adjustment_direction: recommendation.adjustmentDirection,
+          attempt_number: state.attemptNumber ?? 1,
+          helpful: feedback === 'better',
         });
       }
       commit({ ...state, step: 'feedback', feedbackPending: false, feedback });
@@ -730,15 +717,17 @@ const { revealAfterScroll = false } = Astro.props;
         reportedRecommendations.add(key);
         trackTypedBrewEvent('brew_diagnosis_completed', {
           method: analyticsMethod(recommendation.method),
-          entry_point: 'floating_widget',
-          issue: analyticsIssue(recommendation.issue),
-          recommendation_id: recommendation.id,
-          adjustment_type: recommendation.adjustmentType,
+          issue_category: analyticsIssue(recommendation.issue),
+          rule_id: recommendation.id,
+          adjustment_variable: recommendation.adjustmentVariable,
+          adjustment_direction: recommendation.adjustmentDirection,
+          attempt_number: state.attemptNumber ?? 1,
         });
         if ((state.attemptNumber ?? 1) > 1) {
           trackTypedBrewEvent('brew_next_attempt_completed', {
-            entry_point: 'floating_widget',
-            recommendation_id: recommendation.id,
+            method: analyticsMethod(recommendation.method),
+            rule_id: recommendation.id,
+            attempt_number: state.attemptNumber ?? 1,
           });
         }
       }
@@ -817,6 +806,7 @@ const { revealAfterScroll = false } = Astro.props;
 
     function openWidget(): void {
       if (dialog.open) return;
+      root.dataset.tooltipDismissed = 'true';
       showFeedbackPrompt =
         state.step === 'recommendation' &&
         Boolean(state.recommendationId) &&
@@ -827,10 +817,7 @@ const { revealAfterScroll = false } = Astro.props;
       trigger.setAttribute('aria-expanded', 'true');
       trigger.hidden = true;
       document.body.classList.add('brew-widget-open');
-      trackTypedBrewEvent('brew_widget_opened', {
-        page_type: pageType(window.location.pathname),
-        pathname: window.location.pathname,
-      });
+      trackTypedBrewEvent('brew_widget_opened', {});
       void render();
       window.requestAnimationFrame(() => title.focus());
     }
@@ -838,9 +825,9 @@ const { revealAfterScroll = false } = Astro.props;
     function closeWidget(): void {
       if (!dialog.open) return;
       trackTypedBrewEvent('brew_widget_closed', {
-        step: state.step,
-        has_recommendation:
-          Boolean(state.recommendationId) && state.recommendationId !== 'needs-more-data',
+        ...(state.method ? { method: analyticsMethod(state.method) } : {}),
+        ...(state.issue ? { issue_category: analyticsIssue(state.issue) } : {}),
+        attempt_number: state.attemptNumber ?? 1,
       });
       dialog.close();
       trigger.setAttribute('aria-expanded', 'false');
@@ -886,6 +873,20 @@ const { revealAfterScroll = false } = Astro.props;
     }
 
     trigger.addEventListener('click', openWidget);
+    trigger.addEventListener('pointerenter', () => {
+      if (!dialog.open) delete root.dataset.tooltipDismissed;
+    });
+    trigger.addEventListener('pointerleave', () => {
+      if (!dialog.open) delete root.dataset.tooltipDismissed;
+    });
+    trigger.addEventListener('blur', () => {
+      if (!dialog.open) delete root.dataset.tooltipDismissed;
+    });
+    trigger.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || dialog.open) return;
+      trigger.blur();
+      root.dataset.tooltipDismissed = 'true';
+    });
     closeButton.addEventListener('click', closeWidget);
     restartButton.addEventListener('click', startOver);
     historyButton.addEventListener('click', () => {
@@ -943,6 +944,24 @@ const { revealAfterScroll = false } = Astro.props;
 
   .brew-widget-trigger[hidden] {
     display: none;
+  }
+
+  .brew-widget-tooltip {
+    position: fixed;
+    right: 8px;
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    z-index: 41;
+    visibility: hidden;
+    border-radius: var(--radius-sm);
+    background: var(--color-espresso);
+    padding: 7px 10px;
+    color: var(--color-ivory);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 120ms ease, visibility 0s linear 370ms;
   }
 
   .brew-widget-trigger:hover {
@@ -1302,6 +1321,19 @@ const { revealAfterScroll = false } = Astro.props;
       clip: rect(0, 0, 0, 0);
       white-space: nowrap;
       clip-path: inset(50%);
+    }
+
+    .brew-widget-trigger:hover + .brew-widget-tooltip,
+    .brew-widget-trigger:focus-visible + .brew-widget-tooltip {
+      visibility: visible;
+      opacity: 1;
+      transition-delay: 250ms, 250ms;
+    }
+
+    .brew-assistant-widget[data-tooltip-dismissed] .brew-widget-tooltip {
+      visibility: hidden;
+      opacity: 0;
+      transition-delay: 0s;
     }
   }
 

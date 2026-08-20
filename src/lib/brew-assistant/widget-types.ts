@@ -1,4 +1,4 @@
-import type { Method } from './types';
+import type { AdjustableVariable, AdjustmentDirection, Method } from './types';
 
 export type WidgetStep =
   | 'welcome'
@@ -82,6 +82,8 @@ export interface WidgetRecommendation {
   method: Method;
   issue: WidgetIssue;
   adjustmentType: WidgetAdjustmentType;
+  adjustmentVariable: AdjustableVariable;
+  adjustmentDirection: AdjustmentDirection;
   adjustment: string;
   explanation: string[];
   keepUnchanged: string[];

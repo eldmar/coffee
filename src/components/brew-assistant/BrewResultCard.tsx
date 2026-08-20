@@ -27,15 +27,11 @@ export default function BrewResultCard({
   diagnosis,
   onNextAttempt,
   onRestart,
-  onFeedback,
-  feedback,
   onContentClick,
 }: {
   diagnosis: BrewDiagnosis;
   onNextAttempt: () => void;
   onRestart: () => void;
-  onFeedback: (value: 'yes' | 'not_yet') => void;
-  feedback?: 'yes' | 'not_yet';
   onContentClick?: (href: string) => void;
 }) {
   const links = linksFor(diagnosis.relatedContent);
@@ -131,24 +127,6 @@ export default function BrewResultCard({
         >
           Start a new brew
         </button>
-      </div>
-
-      <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-line pt-5 text-sm">
-        <span className="font-medium">Was this helpful?</span>
-        {(['yes', 'not_yet'] as const).map((value) => (
-          <button
-            key={value}
-            type="button"
-            aria-pressed={feedback === value}
-            onClick={() => onFeedback(value)}
-            className={`min-h-11 rounded-md border px-4 transition-colors ${
-              feedback === value ? 'border-accent bg-accent/8 font-medium' : 'border-line hover:border-ink/30'
-            }`}
-          >
-            {value === 'yes' ? 'Yes' : 'Not yet'}
-          </button>
-        ))}
-        {feedback && <span className="text-ink-soft">Thanks — that helps us tune the advice.</span>}
       </div>
 
       {links.length > 0 && (

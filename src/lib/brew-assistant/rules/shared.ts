@@ -59,7 +59,7 @@ export function clarify(
   return {
     method: input.method,
     diagnosis: 'There is not quite enough here to point at one change.',
-    adjustment: { variable: 'technique', direction: 'improve', title: 'One more detail first' },
+    adjustment: null,
     keepConstant: [],
     nextTarget: {},
     reasons: [],

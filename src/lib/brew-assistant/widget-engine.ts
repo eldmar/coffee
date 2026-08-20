@@ -1,7 +1,7 @@
 import { linksFor } from './content';
 import { diagnose } from './rules';
 import { isAssistantMethod } from './query';
-import type { BrewDiagnosis, BrewInput, Method } from './types';
+import type { BrewInput, BrewRecommendation, Method } from './types';
 import type {
   WidgetAdjustmentType,
   WidgetIssue,
@@ -289,18 +289,16 @@ function quickInput(
   return input;
 }
 
-function adjustmentType(diagnosis: BrewDiagnosis): WidgetAdjustmentType {
+function adjustmentType(diagnosis: BrewRecommendation): WidgetAdjustmentType {
   const { variable, direction } = diagnosis.adjustment;
   if (variable === 'grind') return direction === 'finer' ? 'grind-finer' : 'grind-coarser';
   if (variable === 'dose' || variable === 'yield' || variable === 'water') return 'change-ratio';
   if (variable === 'temperature') return 'change-temperature';
-  if (variable === 'time') return 'change-time';
-  if (variable === 'freshness') return 'check-freshness';
   return 'change-technique';
 }
 
 function toWidgetRecommendation(
-  diagnosis: BrewDiagnosis,
+  diagnosis: BrewRecommendation,
   issue: WidgetIssue,
   answerCount: number,
 ): WidgetRecommendation {
@@ -310,6 +308,8 @@ function toWidgetRecommendation(
     method: diagnosis.method,
     issue,
     adjustmentType: adjustmentType(diagnosis),
+    adjustmentVariable: diagnosis.adjustment.variable,
+    adjustmentDirection: diagnosis.adjustment.direction,
     adjustment: diagnosis.adjustment.title,
     explanation: diagnosis.reasons.slice(0, 2),
     keepUnchanged: diagnosis.keepConstant,

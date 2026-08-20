@@ -12,6 +12,20 @@ interface RecipeFilterInput {
   milk?: string;
 }
 
+interface RecipeFilterLocation {
+  pathname: string;
+  search: string;
+  hash: string;
+}
+
+interface RecipeFilterHistory {
+  state: unknown;
+  pushState(data: unknown, unused: string, url?: string | URL | null): void;
+  replaceState(data: unknown, unused: string, url?: string | URL | null): void;
+}
+
+export type RecipeFilterHistoryMode = 'normalise' | 'user';
+
 const METHODS = new Set([
   'espresso',
   'aeropress',
@@ -53,4 +67,26 @@ export function serialiseRecipeFilters({
   if (milk === 'black') params.set('milk', 'black');
   if (milk === 'milk') params.set('milk', 'with-milk');
   return params.toString();
+}
+
+/**
+ * Normalisation edits the current entry; a user change creates a navigable
+ * entry. A popstate update is a no-op because its URL already matches state.
+ */
+export function syncRecipeFilterUrl(
+  filters: RecipeFilterInput,
+  location: RecipeFilterLocation,
+  history: RecipeFilterHistory,
+  mode: RecipeFilterHistoryMode,
+): string {
+  const search = serialiseRecipeFilters(filters);
+  const href = `${location.pathname}${search ? `?${search}` : ''}${location.hash}`;
+  const currentHref = `${location.pathname}${location.search}${location.hash}`;
+
+  if (href !== currentHref) {
+    const update = mode === 'normalise' ? history.replaceState : history.pushState;
+    update.call(history, history.state, '', href);
+  }
+
+  return href;
 }

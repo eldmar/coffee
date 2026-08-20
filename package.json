@@ -11,6 +11,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "images": "node scripts/build-images.mjs",
+    "comparison-images": "node scripts/build-comparison-images.mjs",
     "social-images": "node scripts/build-social-images.mjs",
     "check:en-gb": "node scripts/check-en-gb.mjs",
     "check:worker": "WRANGLER_LOG_PATH=.wrangler/logs/wrangler.log wrangler deploy --dry-run",

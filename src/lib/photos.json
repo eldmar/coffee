@@ -1747,6 +1747,55 @@
     ],
     "src": "/img/lesson-espresso-basics-dose-yield-time.220e830d-800.jpg"
   },
+  "lesson-espresso-ratio": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-espresso-ratio.620bc0a3-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-espresso-ratio.620bc0a3-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-espresso-ratio.620bc0a3-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-espresso-ratio.620bc0a3-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-espresso-ratio.620bc0a3-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-espresso-ratio.620bc0a3-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-espresso-ratio.620bc0a3-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-espresso-ratio.620bc0a3-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-espresso-ratio.620bc0a3-800.jpg"
+  },
   "lesson-dial-in-espresso-step-by-step": {
     "width": 800,
     "height": 600,
@@ -2089,6 +2138,202 @@
       }
     ],
     "src": "/img/lesson-arabica-vs-robusta.65770b78-800.jpg"
+  },
+  "lesson-cortado-flat-white-latte": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-cortado-flat-white-latte.2d680086-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-cortado-flat-white-latte.2d680086-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-cortado-flat-white-latte.2d680086-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-cortado-flat-white-latte.2d680086-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-cortado-flat-white-latte.2d680086-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-cortado-flat-white-latte.2d680086-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-cortado-flat-white-latte.2d680086-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-cortado-flat-white-latte.2d680086-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-cortado-flat-white-latte.2d680086-800.jpg"
+  },
+  "lesson-americano-filter-coffee": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-americano-filter-coffee.25d6ac5a-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-americano-filter-coffee.25d6ac5a-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-americano-filter-coffee.25d6ac5a-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-americano-filter-coffee.25d6ac5a-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-americano-filter-coffee.25d6ac5a-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-americano-filter-coffee.25d6ac5a-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-americano-filter-coffee.25d6ac5a-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-americano-filter-coffee.25d6ac5a-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-americano-filter-coffee.25d6ac5a-800.jpg"
+  },
+  "lesson-cold-brew-iced-coffee": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-cold-brew-iced-coffee.308a5f99-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-cold-brew-iced-coffee.308a5f99-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-cold-brew-iced-coffee.308a5f99-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-cold-brew-iced-coffee.308a5f99-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-cold-brew-iced-coffee.308a5f99-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-cold-brew-iced-coffee.308a5f99-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-cold-brew-iced-coffee.308a5f99-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-cold-brew-iced-coffee.308a5f99-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-cold-brew-iced-coffee.308a5f99-800.jpg"
+  },
+  "lesson-cappuccino-flat-white": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/lesson-cappuccino-flat-white.bc7b9f04-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-cappuccino-flat-white.bc7b9f04-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-cappuccino-flat-white.bc7b9f04-1200.avif",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-cappuccino-flat-white.bc7b9f04-1600.avif",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/lesson-cappuccino-flat-white.bc7b9f04-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/lesson-cappuccino-flat-white.bc7b9f04-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/lesson-cappuccino-flat-white.bc7b9f04-1200.webp",
+        "width": 1200,
+        "height": 900
+      },
+      {
+        "url": "/img/lesson-cappuccino-flat-white.bc7b9f04-1600.webp",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "src": "/img/lesson-cappuccino-flat-white.bc7b9f04-800.jpg"
   },
   "lesson-origin-changes-flavour": {
     "width": 800,

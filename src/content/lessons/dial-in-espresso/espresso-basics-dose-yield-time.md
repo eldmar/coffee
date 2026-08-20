@@ -9,11 +9,14 @@ readingTime: 6
 image: lesson-espresso-basics-dose-yield-time
 imageBrief: "KAVOVO-style editorial coffee photograph showing the three parts of an espresso recipe: a filled portafilter on a compact digital scale, a small ceramic espresso cup on a second scale beneath a home espresso machine, and a subtle timer visible without requiring readable text. Warm cream plaster, natural linen, light wood, soft leaf shadows and warm side sunlight. Realistic home setup, restrained composition, no logos, no floating equipment, no captions or added typography. Landscape 4:3 with all important objects inside a centred safe area."
 imageAlt: A portafilter of ground coffee and an espresso cup being measured on digital scales.
+dateModified: 2026-08-20
 related:
   - label: Espresso recipe
     href: /recipes/espresso/
   - label: Espresso brew guide
     href: /guides/espresso/
+  - label: Espresso Ratio calculator
+    href: /learn/dial-in-espresso/espresso-ratio/
 ---
 
 <div class="callout callout--answer">

@@ -9,7 +9,7 @@ readingTime: 10
 image: v60-pour-over
 imageBrief: Filter coffee dripping through a paper brewer into a clear glass server, with the coffee bed and pour visible.
 imageAlt: Filter coffee brewing through a paper filter into a glass server.
-dateModified: 2026-08-18
+dateModified: 2026-08-20
 related:
   - label: V60 Pour Over recipe
     href: /recipes/v60-pour-over/
@@ -17,6 +17,8 @@ related:
     href: /learn/coffee-basics/coffee-to-water-ratio/
   - label: Americano recipe
     href: /recipes/americano/
+  - label: Americano vs Filter Coffee
+    href: /learn/coffee-basics/americano-vs-filter-coffee/
 ---
 
 <div class="callout callout--answer">

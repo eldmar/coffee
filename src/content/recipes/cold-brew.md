@@ -21,7 +21,7 @@ vessel:
   name: "Tall glass"
   capacity: "300–350 ml"
 datePublished: 2026-07-18
-dateModified: 2026-08-15
+dateModified: 2026-08-20
 ingredients:
   - 60 g coarsely ground coffee
   - 600 ml cold filtered water
@@ -47,3 +47,5 @@ equipmentOptional:
 Use the [Cold Brew ratio calculator and comparison chart](/learn/coffee-basics/coffee-to-water-ratio/) to choose between a ready-to-drink 1:8–1:12 brew and a 1:4–1:6 concentrate that is diluted after filtering.
 
 Compare this method with espresso-based drinks in the [Iced Coffee recipe collection](/recipes/iced-coffee/).
+
+For brewing temperature, caffeine and storage differences, read [Cold Brew vs Iced Coffee](/learn/coffee-basics/cold-brew-vs-iced-coffee/).

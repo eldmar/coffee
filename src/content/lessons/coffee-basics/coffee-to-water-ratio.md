@@ -9,7 +9,7 @@ readingTime: 9
 image: lesson-coffee-to-water-ratio
 imageBrief: Ground coffee on a digital scale beside a glass server and measured water, photographed in the KAVOVO visual style.
 imageAlt: Ground coffee and brewing water being measured with a digital scale.
-dateModified: 2026-08-18
+dateModified: 2026-08-20
 related:
   - label: V60 Pour Over recipe
     href: /recipes/v60-pour-over/
@@ -17,6 +17,8 @@ related:
     href: /recipes/classic-french-press/
   - label: AeroPress Daily recipe
     href: /recipes/aeropress-daily/
+  - label: Espresso Ratio calculator
+    href: /learn/dial-in-espresso/espresso-ratio/
 ---
 
 <div class="callout callout--answer">

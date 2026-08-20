@@ -6,6 +6,8 @@ import Photo from '../../../components/Photo.astro';
 import JsonLd from '../../../components/JsonLd.astro';
 import FaqSchema from '../../../components/FaqSchema.astro';
 import CoffeeRatioCalculator from '../../../components/CoffeeRatioCalculator.astro';
+import EspressoRatioCalculator from '../../../components/EspressoRatioCalculator.astro';
+import Newsletter from '../../../components/Newsletter.astro';
 import { photo } from '../../../lib/photos';
 import { pathBySlug, readingMinutes } from '../../../lib/learn';
 import { extractFaqs } from '../../../lib/recipes';
@@ -35,11 +37,18 @@ const { lesson, total, previous, next } = Astro.props;
 const { Content, headings } = await render(lesson);
 const { data } = lesson;
 const isRatioLesson = lesson.id === 'coffee-basics/coffee-to-water-ratio';
+const isEspressoRatioLesson = lesson.id === 'dial-in-espresso/espresso-ratio';
+const isComparisonGuide = data.contentType === 'Comparison guide';
 const faqs = extractFaqs(lesson.body ?? '');
 
 // Contents lists the real sections only. The three callouts are h2 for document
 // structure, but they are not places a reader jumps to.
-const CALLOUT_SLUGS = ['the-short-answer', 'try-this-today', 'key-takeaway'];
+const CALLOUT_SLUGS = [
+  'the-short-answer',
+  'arabica-vs-robusta-the-short-answer',
+  'try-this-today',
+  'key-takeaway',
+];
 const contents = headings.filter((h) => h.depth === 2 && !CALLOUT_SLUGS.includes(h.slug));
 
 const path = pathBySlug(data.path);
@@ -49,7 +58,10 @@ const pathHome = `/learn/${data.path}/`;
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const url = `${site}/learn/${lesson.id}/`;
 // Lessons without their own photo fall back to the site hero for social cards.
-const ogImagePath = photo(data.image ?? 'hero').src;
+const heroImagePath = photo(data.image ?? 'hero').src;
+const ogImagePath = data.ogImage ?? heroImagePath;
+const dateFmt = (date: Date) =>
+  date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
 const schema = {
   '@context': 'https://schema.org',
@@ -58,17 +70,25 @@ const schema = {
   url,
   name: data.title,
   headline: data.title,
-  image: `${site}${ogImagePath}`,
-  description: data.excerpt,
-  learningResourceType: 'Lesson',
+  image: `${site}${heroImagePath}`,
+  description: data.seoDescription,
+  learningResourceType: data.contentType,
   educationalLevel: 'Beginner',
   timeRequired: `PT${data.readingTime}M`,
-  inLanguage: 'en',
+  inLanguage: 'en-GB',
   isPartOf: { '@type': 'Course', name: pathTitle, url: `${site}${pathHome}` },
   position: data.order,
-  author: { '@type': 'Organization', name: 'KAVOVO', url: `${site}/about/` },
-  publisher: { '@type': 'Organization', name: 'KAVOVO' },
+  author: { '@type': 'Organization', name: data.author, url: `${site}/about/` },
+  publisher: {
+    '@type': 'Organization',
+    name: 'KAVOVO',
+    url: site,
+    logo: { '@type': 'ImageObject', url: `${site}/images/kavovo-lockup.svg` },
+  },
   mainEntityOfPage: url,
+  ...(data.datePublished
+    ? { datePublished: data.datePublished.toISOString().slice(0, 10) }
+    : {}),
   ...(data.dateModified
     ? { dateModified: data.dateModified.toISOString().slice(0, 10) }
     : {}),
@@ -80,9 +100,13 @@ const schema = {
   description={data.seoDescription}
   ogImage={ogImagePath}
   ogType="article"
+  publishedTime={data.datePublished}
   modifiedTime={data.dateModified}
 >
-  <article class="mx-auto max-w-3xl px-5 py-12">
+  <article
+    class="mx-auto max-w-3xl px-5 py-12"
+    data-comparison-guide={isComparisonGuide ? '' : undefined}
+  >
     <JsonLd schema={schema} />
     <Breadcrumbs
       trail={[
@@ -93,7 +117,7 @@ const schema = {
     />
 
     <span class="eyebrow mt-6 block">
-      <a href={pathHome} class="hover:underline">{pathTitle}</a>&#32;&#183; Lesson {data.order} of {total}
+      <a href={pathHome} class="hover:underline">{pathTitle}</a>&#32;&#183; {data.contentType}
     </span>
     <div
       class="mt-2 h-1 w-full max-w-xs overflow-hidden rounded-full bg-line print:hidden"
@@ -101,13 +125,30 @@ const schema = {
       aria-valuenow={data.order}
       aria-valuemin="1"
       aria-valuemax={total}
-      aria-label={`Lesson ${data.order} of ${total} in ${pathTitle}`}
+      aria-label={`Item ${data.order} of ${total} in ${pathTitle}`}
     >
       <span class="block h-full rounded-full bg-accent" style={`width: ${(data.order / total) * 100}%`}></span>
     </div>
     <h1 class="mt-2 font-display text-4xl font-medium text-balance">{data.title}</h1>
     <p class="mt-4 text-lg text-ink-soft">{data.excerpt}</p>
-    <p class="mt-3 text-sm text-ink-soft">{readingMinutes(data.readingTime)} read</p>
+    <p class="mt-3 flex flex-wrap gap-x-2 gap-y-1 text-sm text-ink-soft">
+      <span>By {data.author}</span>
+      {
+        (data.dateModified ?? data.datePublished) && (
+          <>
+            <span aria-hidden="true">&#183;</span>
+            <span>
+              Updated{' '}
+              <time datetime={(data.dateModified ?? data.datePublished)?.toISOString()}>
+                {dateFmt((data.dateModified ?? data.datePublished) as Date)}
+              </time>
+            </span>
+          </>
+        )
+      }
+      <span aria-hidden="true">&#183;</span>
+      <span>{readingMinutes(data.readingTime)} read</span>
+    </p>
 
     {/* Native 4:3, uncropped. These photos teach: a 16:9 crop cut the
         thermometer reading off the temperature lesson. */}
@@ -127,7 +168,9 @@ const schema = {
     {
       contents.length > 2 && (
         <nav class="mt-10 rounded-lg border border-line bg-card p-5 print:hidden" aria-labelledby="contents-heading">
-          <h2 id="contents-heading" class="eyebrow">In this lesson</h2>
+          <h2 id="contents-heading" class="eyebrow">
+            {isComparisonGuide ? 'In this article' : 'In this lesson'}
+          </h2>
           <ol class="mt-3 flex flex-col gap-1.5 text-sm">
             {contents.map((heading) => (
               <li>
@@ -142,8 +185,9 @@ const schema = {
     }
 
     {isRatioLesson && <CoffeeRatioCalculator />}
+    {isEspressoRatioLesson && <EspressoRatioCalculator />}
 
-    <div class="prose-body mt-10">
+    <div class:list={['prose-body mt-10', isComparisonGuide && 'prose-comparison']}>
       <Content />
     </div>
 
@@ -200,6 +244,8 @@ const schema = {
     </nav>
   </article>
 
+  {isComparisonGuide && <Newsletter />}
+
   {
     next && (
       <a href={`/learn/${next.id}/`} id="jump-next" class="jump-next print:hidden" hidden>
@@ -220,7 +266,17 @@ const schema = {
    * Copy each table's column headings onto its cells. CSS uses them to turn
    * rows into cards on narrow screens, where a wide table is unreadable.
    */
-  for (const table of document.querySelectorAll('.prose-body table')) {
+  for (const table of document.querySelectorAll<HTMLTableElement>('.prose-body table')) {
+    if (table.closest('.prose-comparison')) {
+      table.tabIndex = 0;
+      table.setAttribute('aria-label', 'Scrollable comparison table');
+      const hint = document.createElement('p');
+      hint.className = 'table-scroll-hint';
+      hint.setAttribute('aria-hidden', 'true');
+      hint.textContent = 'Swipe to compare →';
+      table.before(hint);
+      continue;
+    }
     const labels = [...table.querySelectorAll('thead th')].map((th) => th.textContent.trim());
     if (labels.length === 0) continue;
     for (const row of table.querySelectorAll('tbody tr')) {

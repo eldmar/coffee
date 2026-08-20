@@ -25,7 +25,7 @@ vessel:
   name: "Flat white cup"
   capacity: "150–180 ml"
 datePublished: 2026-07-18
-dateModified: 2026-08-18
+dateModified: 2026-08-20
 popular: true
 ingredients:
   - 18 g finely ground coffee, brewed as 36–40 g double espresso
@@ -73,9 +73,13 @@ Introduce air only during the first few seconds, then keep the steam wand tip ju
 
 A [Caffè Latte](/recipes/caffe-latte/) normally uses more milk and a larger cup. A Flat White is smaller, has a higher coffee-to-milk ratio and uses a thinner layer of microfoam.
 
+The [Cortado vs Flat White vs Latte guide](/learn/coffee-basics/cortado-vs-flat-white-vs-latte/) compares all three by cup size, milk quantity and perceived strength.
+
 ## Flat White vs Cappuccino
 
 A [Cappuccino](/recipes/cappuccino/) has a more noticeable foam layer and an airier texture. A Flat White keeps the milk silkier and more integrated with the espresso.
+
+Read [Cappuccino vs Flat White](/learn/coffee-basics/cappuccino-vs-flat-white/) for the detailed difference in aeration, texture and caffeine.
 
 ## Flat White vs Cortado
 

@@ -24,7 +24,7 @@ vessel:
   name: "Cappuccino cup"
   capacity: "150–180 ml"
 datePublished: 2026-07-18
-dateModified: 2026-08-15
+dateModified: 2026-08-20
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 120–150 ml cold whole milk
@@ -57,6 +57,8 @@ A [Caffè Latte](/recipes/caffe-latte/) is larger, milkier and topped with a thi
 ## Cappuccino vs Flat White
 
 A [Flat White](/recipes/flat-white/) has a thinner, silkier microfoam layer and usually a higher coffee-to-milk ratio. Cappuccino milk contains more incorporated air and gives the drink a lighter, fuller texture.
+
+The detailed [Cappuccino vs Flat White guide](/learn/coffee-basics/cappuccino-vs-flat-white/) compares their espresso base, aeration, cup size and caffeine.
 
 ## Common Milk-Steaming Mistakes
 

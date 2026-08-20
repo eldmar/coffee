@@ -206,4 +206,5 @@ The goal is not to stop that change. The goal is to account for it.
 * [Iced Caramel Latte](/recipes/iced-caramel-latte/)
 * [Iced Salted Vanilla Cloud Foam](/recipes/iced-salted-vanilla-cloud-foam/)
 * [Overnight Cold Brew](/recipes/cold-brew/)
+* [Cold Brew vs Iced Coffee](/learn/coffee-basics/cold-brew-vs-iced-coffee/)
 * [Coffee-to-Water Ratio](/learn/coffee-basics/coffee-to-water-ratio/)

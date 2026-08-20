@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { categoryLabel, formatTimeShort } from "../lib/recipes";
 import type { CardImage } from "../lib/cardImage";
-import { parseRecipeFilterSearch, serialiseRecipeFilters } from '../lib/recipe-filters';
+import { parseRecipeFilterSearch, syncRecipeFilterUrl } from '../lib/recipe-filters';
 
 interface CatalogRecipe {
   slug: string;
@@ -62,9 +62,11 @@ export default function RecipeFilters({ recipes }: Props) {
       setTemp(parsed.temp);
       setMilk(parsed.milk);
       setVisibleCount(INITIAL_RESULT_COUNT);
+      return parsed;
     };
 
-    applyUrlFilters();
+    const initialFilters = applyUrlFilters();
+    syncRecipeFilterUrl(initialFilters, window.location, window.history, 'normalise');
     setReady(true);
     window.addEventListener('popstate', applyUrlFilters);
     return () => window.removeEventListener('popstate', applyUrlFilters);
@@ -72,9 +74,12 @@ export default function RecipeFilters({ recipes }: Props) {
 
   useEffect(() => {
     if (!ready) return;
-    const search = serialiseRecipeFilters({ query, method, temp, milk });
-    const href = `${window.location.pathname}${search ? `?${search}` : ''}${window.location.hash}`;
-    window.history.replaceState(window.history.state, '', href);
+    syncRecipeFilterUrl(
+      { query, method, temp, milk },
+      window.location,
+      window.history,
+      'user',
+    );
   }, [ready, query, method, temp, milk]);
 
   const results = useMemo(() => {

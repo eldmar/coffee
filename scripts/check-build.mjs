@@ -9,6 +9,7 @@
  */
 import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import sharp from 'sharp';
 
 // --warn-only reports problems without failing the build. Used on the host
 // while we work out why its environment differs from a clean local build.
@@ -269,6 +270,28 @@ for (const [pathSegments, imageName] of [
   [['learn'], 'learn.webp'],
   [['journal'], 'journal.webp'],
   [['recipes', 'filter-coffee'], 'filter-coffee-recipes.webp'],
+  [
+    ['learn', 'understand-your-beans', 'arabica-vs-robusta'],
+    'arabica-vs-robusta.webp',
+  ],
+  [
+    ['learn', 'coffee-basics', 'cortado-vs-flat-white-vs-latte'],
+    'cortado-vs-flat-white-vs-latte.webp',
+  ],
+  [
+    ['learn', 'coffee-basics', 'americano-vs-filter-coffee'],
+    'americano-vs-filter-coffee.webp',
+  ],
+  [
+    ['learn', 'coffee-basics', 'cold-brew-vs-iced-coffee'],
+    'cold-brew-vs-iced-coffee.webp',
+  ],
+  [
+    ['learn', 'coffee-basics', 'cappuccino-vs-flat-white'],
+    'cappuccino-vs-flat-white.webp',
+  ],
+  [['learn', 'dial-in-espresso', 'espresso-ratio'], 'espresso-ratio.webp'],
+  [['recipes', 'iced-americano'], 'iced-americano.webp'],
 ]) {
   const imagePath = join('public', 'social', imageName);
   const pagePath = join(DIST, ...pathSegments, 'index.html');
@@ -279,6 +302,10 @@ for (const [pathSegments, imageName] of [
   }
   if (statSync(imagePath).size >= 250 * 1024) {
     problems.push(`${imageName} exceeds the 250 KB social image limit`);
+  }
+  const metadata = await sharp(imagePath).metadata();
+  if (metadata.width !== 1200 || metadata.height !== 630) {
+    problems.push(`${imageName} must be exactly 1200×630`);
   }
   if (!existsSync(pagePath)) continue;
   const html = readFileSync(pagePath, 'utf8');
@@ -332,9 +359,9 @@ for (const [pathSegments, expected] of [
   [
     ['recipes', 'iced-americano'],
     {
-      title: 'Iced Americano Recipe: Ratio & Optional Milk | KAVOVO',
+      title: 'Iced Americano Recipe: Coffee, Water & Ice Ratio',
       description:
-        'Make a refreshing Iced Americano with espresso, cold water and ice. Includes the exact ratio, optional milk and simple step-by-step instructions.',
+        'Make a balanced Iced Americano with espresso, cold water and ice. Includes the correct ratio, a milk variation and tips to prevent watery coffee.',
       h1: 'Iced Americano Recipe',
     },
   ],
@@ -423,7 +450,57 @@ for (const [pathSegments, expected] of [
   [['recipes', 'caffe-mocha'], { title: 'Caffè Mocha Recipe: Chocolate, Espresso & Milk | KAVOVO' }],
   [
     ['learn', 'understand-your-beans', 'arabica-vs-robusta'],
-    { title: 'Arabica vs Robusta: Taste, Caffeine & Price | KAVOVO' },
+    {
+      title: 'Arabica vs Robusta: Taste, Caffeine & Espresso',
+      description:
+        'Compare Arabica and Robusta coffee by taste, caffeine, crema, growing conditions and price. Learn which beans work best for espresso and everyday brewing.',
+      h1: 'Arabica vs Robusta: What’s the Difference?',
+    },
+  ],
+  [
+    ['learn', 'coffee-basics', 'cortado-vs-flat-white-vs-latte'],
+    {
+      title: 'Cortado vs Flat White vs Latte — Key Differences',
+      description:
+        'Compare a Cortado, Flat White and Latte by espresso, milk, cup size, foam and coffee strength, then choose the right drink for your taste.',
+      h1: 'Cortado vs Flat White vs Latte: What’s the Difference?',
+    },
+  ],
+  [
+    ['learn', 'coffee-basics', 'americano-vs-filter-coffee'],
+    {
+      title: 'Americano vs Filter Coffee: Taste, Strength & Brewing',
+      description:
+        'Compare Americano and filter coffee by brewing method, taste, body, caffeine and strength, then choose the better black coffee for your routine.',
+      h1: 'Americano vs Filter Coffee: What’s the Difference?',
+    },
+  ],
+  [
+    ['learn', 'coffee-basics', 'cold-brew-vs-iced-coffee'],
+    {
+      title: 'Cold Brew vs Iced Coffee: Taste, Caffeine & Method',
+      description:
+        'Compare Cold Brew and iced coffee by brewing temperature, time, taste, caffeine and storage, then choose the right cold coffee method.',
+      h1: 'Cold Brew vs Iced Coffee: What’s the Difference?',
+    },
+  ],
+  [
+    ['learn', 'coffee-basics', 'cappuccino-vs-flat-white'],
+    {
+      title: 'Cappuccino vs Flat White: Milk, Foam & Strength',
+      description:
+        'Compare Cappuccino and Flat White by espresso, milk, foam, texture, cup size and strength, with practical guidance for making each at home.',
+      h1: 'Cappuccino vs Flat White: What’s the Difference?',
+    },
+  ],
+  [
+    ['learn', 'dial-in-espresso', 'espresso-ratio'],
+    {
+      title: 'Espresso Ratio Guide: 1:2, 1:2.5 and 1:3',
+      description:
+        'Calculate espresso yield from your coffee dose and compare 1:1.5, 1:2, 1:2.5 and 1:3 ratios by taste, roast level and practical use.',
+      h1: 'Espresso Ratio: 1:2, 1:2.5 or 1:3?',
+    },
   ],
 ]) {
   checkPageSeo(pathSegments, expected);
@@ -453,6 +530,161 @@ for (const [slug, expectedFaqs] of [
       problems.push('recipes/irish-coffee should expose exactly seven recipe steps');
     }
   }
+}
+
+const comparisonGuides = [
+  {
+    segments: ['learn', 'understand-your-beans', 'arabica-vs-robusta'],
+    faqCount: 7,
+    markers: [
+      'Arabica vs Robusta: The Short Answer',
+      'Arabica vs Robusta Comparison',
+      'Choose Based on How You Brew',
+    ],
+  },
+  {
+    segments: ['learn', 'coffee-basics', 'cortado-vs-flat-white-vs-latte'],
+    faqCount: 6,
+    markers: [
+      'The short answer',
+      'Cortado vs Flat White vs Latte Comparison',
+      'Which Should You Order or Make?',
+    ],
+  },
+  {
+    segments: ['learn', 'coffee-basics', 'americano-vs-filter-coffee'],
+    faqCount: 6,
+    markers: [
+      'The short answer',
+      'Americano vs Filter Coffee Comparison',
+      'Which Method Is Easier at Home?',
+    ],
+  },
+  {
+    segments: ['learn', 'coffee-basics', 'cold-brew-vs-iced-coffee'],
+    faqCount: 6,
+    markers: [
+      'The short answer',
+      'Cold Brew vs Iced Coffee Comparison',
+      'Caffeine and Concentration',
+    ],
+  },
+  {
+    segments: ['learn', 'coffee-basics', 'cappuccino-vs-flat-white'],
+    faqCount: 6,
+    markers: [
+      'The short answer',
+      'Cappuccino vs Flat White Comparison',
+      'How to Make Each Drink at Home',
+    ],
+  },
+  {
+    segments: ['learn', 'dial-in-espresso', 'espresso-ratio'],
+    faqCount: 6,
+    markers: [
+      'What an Espresso Ratio Means',
+      'Espresso Ratio Comparison',
+      'Change Ratio or Grind Size?',
+    ],
+  },
+];
+
+for (const { segments, faqCount, markers } of comparisonGuides) {
+  const label = segments.join('/');
+  const page = join(DIST, ...segments, 'index.html');
+  if (!existsSync(page)) {
+    problems.push(`${label} was not built`);
+    continue;
+  }
+
+  const html = readFileSync(page, 'utf8');
+  const schemas = schemasIn(html);
+  const article = schemas.find((schema) => {
+    const type = schema?.['@type'];
+    return Array.isArray(type) && type.includes('Article') && type.includes('LearningResource');
+  });
+  const faq = schemas.find((schema) => schema?.['@type'] === 'FAQPage');
+
+  if (!article) {
+    problems.push(`${label} is missing combined Article and LearningResource schema`);
+  } else {
+    for (const field of [
+      'headline',
+      'description',
+      'image',
+      'author',
+      'publisher',
+      'datePublished',
+      'dateModified',
+      'mainEntityOfPage',
+      'learningResourceType',
+      'educationalLevel',
+      'isPartOf',
+    ]) {
+      if (!article[field]) problems.push(`${label} Article schema is missing ${field}`);
+    }
+    if (article.learningResourceType !== 'Comparison guide') {
+      problems.push(`${label} must identify itself as a Comparison guide`);
+    }
+    if (article.inLanguage !== 'en-GB') {
+      problems.push(`${label} Article schema must use en-GB`);
+    }
+  }
+
+  if (!schemas.some((schema) => schema?.['@type'] === 'BreadcrumbList')) {
+    problems.push(`${label} is missing BreadcrumbList schema`);
+  }
+  if (faq?.mainEntity?.length !== faqCount) {
+    problems.push(`${label} should expose exactly ${faqCount} visible FAQ items`);
+  }
+  if (!html.includes('data-comparison-guide')) {
+    problems.push(`${label} is missing comparison-guide presentation`);
+  }
+  if ((html.match(/<table\b/gi) ?? []).length !== 1) {
+    problems.push(`${label} should contain exactly one main comparison table`);
+  }
+  for (const marker of markers) {
+    if (!html.includes(marker)) problems.push(`${label} is missing section: ${marker}`);
+  }
+}
+
+const icedAmericanoPage = join(DIST, 'recipes', 'iced-americano', 'index.html');
+if (existsSync(icedAmericanoPage)) {
+  const html = readFileSync(icedAmericanoPage, 'utf8');
+  const schemas = schemasIn(html);
+  const recipe = schemas.find((schema) => schema?.['@type'] === 'Recipe');
+  const ingredients = recipe?.recipeIngredient?.join(' ') ?? '';
+  if (/milk/i.test(ingredients)) {
+    problems.push('iced-americano milk variation must not appear in required recipe ingredients');
+  }
+  if (recipe?.dateModified !== '2026-08-20') {
+    problems.push('iced-americano Recipe schema has an outdated dateModified');
+  }
+  if (!html.includes('data-scrollable-tables')) {
+    problems.push('iced-americano comparison tables are missing mobile scroll behaviour');
+  }
+  for (const marker of [
+    'How Much Water Should You Add to an Iced Americano?',
+    'Iced Americano with a Splash of Milk',
+    'Iced Americano with Milk vs Iced Latte',
+    'It is weak after adding milk.',
+    'The espresso tastes lost.',
+  ]) {
+    if (!html.includes(marker)) problems.push(`iced-americano is missing: ${marker}`);
+  }
+  for (const href of [
+    '/recipes/iced-latte/',
+    '/learn/coffee-basics/coffee-to-water-ratio/',
+    '/journal/ice-is-an-ingredient/',
+    '/guides/espresso/',
+    '/recipes/iced-coffee/',
+  ]) {
+    if (!html.includes(`href="${href}"`)) {
+      problems.push(`iced-americano is missing internal link: ${href}`);
+    }
+  }
+} else {
+  problems.push('Iced Americano recipe page was not built');
 }
 
 const filterCoffeePage = join(DIST, 'learn', 'coffee-basics', 'filter-coffee', 'index.html');
@@ -574,6 +806,12 @@ if (existsSync(searchPage)) {
   }
   if (!html.includes('aria-label="Filter search results by content type"')) {
     problems.push('search/index.html is missing content-type search filters');
+  }
+  for (const { segments } of comparisonGuides) {
+    const href = `/${segments.join('/')}/`;
+    if (!html.includes(href)) {
+      problems.push(`search index is missing comparison guide: ${href}`);
+    }
   }
 }
 
@@ -897,6 +1135,30 @@ if (existsSync(ratioPage)) {
   }
 }
 
+const espressoRatioPage = join(DIST, 'learn', 'dial-in-espresso', 'espresso-ratio', 'index.html');
+if (existsSync(espressoRatioPage)) {
+  const html = readFileSync(espressoRatioPage, 'utf8');
+  for (const control of [
+    'data-espresso-ratio-calculator',
+    'data-espresso-dose',
+    'data-espresso-ratio',
+    'data-espresso-ratio-result',
+    'data-espresso-ratio-equation',
+    'name="dose"',
+    'value="1.5"',
+    'value="2"',
+    'value="2.5"',
+    'value="3"',
+    'aria-live="polite"',
+    '18 g dose × 1:2.5 = 45 g target yield',
+    'href="/assistant/"',
+  ]) {
+    if (!html.includes(control)) problems.push(`espresso ratio calculator is missing ${control}`);
+  }
+} else {
+  problems.push('Espresso Ratio guide was not built');
+}
+
 const shopPage = join(DIST, 'shop', 'index.html');
 if (existsSync(shopPage)) {
   const html = readFileSync(shopPage, 'utf8');
@@ -972,6 +1234,17 @@ if (!filterCoffeeInSitemap) {
   problems.push('sitemap is missing the Filter Coffee guide');
 }
 
+const sitemapXml = readdirSync(DIST, { withFileTypes: true })
+  .filter((entry) => entry.isFile() && entry.name.endsWith('.xml'))
+  .map((entry) => readFileSync(join(DIST, entry.name), 'utf8'))
+  .join('\n');
+for (const { segments } of comparisonGuides) {
+  const url = `https://kavovo.uk/${segments.join('/')}/`;
+  if (!sitemapXml.includes(`<loc>${url}</loc>`)) {
+    problems.push(`sitemap is missing comparison guide: ${url}`);
+  }
+}
+
 for (const asset of missingAssets) problems.push(`referenced but not emitted: ${asset}`);
 if (recipeSchemas === 0) problems.push('no Recipe schemas found in the production build');
 if (faqSchemas < 3) problems.push(`expected at least 3 FAQPage schemas; found ${faqSchemas}`);
@@ -992,6 +1265,18 @@ for (const page of pages) {
   }
 }
 for (const [href, from] of deadLinks) problems.push(`dead internal link ${href} (from ${from})`);
+
+for (const { segments } of comparisonGuides) {
+  const href = `/${segments.join('/')}/`;
+  const ownPage = join(...segments, 'index.html');
+  const inboundPages = pages.filter((page) => {
+    if (relative(DIST, page) === ownPage) return false;
+    return readFileSync(page, 'utf8').includes(`href="${href}"`);
+  });
+  if (inboundPages.length < 3) {
+    problems.push(`${href} has ${inboundPages.length} inbound pages; expected at least 3`);
+  }
+}
 
 // The Brew Assistant renders its links in the browser, so they never appear in
 // the static HTML the check above walks. Read them from the content map instead:

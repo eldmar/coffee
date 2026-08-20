@@ -12,6 +12,7 @@ const recipes = defineCollection({
     recipeCuisine: z.string().default('Coffee'),
     image: z.string(),
     imageAlt: z.string(),
+    ogImage: z.string().startsWith('/').optional(),
     // Shown above the recipe, e.g. an age advisory on alcoholic drinks.
     notice: z.string().optional(),
     category: z.enum([
@@ -200,11 +201,15 @@ const lessons = defineCollection({
     seoDescription: z.string(),
     excerpt: z.string(),
     readingTime: z.number().int().positive(),
+    contentType: z.enum(['Lesson', 'Comparison guide']).default('Lesson'),
+    author: z.string().default('KAVOVO'),
+    datePublished: z.coerce.date().optional(),
     // Manifest key in src/lib/photos.json, set once the photo exists. The brief
     // is the record of what to shoot; the alt text is written ahead of it so a
     // new photo only needs the `image` line adding.
     image: z.string().optional(),
     imageAlt: z.string().optional(),
+    ogImage: z.string().startsWith('/').optional(),
     imageBrief: z.string().optional(),
     // Only set when the lesson itself has been materially revised.
     dateModified: z.coerce.date().optional(),

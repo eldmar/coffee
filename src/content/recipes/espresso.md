@@ -21,7 +21,7 @@ vessel:
   name: "Demitasse"
   capacity: "60–90 ml"
 datePublished: 2026-08-03
-dateModified: 2026-08-15
+dateModified: 2026-08-20
 ingredients:
   - 18 g freshly roasted coffee beans
 equipmentSet: espresso
@@ -66,4 +66,4 @@ Change only one variable at a time and keep the 18 g dose consistent while adjus
 
 ## Understand the Espresso Ratio
 
-Espresso compares dry coffee with beverage yield rather than total machine water. Use the [Coffee-to-Water Ratio Calculator and brew guide](/learn/coffee-basics/coffee-to-water-ratio/) to compare a 1:2 espresso with filter and immersion methods.
+Espresso compares dry coffee with beverage yield rather than total machine water. Use the [Espresso Ratio calculator](/learn/dial-in-espresso/espresso-ratio/) to compare 1:1.5, 1:2, 1:2.5 and 1:3 targets, or the [Coffee-to-Water Ratio Calculator and brew guide](/learn/coffee-basics/coffee-to-water-ratio/) to compare espresso with filter and immersion methods.

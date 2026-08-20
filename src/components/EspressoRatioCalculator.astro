@@ -1,0 +1,184 @@
+---
+import { ESPRESSO_RATIOS } from '../lib/espressoRatio';
+---
+
+<section class="espresso-ratio-calculator" aria-labelledby="espresso-ratio-calculator-title">
+  <div>
+    <p class="eyebrow">Interactive calculator</p>
+    <h2 id="espresso-ratio-calculator-title" class="mt-1 font-display text-2xl font-medium">
+      Calculate target espresso yield
+    </h2>
+  </div>
+
+  <form class="espresso-ratio-calculator__form" data-espresso-ratio-calculator>
+    <label class="espresso-ratio-calculator__field">
+      <span>Coffee dose</span>
+      <span class="espresso-ratio-calculator__input-unit">
+        <input
+          type="number"
+          name="dose"
+          data-espresso-dose
+          value="18"
+          min="5"
+          max="30"
+          step="0.1"
+          inputmode="decimal"
+        />
+        <span aria-hidden="true">g</span>
+      </span>
+    </label>
+
+    <label class="espresso-ratio-calculator__field">
+      <span>Espresso ratio</span>
+      <select name="ratio" data-espresso-ratio>
+        {
+          ESPRESSO_RATIOS.map((ratio) => (
+            <option value={ratio} selected={ratio === 2.5}>1:{ratio}</option>
+          ))
+        }
+      </select>
+    </label>
+  </form>
+
+  <div class="espresso-ratio-calculator__result" aria-live="polite" aria-atomic="true">
+    <p class="eyebrow">Target beverage yield</p>
+    <output data-espresso-ratio-result>45 g</output>
+    <p data-espresso-ratio-equation>18 g dose × 1:2.5 = 45 g target yield</p>
+    <p class="espresso-ratio-calculator__note">
+      Yield is the liquid espresso in the cup. Use taste and flow to decide whether the grind needs attention.
+    </p>
+  </div>
+</section>
+
+<script>
+  import { formatEspressoAmount, targetEspressoYield } from '../lib/espressoRatio';
+
+  document
+    .querySelectorAll<HTMLFormElement>('[data-espresso-ratio-calculator]')
+    .forEach((form) => {
+      const dose = form.querySelector<HTMLInputElement>('[data-espresso-dose]');
+      const ratio = form.querySelector<HTMLSelectElement>('[data-espresso-ratio]');
+      const shell = form.closest<HTMLElement>('.espresso-ratio-calculator');
+      const result = shell?.querySelector<HTMLOutputElement>('[data-espresso-ratio-result]');
+      const equation = shell?.querySelector<HTMLElement>('[data-espresso-ratio-equation]');
+
+      if (!dose || !ratio || !result || !equation) return;
+
+      const update = () => {
+        const doseAmount = Number(dose.value);
+        const ratioAmount = Number(ratio.value);
+        const target = targetEspressoYield(doseAmount, ratioAmount);
+
+        if (target === null || doseAmount < 5 || doseAmount > 30) {
+          dose.setAttribute('aria-invalid', 'true');
+          result.textContent = 'Enter 5–30 g';
+          equation.textContent = 'Use the dry coffee dose that suits your basket.';
+          return;
+        }
+
+        dose.removeAttribute('aria-invalid');
+        const doseText = formatEspressoAmount(doseAmount);
+        const targetText = formatEspressoAmount(target);
+        result.textContent = `${targetText} g`;
+        equation.textContent = `${doseText} g dose × 1:${ratioAmount} = ${targetText} g target yield`;
+      };
+
+      form.addEventListener('input', update);
+      form.addEventListener('change', update);
+      form.addEventListener('submit', (event) => event.preventDefault());
+      update();
+    });
+</script>
+
+<style>
+  .espresso-ratio-calculator {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: var(--color-card);
+  }
+
+  .espresso-ratio-calculator__form {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .espresso-ratio-calculator__field {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.4rem;
+    color: var(--color-ink-soft);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .espresso-ratio-calculator__field :where(input, select) {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    padding: 0 0.75rem;
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .espresso-ratio-calculator__input-unit {
+    position: relative;
+    display: block;
+  }
+
+  .espresso-ratio-calculator__input-unit input {
+    padding-right: 2.25rem;
+  }
+
+  .espresso-ratio-calculator__input-unit > span {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+  }
+
+  .espresso-ratio-calculator__result {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-line);
+  }
+
+  .espresso-ratio-calculator__result output {
+    display: block;
+    margin-top: 0.2rem;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: 2.25rem;
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  .espresso-ratio-calculator__result > p:not(.eyebrow) {
+    margin-top: 0.45rem;
+    color: var(--color-accent-dark);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .espresso-ratio-calculator__result .espresso-ratio-calculator__note {
+    max-width: 40rem;
+    margin-top: 0.8rem;
+    color: var(--color-ink-soft);
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  @media (min-width: 40rem) {
+    .espresso-ratio-calculator__form {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

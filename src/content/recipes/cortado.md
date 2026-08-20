@@ -24,7 +24,7 @@ vessel:
   name: "Cortado glass"
   capacity: "120–150 ml"
 datePublished: 2026-08-03
-dateModified: 2026-08-15
+dateModified: 2026-08-20
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 40–60 ml cold whole milk or a barista-style alternative
@@ -49,6 +49,8 @@ Start with a 1:1 ratio by weight: 36–40 g espresso and roughly the same amount
 ## Cortado vs Flat White
 
 A cortado is smaller and normally stays close to a 1:1 espresso-to-milk ratio. A [Flat White](/recipes/flat-white/) contains more milk, has fine microfoam and is usually served in a 150–180 ml cup.
+
+Compare all three milk balances in [Cortado vs Flat White vs Latte](/learn/coffee-basics/cortado-vs-flat-white-vs-latte/).
 
 ## Cortado vs Cappuccino
 

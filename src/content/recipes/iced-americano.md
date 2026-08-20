@@ -1,14 +1,16 @@
 ---
 title: Iced Americano Recipe
-description: An Iced Americano is made by combining espresso with cold water and ice. This iced Americano recipe uses a balanced ratio; for an iced Americano with milk, add a small cold splash at the end.
-seoTitle: "Iced Americano Recipe: Ratio & Optional Milk | KAVOVO"
-seoDescription: Make a refreshing Iced Americano with espresso, cold water and ice. Includes the exact ratio, optional milk and simple step-by-step instructions.
+description: An Iced Americano combines a double espresso with cold water and plenty of ice. The measured dilution keeps it bold and refreshing rather than watery.
+seoTitle: "Iced Americano Recipe: Coffee, Water & Ice Ratio"
+seoDescription: Make a balanced Iced Americano with espresso, cold water and ice. Includes the correct ratio, a milk variation and tips to prevent watery coffee.
 seoKeywords:
   - iced americano
   - iced americano recipe
   - iced americano with milk
+  - iced americano ratio
 image: iced-americano
 imageAlt: Iced Americano in a tall glass with ice and condensation.
+ogImage: /social/iced-americano.webp
 category: iced-coffee
 brewMethod: espresso
 temperature: iced
@@ -18,19 +20,19 @@ brewTime: 3
 activeTime: 5
 totalTime: 5
 yield: "1 glass"
+schemaYield: "1 Iced Americano"
 dose: "18 g"
 drinkYield: "300–350 ml"
 vessel:
   name: "Highball glass"
   capacity: "300–350 ml"
 datePublished: 2026-08-05
-dateModified: 2026-08-15
+dateModified: 2026-08-20
 ingredients:
   - 18 g freshly ground coffee
   - 40 g double espresso
   - 120 ml cold filtered water
   - 100–120 g ice
-  - 30–50 ml cold milk (optional)
 equipmentSet: espresso
 relatedRecipes:
   - iced-latte
@@ -40,66 +42,105 @@ relatedRecipes:
 
 ## Steps
 
-1. Fill the glass with 100–120 g of ice.
+1. Fill the glass with 100–120 g of solid ice.
 2. Add 120 ml of cold filtered water.
 3. Grind and dose 18 g of coffee into the portafilter.
-4. Distribute evenly and tamp level.
-5. Pull 40 g of espresso in approximately 25–30 seconds.
-6. Pour the espresso over the water and ice.
-7. Stir two or three times. Add 30–50 ml of cold milk if desired, then serve.
+4. Distribute evenly, tamp level and pull 40 g of espresso in approximately 25–30 seconds.
+5. Pour the espresso over the cold water and ice.
+6. Stir two or three times, taste and serve immediately.
 
-## Iced Americano Ratio
+## How Much Water Should You Add to an Iced Americano?
 
-A common starting ratio is one part espresso to two or three parts cold water. Use the table to choose the strength before changing the espresso recipe.
+Start with **one part espresso to three parts cold water**. The KAVOVO recipe uses 40 g double espresso and 120 ml water. For a stronger glass use 80 ml; for a lighter glass use 160 ml.
 
-| Strength | Espresso | Cold water | Ice |
+A single espresso of roughly 20 g pairs with about 40–60 ml water. A 40 g double pairs with 80–120 ml. Scale the water with the espresso rather than filling the glass automatically, because cup size is not a recipe.
+
+Ice also becomes part of the total water as it melts. Use plenty of fully frozen ice to chill the drink quickly, then reduce the added water before reducing the ice if the final third tastes thin. The [Coffee-to-Water Ratio Calculator](/learn/coffee-basics/coffee-to-water-ratio/) explains how dilution differs from espresso beverage yield.
+
+| Style | Espresso | Cold water | Ice |
 | --- | ---: | ---: | ---: |
 | Strong | 40 g | 80 ml | 100–120 g |
 | Balanced | 40 g | 120 ml | 100–120 g |
 | Light | 40 g | 160 ml | 100–120 g |
 
+Keep the espresso recipe fixed while comparing these rows. Water changes the drink’s concentration; it cannot correct a sour, bitter or unevenly extracted shot. Use the [Espresso brew guide](/guides/espresso/) when the base coffee needs work.
+
 ## Can You Add Milk to an Iced Americano?
 
-Yes. Adding 30–50 ml of cold milk is a perfectly good way to soften an Iced Americano without covering the espresso. Add it after the water and espresso so you can stop when the balance tastes right. With much more milk, the drink moves closer to an [Iced Latte](/recipes/iced-latte/), which uses milk rather than water as its main diluting ingredient.
+Yes. A small amount of cold milk softens bitterness and adds a little texture while water remains the main liquid. That does not automatically turn the drink into an Iced Latte: a latte uses milk as its primary diluting ingredient and tastes much creamier.
 
-## Iced Americano vs Iced Coffee
+Keep the espresso dose and 40 g yield unchanged. Add **20–40 ml cold milk** and remove approximately the same amount of cold water. This preserves the overall drink volume and avoids making the Americano weak.
 
-An Iced Americano starts with espresso and is diluted immediately with cold water. Iced coffee is a broader category that can include chilled filter coffee, cold brew and espresso drinks served over ice. Espresso gives the Americano a concentrated, bold flavour; brewed iced coffee is often softer and can have a lighter body. Browse the [Iced Coffee recipes hub](/recipes/iced-coffee/) to compare the main styles.
+<div class="callout callout--exercise">
 
-## Iced Americano vs Iced Latte
+## Iced Americano with a Splash of Milk
 
-Both begin with espresso and ice. An Iced Americano uses 80–160 ml of water and little or no milk, so it remains clean and coffee-forward. An Iced Latte replaces that water with roughly 150–180 ml of milk, making it creamier and more mellow.
+Make the balanced Iced Americano with 40 g espresso and 100–120 g ice. Use **80–100 ml cold water** instead of 120 ml, then add **20–40 ml cold milk** after the water and before the final stir.
 
-## Barista tip
+Taste before adding more. The aim is still a light, coffee-forward Americano, not a glass in which the espresso disappears behind milk.
 
-Use plenty of solid ice. A full glass melts more slowly than a few cubes and keeps the drink strong for longer. Coffee ice cubes keep the last third as good as the first.
+</div>
+
+## Iced Americano with Milk vs Iced Latte
+
+| Characteristic | Iced Americano with milk | Iced Latte |
+| --- | --- | --- |
+| Main liquid | Water | Milk |
+| Coffee flavour | More pronounced | Softer |
+| Texture | Light | Creamy |
+| Typical milk quantity | Small splash | Main ingredient |
+| Best for | Black-coffee character | Milk-forward drink |
+
+An Americano with milk is the better choice when you want the clean shape of black coffee with its edge softened. An Iced Latte is deliberately built around milk and has a fuller, smoother texture.
+
+**Prefer a creamier drink? [Make an Iced Latte →](/recipes/iced-latte/)**
+
+## Water or Espresso First?
+
+Add cold water and ice first, then pour the espresso over them. The water begins cooling the espresso immediately and the drink develops an attractive layered surface before stirring. Adding espresso first is not wrong, but pouring hot espresso directly onto a small amount of ice causes faster initial melting.
+
+Whichever order you choose, stir before judging strength. Crema and the darker top layer make an unstirred Americano taste different from one sip to the next.
+
+## How to Prevent a Watery Iced Americano
+
+Use refrigerated water, a cool glass and enough hard ice to chill the drink quickly. A few cubes melt rapidly because they must absorb all the heat; a nearly full glass usually cools faster and then melts more slowly.
+
+Treat melting ice as part of the recipe. The Journal guide [Ice Is an Ingredient](/journal/ice-is-an-ingredient/) explains why the first and last sip differ and how ingredient temperature changes dilution.
+
+If the drink tastes balanced immediately but weak after five minutes, begin with 80–100 ml water rather than pulling a larger espresso. Extra shots change caffeine and extraction; less added water solves dilution directly.
 
 ## Troubleshooting
 
-**The drink becomes watery.** Use more ice or reduce the water to 80–100 ml.
+**The drink becomes watery.** Reduce the cold water by 20–40 ml, use more fully frozen ice and chill the glass. Do not solve fast melting with only three or four cubes.
 
-**It tastes too intense.** Increase the water in 20 ml increments.
+**It tastes too bitter.** Taste the espresso before adding water. If the shot is already bitter or dry, grind slightly coarser or shorten the extraction; extra water only hides the fault temporarily.
 
-**It tastes harsh.** Use a sweeter coffee or adjust the espresso extraction before changing the dilution.
+**It is weak after adding milk.** Use 20–40 ml milk and remove the same amount of water. Keep the 18 g dose and 40 g espresso yield unchanged.
+
+**The ice melts too quickly.** Start with refrigerated water and a full glass of dense ice. Let the espresso rest for no more than 20–30 seconds if every other ingredient is already cold.
+
+**The espresso tastes lost.** Use the strong 80 ml water row, check that the shot tastes balanced on its own and avoid increasing the drink size without increasing the espresso recipe proportionally.
+
+Explore the [Iced Coffee Recipes](/recipes/iced-coffee/) collection when you want to compare this clean style with Cold Brew, Iced Latte and shaken espresso.
 
 ## Frequently asked questions
 
-### What is the best ratio for an Iced Americano?
-
-A balanced starting ratio is one part espresso to three parts cold water. With 40 g of espresso, use about 120 ml of water, then adjust between 80 and 160 ml to taste.
-
 ### Can you put milk in an Iced Americano?
 
-Yes. Add 30–50 ml of cold milk after the espresso, water and ice are combined. It softens the drink, although a larger amount starts to taste more like an iced latte.
+Yes. Add 20–40 ml cold milk and reduce the cold water by roughly the same amount. Keep the espresso dose and yield unchanged so the drink remains coffee-forward.
 
-### Is an Iced Americano stronger than iced coffee?
+### Is an Iced Americano with milk the same as an Iced Latte?
 
-It often tastes bolder because it is built from espresso, but caffeine depends on the coffee dose and serving size. A large brewed iced coffee can contain more caffeine.
+No. An Iced Americano with milk still uses water as its main liquid and only a small splash of milk. An Iced Latte uses a much larger amount of milk as the main ingredient, so it is creamier and softer.
 
-### Should espresso or water be added first?
+### How much water should be added to an Iced Americano?
 
-Add cold water and ice first, then pour in the espresso for a layered look and gentler cooling. Either order works once the drink is stirred.
+Use 120 ml cold water with 40 g double espresso for a balanced starting point. Use 80 ml for a stronger drink or 160 ml for a lighter one, while keeping the ice at 100–120 g.
 
-### How many espresso shots are in an Iced Americano?
+### Should water or espresso go into the glass first?
 
-This recipe uses one double espresso, approximately 40 g in the cup. A larger drink may use an additional shot rather than excessive water.
+Add cold water and ice first, then pour in the espresso. This cools the coffee quickly and preserves a layered appearance. Stir before drinking so the strength is even.
+
+### How do you stop an Iced Americano becoming watery?
+
+Use refrigerated water, plenty of solid ice and slightly less added water when the drink will sit. If it becomes weak, reduce the water before reducing the ice or adding another espresso shot.

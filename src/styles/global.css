@@ -237,10 +237,33 @@ body {
   color: var(--color-ink-soft);
 }
 
+.table-scroll-hint {
+  display: none;
+}
+
 /* On a phone a three-column table of prose collapses into unreadable ribbons,
    so each row becomes a card and every cell carries its own column heading.
    The labels are filled in by script; without it the plain table still works. */
 @media (max-width: 40rem) {
+  .prose-comparison .table-scroll-hint {
+    display: block;
+    margin-top: 1.25rem;
+    color: var(--color-ink-soft);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .prose-comparison table {
+    margin-top: 0.45rem;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+  }
+
+  .prose-comparison table th,
+  .prose-comparison table td {
+    min-width: 9rem;
+  }
+
   .prose-body table:has(td[data-label]),
   .data-table:has(td[data-label]) {
     display: block;

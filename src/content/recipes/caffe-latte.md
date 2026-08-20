@@ -19,7 +19,7 @@ vessel:
   name: "Latte cup"
   capacity: "250–300 ml"
 datePublished: 2026-08-03
-dateModified: 2026-08-03
+dateModified: 2026-08-20
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 180–220 ml cold whole milk or a barista-style alternative
@@ -43,6 +43,8 @@ A caffè latte combines a double espresso with plenty of steamed milk and only a
 ## Ratio
 
 Use approximately one part espresso to five parts steamed milk. Adjust the amount of milk to suit the size of your cup and preferred coffee strength.
+
+Compare this larger milk balance with a [Cortado and Flat White](/learn/coffee-basics/cortado-vs-flat-white-vs-latte/) before choosing a cup size.
 
 ## Tips
 

@@ -24,7 +24,7 @@ vessel:
   name: "Americano cup"
   capacity: "200–250 ml"
 datePublished: 2026-08-03
-dateModified: 2026-08-18
+dateModified: 2026-08-20
 ingredients:
   - 18 g freshly ground coffee, brewed as 36–40 g espresso
   - 120–180 ml fresh hot water
@@ -68,6 +68,8 @@ These are starting points rather than fixed rules. The [coffee-to-water ratio gu
 ## Americano vs Filter Coffee
 
 An Americano starts as concentrated espresso and is diluted after extraction. [Filter coffee](/learn/coffee-basics/filter-coffee/) is brewed at its final strength as water passes through ground coffee and a filter. Filter coffee usually has a cleaner texture; an Americano keeps more of espresso's concentrated character and may retain some crema.
+
+The full [Americano vs Filter Coffee comparison](/learn/coffee-basics/americano-vs-filter-coffee/) covers taste, body, caffeine and equipment side by side.
 
 ## Americano vs Long Black
 

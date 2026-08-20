@@ -9,7 +9,10 @@ readingTime: 6
 image: lesson-roast-levels-explained
 imageBrief: "KAVOVO-style editorial flat lay with exactly three neat, equal samples of roasted coffee beans progressing naturally from light brown to medium brown to deep dark brown. Beans should look realistic, with only the darkest sample showing a subtle possible surface sheen, not burnt black. Warm cream plaster surface, pale wood, natural linen, soft leaf shadows and side sunlight. No labels, arrows, logos or text. Landscape 4:3, centred crop-safe composition."
 imageAlt: Light, medium and dark roasted coffee beans arranged in three distinct samples.
+dateModified: 2026-08-20
 related:
+  - label: Arabica vs Robusta
+    href: /learn/understand-your-beans/arabica-vs-robusta/
   - label: Coffee Brewing Temperature, Explained
     href: /learn/coffee-basics/brewing-temperature/
   - label: "Grind Size: From Espresso to French Press"

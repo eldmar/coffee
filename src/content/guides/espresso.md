@@ -268,6 +268,12 @@ cleaning:
     on a schedule set by your water hardness and the manual.
 
 relatedLearning:
+  - label: Arabica vs Robusta
+    href: /learn/understand-your-beans/arabica-vs-robusta/
+    why: Choose between aromatic Arabica and a fuller espresso blend without treating species as a quality grade.
+  - label: Espresso Ratio — 1:2, 1:2.5 or 1:3
+    href: /learn/dial-in-espresso/espresso-ratio/
+    why: Calculate target yield and decide when ratio, rather than grind, is the useful variable.
   - label: "Espresso Basics: Dose, Yield and Time"
     href: /learn/dial-in-espresso/espresso-basics-dose-yield-time/
     why: The three numbers behind the Quick start card, explained properly.

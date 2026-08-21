@@ -22,8 +22,13 @@ vessel:
 datePublished: 2026-07-18
 dateModified: 2026-08-15
 ingredients:
-  - 30 g coarsely ground coffee
-  - 500 ml water at 94 °C
+  - name: "coarsely ground coffee"
+    amount: 30
+    unit: "g"
+  - name: "water"
+    amount: 500
+    unit: "ml"
+    temperatureC: 94
 equipmentSet: french-press
 cupScaling:
   baseCups: 2

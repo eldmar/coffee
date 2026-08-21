@@ -22,9 +22,16 @@ vessel:
 datePublished: 2026-08-06
 dateModified: 2026-08-06
 ingredients:
-  - 7 g extra-finely ground coffee
-  - 70 g cold filtered water
-  - 4 g sugar, optional
+  - name: "extra-finely ground coffee"
+    amount: 7
+    unit: "g"
+  - name: "cold filtered water"
+    amount: 70
+    unit: "ml"
+  - name: "sugar"
+    amount: 4
+    unit: "g"
+    note: "optional"
 equipmentSet: cezve
 equipmentExtra:
   - Teaspoon

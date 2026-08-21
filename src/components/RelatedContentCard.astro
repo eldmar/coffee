@@ -1,0 +1,56 @@
+---
+import Photo from './Photo.astro';
+
+interface Props {
+  href: string;
+  title: string;
+  type: 'recipe' | 'guide' | 'learn' | 'journal' | 'collection';
+  typeLabel: string;
+  category: string;
+  image: string;
+  imageAlt: string;
+  time: string;
+  sourceRecipe: string;
+  contentSlug: string;
+}
+
+const {
+  href,
+  title,
+  type,
+  typeLabel,
+  category,
+  image,
+  imageAlt,
+  time,
+  sourceRecipe,
+  contentSlug,
+} = Astro.props;
+---
+
+<a
+  href={href}
+  data-related-content
+  data-source-recipe={sourceRecipe}
+  data-content-type={type === 'collection' ? 'recipe' : type}
+  data-content-slug={contentSlug}
+  class="group flex h-full flex-col overflow-hidden rounded-lg border border-line bg-card transition-shadow hover:shadow-md"
+>
+  <Photo
+    name={image}
+    alt={imageAlt}
+    sizes="(min-width: 1024px) 260px, (min-width: 640px) 45vw, 82vw"
+    class="aspect-[4/3] w-full object-cover"
+    loading="lazy"
+  />
+  <span class="flex flex-1 flex-col p-5">
+    <span class="eyebrow">{typeLabel} · {category}</span>
+    <h3 class="mt-2 font-display text-xl font-medium">{title}</h3>
+    <span class="mt-auto flex items-center gap-2 pt-4 text-sm text-ink-soft">
+      {time}
+      <span class="ml-auto text-accent transition-transform group-hover:translate-x-1" aria-hidden="true">
+        &#8594;
+      </span>
+    </span>
+  </span>
+</a>

@@ -23,8 +23,13 @@ datePublished: 2026-07-18
 dateModified: 2026-08-15
 popular: true
 ingredients:
-  - 15 g medium-fine ground coffee
-  - 250 ml water at 93 °C
+  - name: "medium-fine ground coffee"
+    amount: 15
+    unit: "g"
+  - name: "water"
+    amount: 250
+    unit: "ml"
+    temperatureC: 93
 equipmentSet: pour-over
 equipmentOptional:
   - Brew scale with timer

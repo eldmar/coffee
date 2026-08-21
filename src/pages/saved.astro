@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import SavedRecipesPage from '../components/retention/SavedRecipesPage';
+import { cardImage } from '../lib/cardImage';
+import Layout from '../layouts/Layout.astro';
+
+const recipes = (await getCollection('recipes')).map((recipe) => ({
+  slug: recipe.id,
+  title: recipe.data.title,
+  image: cardImage(recipe.data.image),
+  imageAlt: recipe.data.imageAlt,
+  category: recipe.data.category,
+  activeTime: recipe.data.activeTime,
+  totalTime: recipe.data.totalTime,
+  totalTimeLabel: recipe.data.totalTimeLabel,
+}));
+---
+
+<Layout
+  title="Saved Coffee Recipes | KAVOVO"
+  description="Recipes saved on this device for your next brew."
+  noindex
+>
+  <section class="mx-auto max-w-6xl px-5 py-14">
+    <Breadcrumbs trail={[{ label: 'Saved recipes' }]} />
+    <span class="eyebrow mt-6 block">Your collection</span>
+    <h1 class="mt-2 font-display text-4xl font-medium">Saved recipes</h1>
+    <p class="mt-3 max-w-lg text-ink-soft">
+      Saved recipes are stored in this browser and are not synced between devices.
+    </p>
+
+    <SavedRecipesPage client:load recipes={recipes} />
+    <noscript>
+      <div class="mt-8 border-y border-line py-12 text-center">
+        <h2 class="font-display text-2xl font-medium">No saved recipes yet</h2>
+        <p class="mx-auto mt-3 max-w-md text-ink-soft">
+          Turn on JavaScript to save recipes on this device.
+        </p>
+        <a href="/recipes/" class="mt-5 inline-flex text-sm font-semibold text-accent underline">
+          Browse recipes &#8594;
+        </a>
+      </div>
+    </noscript>
+  </section>
+</Layout>

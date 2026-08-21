@@ -51,7 +51,11 @@ const docs: SearchDoc[] = [
       ...r.data.seoKeywords,
     ].join(' '),
     body: [
-      ...r.data.ingredients,
+      ...r.data.ingredients.flatMap((ingredient) => [
+        ingredient.name,
+        ingredient.note ?? '',
+        ingredient.displayAmount ?? '',
+      ]),
       ...equipmentFor(r.data.equipmentSet),
       ...r.data.equipmentExtra,
       ...r.data.equipmentOptional,

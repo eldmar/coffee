@@ -20,11 +20,28 @@ vessel:
   capacity: "300–350 ml"
 datePublished: 2026-07-18
 dateModified: 2026-08-03
+espresso:
+  dose: 18
+  ratio: 2
 ingredients:
-  - 18 g freshly ground coffee, brewed as 36–40 g espresso
-  - 120–150 ml chilled tonic water
-  - Plenty of ice cubes
-  - Orange or grapefruit peel (optional)
+  - name: "freshly ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 36
+    unit: "g"
+    role: "espresso-yield"
+  - name: "chilled tonic water"
+    amountMin: 120
+    amountMax: 150
+    unit: "ml"
+  - name: "ice cubes"
+    displayAmount: "as needed"
+    scalable: false
+  - name: "orange or grapefruit peel"
+    amount: 1
+    note: "optional"
 equipmentSet: espresso
 equipmentOptional:
   - Bar spoon

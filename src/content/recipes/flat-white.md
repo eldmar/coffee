@@ -27,9 +27,22 @@ vessel:
 datePublished: 2026-07-18
 dateModified: 2026-08-20
 popular: true
+espresso:
+  dose: 18
+  ratio: 2
 ingredients:
-  - 18 g finely ground coffee, brewed as 36–40 g double espresso
-  - 110–130 ml cold whole milk
+  - name: "finely ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 36
+    unit: "g"
+    role: "espresso-yield"
+  - name: "cold whole milk"
+    amountMin: 110
+    amountMax: 130
+    unit: "ml"
 equipmentSet: milk
 equipmentOptional:
   - Milk thermometer

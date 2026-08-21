@@ -135,6 +135,32 @@ describe('switched on with configuration', () => {
     );
   });
 
+  it('sends compact retention events without recipe measurements', async () => {
+    const { trackRetentionEvent } = await loadAnalytics(true, env);
+    trackRetentionEvent('recipe_servings_changed', {
+      recipe_slug: 'espresso',
+      servings: 2,
+    });
+    await vi.waitFor(() =>
+      expect(capture).toHaveBeenCalledWith('recipe_servings_changed', {
+        analytics_version: 1,
+        recipe_slug: 'espresso',
+        servings: 2,
+      }),
+    );
+  });
+
+  it('does not include dose values in espresso dose events', async () => {
+    const { trackRetentionEvent } = await loadAnalytics(true, env);
+    trackRetentionEvent('espresso_dose_changed', { recipe_slug: 'espresso' });
+    await vi.waitFor(() =>
+      expect(capture).toHaveBeenCalledWith('espresso_dose_changed', {
+        analytics_version: 1,
+        recipe_slug: 'espresso',
+      }),
+    );
+  });
+
   it('refuses to send a recipe value or free text', async () => {
     const { trackBrewEvent } = await loadAnalytics(true, env);
     trackBrewEvent('brew_diagnosis_completed', { method: 'espresso', dose: 18 });

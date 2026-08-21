@@ -30,14 +30,34 @@ vessel:
   capacity: "350–400 ml"
 datePublished: 2026-08-12
 dateModified: 2026-08-15
+espresso:
+  dose: 18
+  ratio: 2
 ingredients:
-  - 18 g freshly ground coffee
-  - 36–40 g double espresso
-  - 150 ml cold milk
-  - 120 g ice
-  - 60 ml very cold skimmed or semi-skimmed milk, for the foam
-  - 10 ml vanilla syrup, for the foam
-  - A small pinch of fine sea salt, approximately 0.2 g
+  - name: "freshly ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 36
+    unit: "g"
+    role: "espresso-yield"
+  - name: "cold milk"
+    amount: 150
+    unit: "ml"
+  - name: "ice"
+    amount: 120
+    unit: "g"
+  - name: "very cold skimmed or semi-skimmed milk for the foam"
+    amount: 60
+    unit: "ml"
+  - name: "vanilla syrup for the foam"
+    amount: 10
+    unit: "ml"
+  - name: "fine sea salt"
+    amount: 0.2
+    unit: "g"
+    note: "a small pinch"
 equipmentSet: espresso
 equipmentExtra:
   - Handheld milk frother or electric cold-foam frother

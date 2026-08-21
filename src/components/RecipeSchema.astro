@@ -10,6 +10,7 @@ import {
   recipeStepName,
 } from '../lib/recipes';
 import { equipmentFor } from '../lib/equipment';
+import { formatIngredients } from '../lib/recipe-scaling';
 
 interface Props {
   recipe: CollectionEntry<'recipes'>;
@@ -25,6 +26,11 @@ const keywords = [
   ...data.seoKeywords,
   ...recipeKeywords(data).split(', '),
 ].filter((keyword, index, all) => all.indexOf(keyword) === index);
+const recipeIngredients = formatIngredients(
+  data.ingredients,
+  { servings: 1, units: 'metric', ...(data.espresso ? { dose: data.espresso.dose } : {}) },
+  data.espresso,
+);
 
 // Ratings, videos and step media belong here only when the page shows real source data.
 const schema = {
@@ -48,7 +54,7 @@ const schema = {
   recipeCategory: categoryLabel(data.category),
   recipeCuisine: data.recipeCuisine,
   keywords: keywords.join(', '),
-  recipeIngredient: data.ingredients,
+  recipeIngredient: recipeIngredients,
   tool: [
     ...equipmentFor(data.equipmentSet),
     ...data.equipmentExtra,

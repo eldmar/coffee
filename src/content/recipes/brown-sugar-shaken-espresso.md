@@ -31,13 +31,32 @@ vessel:
   capacity: "300–350 ml"
 datePublished: 2026-08-15
 dateModified: 2026-08-15
+espresso:
+  dose: 18
+  ratio: 2
 ingredients:
-  - 18 g freshly ground coffee
-  - 36–40 g double espresso
-  - 8 g soft brown sugar, approximately 2 teaspoons
-  - A small pinch of ground cinnamon (optional)
-  - 120 g ice
-  - 60–80 ml cold barista oat milk
+  - name: "freshly ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 36
+    unit: "g"
+    role: "espresso-yield"
+  - name: "soft brown sugar"
+    amount: 8
+    unit: "g"
+  - name: "ground cinnamon"
+    displayAmount: "a small pinch"
+    scalable: false
+    note: "optional"
+  - name: "ice"
+    amount: 120
+    unit: "g"
+  - name: "cold barista oat milk"
+    amountMin: 60
+    amountMax: 80
+    unit: "ml"
 equipmentSet: espresso
 equipmentExtra:
   - Metal cocktail shaker

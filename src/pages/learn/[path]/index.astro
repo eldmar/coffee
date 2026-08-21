@@ -6,6 +6,7 @@ import JsonLd from '../../../components/JsonLd.astro';
 import Photo from '../../../components/Photo.astro';
 import { photo } from '../../../lib/photos';
 import { LEARN_PATHS, readingMinutes } from '../../../lib/learn';
+import PathProgressPanel from '../../../components/retention/PathProgressPanel';
 
 export async function getStaticPaths() {
   const lessons = await getCollection('lessons');
@@ -31,6 +32,11 @@ const ogImagePath = photo(first.data.image ?? 'hero').src;
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const url = `${site}/learn/${path.slug}/`;
 const lessonUrl = (id: string) => `/learn/${id}/`;
+const lessonReferences = lessons.map((lesson) => ({
+  slug: lesson.id.split('/').at(-1),
+  title: lesson.data.title,
+  href: lessonUrl(lesson.id),
+}));
 
 const schema = {
   '@context': 'https://schema.org',
@@ -87,13 +93,14 @@ const schema = {
 
     {path.closing && <p class="mt-5 text-ink-soft">{path.closing}</p>}
 
-    <div class="mt-8 flex flex-wrap items-center gap-3">
-      <a
-        href={lessonUrl(first.id)}
-        class="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-accent-ink transition-colors hover:bg-accent-dark"
-      >
-        Start lesson 1
-      </a>
+    <PathProgressPanel
+      client:load
+      pathSlug={path.slug}
+      pathTitle={path.title}
+      lessons={lessonReferences}
+    />
+
+    <div class="mt-4 flex flex-wrap items-center gap-3">
       <a
         href={path.secondaryCta.href}
         class="rounded-md border border-ink/25 px-5 py-2.5 text-sm font-medium transition-colors hover:border-ink/50"
@@ -108,6 +115,9 @@ const schema = {
           <li>
             <a
               href={lessonUrl(lesson.id)}
+              data-path-card={path.slug}
+              data-lesson-slug={lesson.id.split('/').at(-1)}
+              data-complete="false"
               class="group flex gap-4 rounded-lg border border-line bg-card p-4 transition-shadow hover:shadow-md sm:gap-5 sm:p-5"
             >
               {lesson.data.image && (
@@ -121,8 +131,17 @@ const schema = {
                 />
               )}
               <span class="flex flex-col">
-                <span class="eyebrow" aria-hidden="true">
-                  Lesson {lesson.data.order}
+                <span class="flex flex-wrap items-center gap-2">
+                  <span class="eyebrow" aria-hidden="true">
+                    Lesson {lesson.data.order}
+                  </span>
+                  <span
+                    data-lesson-complete-status
+                    hidden
+                    class="text-xs font-semibold text-accent"
+                  >
+                    Complete
+                  </span>
                 </span>
                 <span class="mt-1 font-display text-xl font-medium group-hover:underline">
                   {lesson.data.title}
@@ -139,3 +158,9 @@ const schema = {
     </ol>
   </section>
 </Layout>
+
+<style>
+  [data-path-card][data-complete='true'] {
+    border-color: var(--color-accent);
+  }
+</style>

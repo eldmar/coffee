@@ -16,12 +16,12 @@ const subscriptionsEnabled = import.meta.env.PUBLIC_SUBSCRIPTIONS_ENABLED === 't
     eyebrow="Privacy"
     title="Privacy notice"
     intro="A short, honest description of what happens to data when you visit KAVOVO."
-    updated="2026-08-09"
+    updated="2026-08-21"
   >
     <h2>The short version</h2>
     <p>
       KAVOVO is a static website. We do not run advertising, we do not set tracking cookies, and we do not sell or share
-      personal data. We use limited cookieless analytics to understand how the Brew Assistant works in aggregate. {
+      personal data. We use limited cookieless analytics to understand how selected site features work in aggregate. {
         subscriptionsEnabled
           ? 'We collect an email address only when you choose to subscribe to the newsletter or shop waitlist.'
           : 'Newsletter and waitlist sign-ups are currently disabled, so the site does not accept email addresses.'
@@ -44,10 +44,23 @@ const subscriptionsEnabled = import.meta.env.PUBLIC_SUBSCRIPTIONS_ENABLED === 't
         )
       }
       <li>
-        <strong>Limited Brew Assistant events,</strong> described below. These contain predefined categories, not your
-        recipe values or free text.
+        <strong>Limited product events,</strong> described below. These contain predefined categories, content slugs and
+        settings, not your recipe values or free text.
+      </li>
+      <li>
+        <strong>Progress and recipe preferences on your device.</strong> Completed lesson slugs, saved and recently
+        viewed recipe slugs, timestamps and your unit preference stay in your browser storage. They are not synced to
+        KAVOVO or between devices.
       </li>
     </ul>
+
+    <h2>Local browser storage</h2>
+    <p>
+      Learn progress, saved recipes, recently viewed recipes and recipe unit preferences use versioned local storage.
+      These features store only content slugs, timestamps and settings. You can remove individual saved recipes, clear
+      recent history, reset one learning path, or clear the site data through your browser. If storage is blocked, the
+      main site still works and these controls fall back to the current page session where possible.
+    </p>
 
     <h2>Hosting and server logs</h2>
     <p>
@@ -59,7 +72,7 @@ const subscriptionsEnabled = import.meta.env.PUBLIC_SUBSCRIPTIONS_ENABLED === 't
     <h2>Analytics</h2>
     <p>
       We use PostHog, hosted in the EU, for limited cookieless product analytics. It tells us which parts of the Brew
-      Assistant people use and where they stop, without telling us who they are.
+      Assistant, learning paths and recipe tools people use, without telling us who they are.
     </p>
     <p>
       PostHog is configured with cookies, autocapture, pageview capture, person profiles and session recording all off.
@@ -72,12 +85,15 @@ const subscriptionsEnabled = import.meta.env.PUBLIC_SUBSCRIPTIONS_ENABLED === 't
       <li>rule ID, adjustment type, direction and attempt number;</li>
       <li>whether feedback was helpful;</li>
       <li>related-content type and canonical content slug;</li>
+      <li>learning path, lesson and recipe slugs for explicit completion, save and navigation actions;</li>
+      <li>the selected servings multiplier or unit system, but never the entered espresso dose;</li>
       <li>validation step and predefined error category;</li>
       <li>the analytics schema version attached to every event.</li>
     </ul>
     <p>
       We do not send your email address, free text, exact dose, yield, water, brew time or temperature, a full recipe,
-      or any session ID. Brew history stays in your own browser and is never uploaded.
+      or any session ID. Brew history, Learn progress, Saved recipes and Recently viewed history stay in your own
+      browser and are never uploaded.
     </p>
     <p>
       If you block analytics with a browser extension or a content blocker, the Brew Assistant carries on working

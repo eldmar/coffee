@@ -21,9 +21,22 @@ vessel:
   capacity: "150–200 ml"
 datePublished: 2026-08-05
 dateModified: 2026-08-06
+espresso:
+  dose: 18
+  ratio: 2
 ingredients:
-  - 70–90 g vanilla gelato
-  - 18 g freshly ground coffee
+  - name: "vanilla gelato"
+    amountMin: 70
+    amountMax: 90
+    unit: "g"
+  - name: "freshly ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 36
+    unit: "g"
+    role: "espresso-yield"
 equipmentSet: espresso
 equipmentExtra:
   - Ice cream scoop

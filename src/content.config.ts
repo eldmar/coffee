@@ -1,6 +1,27 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
+const ingredient = z
+  .object({
+    name: z.string(),
+    amount: z.number().positive().optional(),
+    amountMin: z.number().positive().optional(),
+    amountMax: z.number().positive().optional(),
+    unit: z.enum(['g', 'ml', 'tsp', 'tbsp']).optional(),
+    displayAmount: z.string().optional(),
+    scalable: z.boolean().default(true),
+    role: z.enum(['ingredient', 'coffee-dose', 'espresso-yield']).default('ingredient'),
+    temperatureC: z.number().optional(),
+    note: z.string().optional(),
+  })
+  .refine(
+    (value) =>
+      value.amount !== undefined ||
+      (value.amountMin !== undefined && value.amountMax !== undefined) ||
+      value.displayAmount !== undefined,
+    { message: 'Ingredient needs an amount, range, or displayAmount.' },
+  );
+
 const recipes = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/recipes' }),
   schema: z.object({
@@ -64,7 +85,13 @@ const recipes = defineCollection({
     author: z.string().default('KAVOVO'),
     datePublished: z.coerce.date(),
     dateModified: z.coerce.date(),
-    ingredients: z.array(z.string()),
+    ingredients: z.array(ingredient),
+    espresso: z
+      .object({
+        dose: z.number().positive(),
+        ratio: z.number().positive(),
+      })
+      .optional(),
     // Essentials come from the shared dictionary; extras stay per recipe.
     equipmentSet: z.enum([
       'espresso',
@@ -92,6 +119,14 @@ const recipes = defineCollection({
       .optional(),
     // Set only when editorially chosen recipes should replace the automatic list.
     relatedRecipes: z.array(z.string()).length(3).optional(),
+    related: z
+      .object({
+        recipes: z.array(z.string()).default([]),
+        learn: z.array(z.string()).default([]),
+        journal: z.array(z.string()).default([]),
+      })
+      .optional(),
+    seasonalTags: z.array(z.string()).default([]),
     popular: z.boolean().default(false),
   }),
 });

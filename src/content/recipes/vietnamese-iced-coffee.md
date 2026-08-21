@@ -22,10 +22,19 @@ vessel:
 datePublished: 2026-08-06
 dateModified: 2026-08-06
 ingredients:
-  - 20 g medium-fine dark-roast coffee
-  - 90 g filtered water
-  - 30 g sweetened condensed milk
-  - 100–120 g ice
+  - name: "medium-fine dark-roast coffee"
+    amount: 20
+    unit: "g"
+  - name: "filtered water"
+    amount: 90
+    unit: "ml"
+  - name: "sweetened condensed milk"
+    amount: 30
+    unit: "g"
+  - name: "ice"
+    amountMin: 100
+    amountMax: 120
+    unit: "g"
 equipmentSet: phin
 equipmentExtra:
   - Teaspoon

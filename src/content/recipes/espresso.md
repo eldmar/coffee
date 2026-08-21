@@ -22,8 +22,18 @@ vessel:
   capacity: "60–90 ml"
 datePublished: 2026-08-03
 dateModified: 2026-08-20
+espresso:
+  dose: 18
+  ratio: 2
 ingredients:
-  - 18 g freshly roasted coffee beans
+  - name: "freshly roasted coffee beans"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 36
+    unit: "g"
+    role: "espresso-yield"
 equipmentSet: espresso
 equipmentOptional:
   - Dosing funnel

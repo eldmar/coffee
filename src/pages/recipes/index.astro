@@ -6,6 +6,7 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import JsonLd from '../../components/JsonLd.astro';
 import { CATEGORIES } from '../../lib/recipes';
 import { cardImage } from '../../lib/cardImage';
+import RecentlyViewed from '../../components/retention/RecentlyViewed';
 
 const recipes = (await getCollection('recipes')).sort((a, b) =>
   a.data.title.localeCompare(b.data.title),
@@ -23,7 +24,22 @@ const catalog = recipes.map((r) => ({
   activeTime: r.data.activeTime,
   totalTime: r.data.totalTime,
   totalTimeLabel: r.data.totalTimeLabel,
-    ingredients: r.data.ingredients,
+  ingredients: r.data.ingredients.flatMap((ingredient) => [
+    ingredient.name,
+    ingredient.note ?? '',
+    ingredient.displayAmount ?? '',
+  ]),
+}));
+
+const retentionRecipes = recipes.map((recipe) => ({
+  slug: recipe.id,
+  title: recipe.data.title,
+  image: cardImage(recipe.data.image),
+  imageAlt: recipe.data.imageAlt,
+  category: recipe.data.category,
+  activeTime: recipe.data.activeTime,
+  totalTime: recipe.data.totalTime,
+  totalTimeLabel: recipe.data.totalTimeLabel,
 }));
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
@@ -74,10 +90,22 @@ const schema = {
           </a>
         ))
       }
+      <a
+        href="/saved/"
+        class="rounded-md border border-line px-3.5 py-1.5 text-sm font-medium text-accent transition-colors hover:border-accent"
+      >
+        Saved recipes
+      </a>
     </nav>
 
     <div class="mt-8">
       <RecipeFilters client:load recipes={catalog} />
     </div>
+
+    <RecentlyViewed
+      client:load
+      recipes={retentionRecipes}
+      className="mt-16 border-t border-line pt-10"
+    />
   </section>
 </Layout>

@@ -22,9 +22,17 @@ vessel:
 datePublished: 2026-08-06
 dateModified: 2026-08-06
 ingredients:
-  - 18 g finely ground coffee
-  - Approximately 130 g filtered water
-  - 10–12 g white or demerara sugar
+  - name: "finely ground coffee"
+    amount: 18
+    unit: "g"
+  - name: "filtered water"
+    amount: 130
+    unit: "ml"
+    note: "approximately"
+  - name: "white or demerara sugar"
+    amountMin: 10
+    amountMax: 12
+    unit: "g"
 equipmentSet: moka-pot
 equipmentExtra:
   - Small mixing cup

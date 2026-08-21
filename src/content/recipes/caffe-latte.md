@@ -20,9 +20,22 @@ vessel:
   capacity: "250–300 ml"
 datePublished: 2026-08-03
 dateModified: 2026-08-20
+espresso:
+  dose: 18
+  ratio: 2
 ingredients:
-  - 18 g freshly ground coffee, brewed as 36–40 g espresso
-  - 180–220 ml cold whole milk or a barista-style alternative
+  - name: "freshly ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 36
+    unit: "g"
+    role: "espresso-yield"
+  - name: "cold whole milk or a barista-style alternative"
+    amountMin: 180
+    amountMax: 220
+    unit: "ml"
 equipmentSet: milk
 equipmentOptional:
   - Milk thermometer

@@ -40,7 +40,6 @@ let onDemandImages = 0;
 let recipeSchemas = 0;
 let faqSchemas = 0;
 const indexableSeo = [];
-const recipeGuideLabels = new Set();
 
 function decodeHtml(value = '') {
   return value
@@ -95,6 +94,9 @@ for (const page of pages) {
   if (!/^https:\/\/kavovo\.uk\//.test(canonical)) {
     problems.push(`${label} is missing an absolute kavovo.uk canonical URL`);
   }
+  if (canonical.includes('?') || canonical.includes('#')) {
+    problems.push(`${label} canonical URL contains a query string or fragment`);
+  }
   for (const tag of ['og:title', 'og:description', 'og:url', 'og:image']) {
     if (!html.includes(`property="${tag}"`)) problems.push(`${label} is missing ${tag}`);
   }
@@ -135,30 +137,6 @@ for (const page of pages) {
     }
   }
 
-  const recipeGuideBlock = html.match(
-    /<p\b[^>]*data-recipe-guide-link[^>]*>([\s\S]*?)<\/p>/i,
-  );
-  if (recipeGuideBlock) {
-    const rendered = visibleText(recipeGuideBlock[1]);
-    const guideLink = recipeGuideBlock[1].match(
-      /<a\b[^>]*href="(\/guides\/([^"]+)\/)"[^>]*>([\s\S]*?)<\/a>/i,
-    );
-    const guideLabel = visibleText(guideLink?.[3] ?? '');
-    const expected = `New to this method? The ${guideLabel} covers the technique behind this recipe.`;
-
-    if (!guideLink) problems.push(`${label} recipe guide link is not clickable`);
-    if (rendered !== expected) {
-      problems.push(`${label} has malformed recipe guide text: ${rendered}`);
-    }
-    if (!/The <a\b/i.test(recipeGuideBlock[1]) || !/<\/a> covers/i.test(recipeGuideBlock[1])) {
-      problems.push(`${label} recipe guide link is missing physical SSR spaces`);
-    }
-    if (/The(?:Espresso|V60|AeroPress|French Press|Moka Pot)|guidecovers/.test(rendered)) {
-      problems.push(`${label} recipe guide text contains joined words`);
-    }
-    if (guideLabel) recipeGuideLabels.add(guideLabel);
-  }
-
   for (const match of html.matchAll(
     /<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi,
   )) {
@@ -197,6 +175,19 @@ for (const page of pages) {
     if (!html.includes('data-recipe-experience')) {
       problems.push(`${label} is missing the interactive recipe experience`);
     }
+    if (!html.includes('data-recipe-scaler')) {
+      problems.push(`${label} is missing structured recipe scaling`);
+    }
+    for (const servings of [1, 2, 3]) {
+      if (!html.includes(`data-servings-option="${servings}"`)) {
+        problems.push(`${label} is missing the ${servings}× servings option`);
+      }
+    }
+    for (const units of ['metric', 'us']) {
+      if (!html.includes(`data-units-option="${units}"`)) {
+        problems.push(`${label} is missing the ${units} units option`);
+      }
+    }
     if (!html.includes('Tap each step as you brew.')) {
       problems.push(`${label} is missing the step checklist prompt`);
     }
@@ -205,6 +196,26 @@ for (const page of pages) {
     }
     if (!html.includes('Keep screen awake')) {
       problems.push(`${label} is missing the optional screen wake control`);
+    }
+    if (!html.includes('Current ingredients')) {
+      problems.push(`${label} Brew Mode is missing current ingredients`);
+    }
+    if (!html.includes('data-save-recipe')) {
+      problems.push(`${label} is missing the Save recipe control`);
+    }
+    if (!html.includes('Related recipes and guides')) {
+      problems.push(`${label} is missing the related content heading`);
+    }
+    const relatedCards = html.match(/data-related-content(?:=|\s|>)/g)?.length ?? 0;
+    if (relatedCards < 3 || relatedCards > 4) {
+      problems.push(`${label} has ${relatedCards} related cards; expected 3–4`);
+    }
+    const recipeSlug = schema.url?.match(/\/recipes\/([^/]+)\/$/)?.[1];
+    if (
+      recipeSlug &&
+      html.includes(`data-content-type="recipe" data-content-slug="${recipeSlug}"`)
+    ) {
+      problems.push(`${label} related content includes the current recipe`);
     }
     if (typeof schema.keywords !== 'string' || schema.keywords.trim().length === 0) {
       problems.push(`${label} Recipe schema is missing keywords`);
@@ -249,18 +260,6 @@ for (const page of pages) {
         problems.push(`${label} instruction ${index + 1} URL does not target a rendered step`);
       }
     }
-  }
-}
-
-for (const guideLabel of [
-  'Espresso brew guide',
-  'AeroPress brew guide',
-  'V60 brew guide',
-  'French Press brew guide',
-  'Moka Pot brew guide',
-]) {
-  if (!recipeGuideLabels.has(guideLabel)) {
-    problems.push(`shared recipe guide block was not exercised for ${guideLabel}`);
   }
 }
 
@@ -774,24 +773,6 @@ if (existsSync(v60GuidePage)) {
   }
 }
 
-for (const [slug, baseCups] of [
-  ['v60-pour-over', 1],
-  ['aeropress-daily', 1],
-  ['classic-french-press', 2],
-]) {
-  const recipePage = join(DIST, 'recipes', slug, 'index.html');
-  if (!existsSync(recipePage)) continue;
-  const html = readFileSync(recipePage, 'utf8');
-  if (!html.includes(`data-base-cups="${baseCups}"`)) {
-    problems.push(`recipes/${slug}/index.html is missing its base cup count`);
-  }
-  for (const cups of [1, 2, 3]) {
-    if (!html.includes(`data-cups="${cups}"`)) {
-      problems.push(`recipes/${slug}/index.html is missing the ${cups}-cup option`);
-    }
-  }
-}
-
 const searchPage = join(DIST, 'search', 'index.html');
 if (existsSync(searchPage)) {
   const html = readFileSync(searchPage, 'utf8');
@@ -812,6 +793,41 @@ if (existsSync(searchPage)) {
     if (!html.includes(href)) {
       problems.push(`search index is missing comparison guide: ${href}`);
     }
+  }
+}
+
+const savedPage = join(DIST, 'saved', 'index.html');
+if (existsSync(savedPage)) {
+  const html = readFileSync(savedPage, 'utf8');
+  if (!/<meta name="robots" content="noindex, follow">/i.test(html)) {
+    problems.push('saved/index.html is missing noindex, follow');
+  }
+  if (!/<link rel="canonical" href="https:\/\/kavovo\.uk\/saved\/">/i.test(html)) {
+    problems.push('saved/index.html canonical is not /saved/');
+  }
+  for (const marker of [
+    'Saved recipes',
+    'not synced between devices',
+    'No saved recipes yet',
+    'Browse recipes',
+  ]) {
+    if (!html.includes(marker)) problems.push(`saved/index.html is missing: ${marker}`);
+  }
+} else {
+  problems.push('Saved recipes page was not built');
+}
+
+const irishCoffeePage = join(DIST, 'recipes', 'irish-coffee', 'index.html');
+if (existsSync(irishCoffeePage)) {
+  const html = readFileSync(irishCoffeePage, 'utf8');
+  const requiredRelated = [
+    'data-content-slug="coffee-cocktails"',
+    'data-content-slug="cafe-cubano"',
+    'data-content-slug="coffee-to-water-ratio"',
+    'data-content-slug="filter-coffee"',
+  ];
+  for (const marker of requiredRelated) {
+    if (!html.includes(marker)) problems.push(`Irish Coffee related content is missing ${marker}`);
   }
 }
 
@@ -910,8 +926,8 @@ if (existsSync(cloudFoamPage)) {
     }
   }
 
-  const relatedSlugs = ['iced-latte', 'iced-caramel-latte', 'vietnamese-iced-coffee'];
-  const relatedStart = html.indexOf('Related recipes');
+  const relatedSlugs = ['iced-latte', 'iced-caramel-latte'];
+  const relatedStart = html.indexOf('Related recipes and guides');
   const relatedPositions = relatedSlugs.map((slug) =>
     html.indexOf(`href="/recipes/${slug}/"`, relatedStart),
   );
@@ -922,7 +938,7 @@ if (existsSync(cloudFoamPage)) {
       (position, index) => index > 0 && position <= relatedPositions[index - 1],
     )
   ) {
-    problems.push('cloud foam related recipes are missing or out of editorial order');
+    problems.push('cloud foam related recipe overrides are missing or out of editorial order');
   }
 } else {
   problems.push('Iced Salted Vanilla Cloud Foam recipe page was not built');

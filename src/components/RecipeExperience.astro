@@ -1,51 +1,28 @@
 ---
+import type { EspressoRecipe } from '../lib/recipe-scaling';
+
 interface Props {
   title: string;
   steps: string[];
-  baseCups?: number;
-  cupNote?: string;
-  batchScaling?: boolean;
+  ingredients: string[];
+  espresso?: EspressoRecipe;
 }
 
-const { title, steps, baseCups, cupNote, batchScaling = false } = Astro.props;
-const hasCupScaling = typeof baseCups === 'number';
+const { title, steps, ingredients, espresso } = Astro.props;
 const stepTotal = Math.max(steps.length, 1);
 ---
 
 <div
   data-recipe-experience
-  data-base-cups={hasCupScaling ? baseCups : undefined}
-  data-cup-note-text={cupNote}
-  data-batch-scaling={batchScaling ? 'true' : 'false'}
+  data-espresso-dose={espresso?.dose}
+  data-espresso-ratio={espresso?.ratio}
 >
   <div data-recipe-tools hidden class="recipe-tools print:hidden">
     <div class="recipe-tools__copy">
       <p class="text-sm font-medium text-ink">Tap each step as you brew.</p>
-      <p data-cup-status class="mt-1 text-xs text-ink-soft" aria-live="polite"></p>
-      <p data-cup-note hidden class="mt-2 max-w-xl text-xs leading-relaxed text-ink-soft"></p>
     </div>
 
     <div class="recipe-tools__actions">
-      {
-        hasCupScaling && (
-          <fieldset class="recipe-cups">
-            <legend class="text-xs font-medium text-ink-soft">Cups</legend>
-            <div class="recipe-cups__options" aria-label="Number of cups">
-              {[1, 2, 3].map((cups) => (
-                <button
-                  type="button"
-                  data-cups={cups}
-                  aria-pressed={cups === baseCups ? 'true' : 'false'}
-                  class="recipe-cups__button"
-                >
-                  {cups}
-                </button>
-              ))}
-            </div>
-          </fieldset>
-        )
-      }
-
       <button type="button" data-reset-steps class="recipe-tool-button" disabled>
         Reset steps
       </button>
@@ -101,6 +78,13 @@ const stepTotal = Math.max(steps.length, 1);
         <span data-wake-status class="text-xs text-ink-soft" role="status" aria-live="polite"></span>
       </div>
 
+      <details class="recipe-brew-ingredients" open>
+        <summary>Current ingredients</summary>
+        <ul data-brew-ingredient-list>
+          {ingredients.map((ingredient) => <li>{ingredient}</li>)}
+        </ul>
+      </details>
+
       <section class="recipe-brew-step" aria-labelledby="recipe-current-step">
         <div class="flex items-center justify-between gap-4">
           <p data-step-count class="text-sm font-medium text-accent">Step 1 of {stepTotal}</p>
@@ -141,47 +125,6 @@ const stepTotal = Math.max(steps.length, 1);
     align-items: end;
     gap: 0.625rem;
     margin-top: 0.875rem;
-  }
-
-  .recipe-cups {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    min-width: 0;
-    border: 0;
-    padding: 0;
-  }
-
-  .recipe-cups__options {
-    display: inline-grid;
-    grid-template-columns: repeat(3, 2.75rem);
-    overflow: hidden;
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-md);
-    background: var(--color-card);
-  }
-
-  .recipe-cups__button {
-    display: grid;
-    min-width: 2.75rem;
-    min-height: 2.75rem;
-    place-items: center;
-    border: 0;
-    border-left: 1px solid var(--color-line);
-    background: transparent;
-    color: var(--color-ink-soft);
-    font-size: 0.875rem;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  .recipe-cups__button:first-child {
-    border-left: 0;
-  }
-
-  .recipe-cups__button[aria-pressed='true'] {
-    background: var(--color-accent);
-    color: var(--color-accent-ink);
   }
 
   .recipe-tool-button,
@@ -231,7 +174,6 @@ const stepTotal = Math.max(steps.length, 1);
 
   .recipe-tool-button:focus-visible,
   .recipe-icon-button:focus-visible,
-  .recipe-cups__button:focus-visible,
   .recipe-step-toggle:focus-visible {
     outline: 2px solid var(--color-focus);
     outline-offset: 2px;
@@ -266,7 +208,7 @@ const stepTotal = Math.max(steps.length, 1);
 
   .recipe-brew-dialog__layout {
     display: grid;
-    grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+    grid-template-rows: auto auto auto auto minmax(0, 1fr) auto;
     min-width: 0;
     max-height: calc(100dvh - 2rem);
     overflow: hidden;
@@ -332,6 +274,27 @@ const stepTotal = Math.max(steps.length, 1);
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
+  }
+
+  .recipe-brew-ingredients {
+    max-height: 9rem;
+    overflow-y: auto;
+    border-bottom: 1px solid var(--color-line);
+    padding: 0.75rem 1.25rem;
+    font-size: 0.8125rem;
+  }
+
+  .recipe-brew-ingredients summary {
+    min-height: 2rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .recipe-brew-ingredients ul {
+    display: grid;
+    gap: 0.25rem;
+    margin-top: 0.375rem;
+    color: var(--color-ink-soft);
   }
 
   .recipe-brew-step {
@@ -448,11 +411,6 @@ const stepTotal = Math.max(steps.length, 1);
       align-items: stretch;
     }
 
-    .recipe-cups {
-      width: 100%;
-      justify-content: space-between;
-    }
-
     .recipe-brew-dialog {
       width: 100vw;
       height: 100dvh;
@@ -503,7 +461,6 @@ const stepTotal = Math.max(steps.length, 1);
   @media (prefers-reduced-motion: reduce) {
     .recipe-tool-button,
     .recipe-icon-button,
-    .recipe-cups__button,
     #recipe-body ol > li::before {
       transition: none;
     }
@@ -517,7 +474,11 @@ const stepTotal = Math.max(steps.length, 1);
 </style>
 
 <script>
-  import { scaleRecipeMeasurements } from '../lib/recipes';
+  import {
+    scaleInstructionMeasurements,
+    type EspressoRecipe,
+    type RecipeSettingsEventDetail,
+  } from '../lib/recipe-scaling';
 
   interface WakeLockSentinelLike {
     release: () => Promise<void>;
@@ -565,8 +526,7 @@ const stepTotal = Math.max(steps.length, 1);
     const stepComplete = dialog.querySelector<HTMLElement>('[data-step-complete]');
     const stepProgress = dialog.querySelector<HTMLProgressElement>('[data-step-progress]');
     const stepStatus = tools.querySelector<HTMLElement>('[data-step-status]');
-    const cupStatus = tools.querySelector<HTMLElement>('[data-cup-status]');
-    const cupNote = tools.querySelector<HTMLElement>('[data-cup-note]');
+    const brewIngredientList = dialog.querySelector<HTMLUListElement>('[data-brew-ingredient-list]');
 
     let currentIndex = 0;
 
@@ -613,6 +573,14 @@ const stepTotal = Math.max(steps.length, 1);
       button.addEventListener('click', toggle);
     });
 
+    const baseStepTexts = stepButtons.map((button) => button.textContent?.trim() ?? '');
+    const espressoDose = Number(experience.dataset.espressoDose);
+    const espressoRatio = Number(experience.dataset.espressoRatio);
+    const espresso: EspressoRecipe | undefined =
+      Number.isFinite(espressoDose) && Number.isFinite(espressoRatio)
+        ? { dose: espressoDose, ratio: espressoRatio }
+        : undefined;
+
     const renderDialogStep = (focus = false) => {
       const item = stepItems[currentIndex];
       if (!item || !currentStep || !stepCount || !stepProgress || !nextButton || !previousButton) {
@@ -655,52 +623,36 @@ const stepTotal = Math.max(steps.length, 1);
       renderDialogStep(true);
     });
 
-    const baseCups = Number(experience.dataset.baseCups);
-    const cupButtons = Array.from(tools.querySelectorAll<HTMLButtonElement>('[data-cups]'));
-    if (Number.isFinite(baseCups) && baseCups > 0 && cupButtons.length > 0) {
-      const scalableElements = [
-        ...Array.from(document.querySelectorAll<HTMLElement>('[data-recipe-measurement]')),
-        ...Array.from(document.querySelectorAll<HTMLElement>('[data-recipe-ingredients] li')),
-        ...stepButtons,
-      ];
-
-      scalableElements.forEach((element) => {
-        element.dataset.baseRecipeText ??= element.textContent?.trim() ?? '';
+    const applyRecipeSettings = (settings: RecipeSettingsEventDetail) => {
+      stepButtons.forEach((button, index) => {
+        button.textContent = scaleInstructionMeasurements(
+          baseStepTexts[index] ?? '',
+          settings,
+          espresso,
+        );
       });
+      stepItems.forEach(updateStepLabel);
 
-      const applyCupScale = (cups: number, announce = true) => {
-        const factor = cups / baseCups;
-        scalableElements.forEach((element) => {
-          element.textContent = scaleRecipeMeasurements(
-            element.dataset.baseRecipeText ?? '',
-            factor,
-          );
-        });
-        stepItems.forEach(updateStepLabel);
-        cupButtons.forEach((button) => {
-          button.setAttribute('aria-pressed', Number(button.dataset.cups) === cups ? 'true' : 'false');
-        });
+      if (brewIngredientList) {
+        brewIngredientList.replaceChildren(
+          ...settings.ingredientLines.map((line) => {
+            const item = document.createElement('li');
+            item.textContent = line;
+            return item;
+          }),
+        );
+      }
 
-        const isBatchScale = experience.dataset.batchScaling === 'true' && cups > 1;
-        if (cupStatus) {
-          cupStatus.textContent = announce
-            ? isBatchScale
-              ? `Quantities updated for ${cups} cups across ${cups} batches.`
-              : `Quantities updated for ${cups} ${cups === 1 ? 'cup' : 'cups'}.`
-            : '';
-        }
-        if (cupNote) {
-          cupNote.textContent = experience.dataset.cupNoteText ?? '';
-          cupNote.hidden = !isBatchScale || !cupNote.textContent;
-        }
-        renderDialogStep();
-      };
+      if (settings.doseLabel) {
+        const doseFact = document.querySelector<HTMLElement>('[data-fact-label="Dose"]');
+        if (doseFact) doseFact.textContent = settings.doseLabel;
+      }
+      renderDialogStep();
+    };
 
-      cupButtons.forEach((button) => {
-        button.addEventListener('click', () => applyCupScale(Number(button.dataset.cups)));
-      });
-      applyCupScale(baseCups, false);
-    }
+    window.addEventListener('kavovo:recipe-settings', (event) => {
+      applyRecipeSettings((event as CustomEvent<RecipeSettingsEventDetail>).detail);
+    });
 
     const timerDisplay = dialog.querySelector<HTMLTimeElement>('[data-brew-time]');
     const timerButton = dialog.querySelector<HTMLButtonElement>('[data-toggle-timer]');

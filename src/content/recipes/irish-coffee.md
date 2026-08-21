@@ -28,14 +28,30 @@ vessel:
 datePublished: 2026-08-06
 dateModified: 2026-08-18
 ingredients:
-  - 120–150 ml freshly brewed hot coffee
-  - 40 ml Irish whiskey
-  - 8–10 g brown or demerara sugar
-  - 30 ml cold double cream, lightly whipped
+  - name: "freshly brewed hot coffee"
+    amountMin: 120
+    amountMax: 150
+    unit: "ml"
+  - name: "Irish whiskey"
+    amount: 40
+    unit: "ml"
+  - name: "brown or demerara sugar"
+    amountMin: 8
+    amountMax: 10
+    unit: "g"
+  - name: "cold double cream, lightly whipped"
+    amount: 30
+    unit: "ml"
 equipmentSet: filter
 equipmentExtra:
   - Small whisk or cocktail shaker
   - Bar spoon
+related:
+  recipes:
+    - cafe-cubano
+  learn:
+    - coffee-to-water-ratio
+    - filter-coffee
 ---
 
 ## Steps

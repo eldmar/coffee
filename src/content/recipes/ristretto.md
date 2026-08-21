@@ -21,8 +21,18 @@ vessel:
   capacity: "50–60 ml"
 datePublished: 2026-08-05
 dateModified: 2026-08-06
+espresso:
+  dose: 18
+  ratio: 1.3
 ingredients:
-  - 18 g freshly ground coffee
+  - name: "freshly ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 23.4
+    unit: "g"
+    role: "espresso-yield"
 equipmentSet: espresso
 equipmentOptional:
   - Dosing funnel

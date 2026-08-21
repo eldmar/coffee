@@ -21,9 +21,25 @@ vessel:
   capacity: "90–120 ml"
 datePublished: 2026-08-05
 dateModified: 2026-08-06
+espresso:
+  dose: 18
+  ratio: 1.3
 ingredients:
-  - 18 g freshly ground coffee
-  - 100 g cold whole milk or barista oat milk for steaming — you will use about 65–70 g
+  - name: "freshly ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 23.4
+    unit: "g"
+    role: "espresso-yield"
+  - name: "cold whole milk or barista oat milk for steaming"
+    amount: 100
+    unit: "ml"
+  - name: "steamed milk used in the drink"
+    amountMin: 65
+    amountMax: 70
+    unit: "ml"
 equipmentSet: milk
 ---
 

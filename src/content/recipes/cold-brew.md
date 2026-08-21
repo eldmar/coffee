@@ -23,8 +23,12 @@ vessel:
 datePublished: 2026-07-18
 dateModified: 2026-08-20
 ingredients:
-  - 60 g coarsely ground coffee
-  - 600 ml cold filtered water
+  - name: "coarsely ground coffee"
+    amount: 60
+    unit: "g"
+  - name: "cold filtered water"
+    amount: 600
+    unit: "ml"
 equipmentSet: cold-brew
 equipmentOptional:
   - Paper filter for a cleaner cup

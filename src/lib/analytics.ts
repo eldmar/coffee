@@ -95,6 +95,47 @@ export type BrewAnalyticsEventMap = {
   };
 };
 
+export type RetentionAnalyticsEventMap = {
+  learn_lesson_completed: {
+    path_slug: string;
+    lesson_slug: string;
+  };
+  learn_path_continued: {
+    path_slug: string;
+    lesson_slug: string;
+  };
+  learn_progress_reset: {
+    path_slug: string;
+  };
+  recipe_servings_changed: {
+    recipe_slug: string;
+    servings: number;
+  };
+  recipe_units_changed: {
+    recipe_slug: string;
+    units: 'metric' | 'us';
+  };
+  espresso_dose_changed: {
+    recipe_slug: string;
+  };
+  recipe_saved: {
+    recipe_slug: string;
+  };
+  recipe_removed: {
+    recipe_slug: string;
+  };
+  saved_recipes_opened: Record<never, never>;
+  recent_recipe_opened: {
+    recipe_slug: string;
+  };
+  recent_history_cleared: Record<never, never>;
+  related_content_clicked: {
+    recipe_slug: string;
+    content_type: 'recipe' | 'guide' | 'learn' | 'journal';
+    content_slug: string;
+  };
+};
+
 type AnalyticsValue = string | number | boolean | null;
 type AnalyticsProperties = Record<string, AnalyticsValue>;
 
@@ -134,6 +175,13 @@ const ALLOWED_PROPERTIES = new Set([
   'adjustment_direction',
   'attempt_number',
   'helpful',
+  'path_slug',
+  'lesson_slug',
+  'recipe_slug',
+  'servings',
+  'units',
+  'content_type',
+  'content_slug',
 ]);
 
 type PostHogClient = (typeof import('posthog-js'))['default'];
@@ -217,6 +265,13 @@ export function trackBrewEvent(event: string, properties: AnalyticsProperties = 
 export function trackTypedBrewEvent<TEvent extends keyof BrewAnalyticsEventMap>(
   event: TEvent,
   properties: BrewAnalyticsEventMap[TEvent],
+): void {
+  trackBrewEvent(event, properties as AnalyticsProperties);
+}
+
+export function trackRetentionEvent<TEvent extends keyof RetentionAnalyticsEventMap>(
+  event: TEvent,
+  properties: RetentionAnalyticsEventMap[TEvent],
 ): void {
   trackBrewEvent(event, properties as AnalyticsProperties);
 }

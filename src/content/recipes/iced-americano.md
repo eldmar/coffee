@@ -28,11 +28,25 @@ vessel:
   capacity: "300–350 ml"
 datePublished: 2026-08-05
 dateModified: 2026-08-20
+espresso:
+  dose: 18
+  ratio: 2.2
 ingredients:
-  - 18 g freshly ground coffee
-  - 40 g double espresso
-  - 120 ml cold filtered water
-  - 100–120 g ice
+  - name: "freshly ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 39.6
+    unit: "g"
+    role: "espresso-yield"
+  - name: "cold filtered water"
+    amount: 120
+    unit: "ml"
+  - name: "ice"
+    amountMin: 100
+    amountMax: 120
+    unit: "g"
 equipmentSet: espresso
 relatedRecipes:
   - iced-latte

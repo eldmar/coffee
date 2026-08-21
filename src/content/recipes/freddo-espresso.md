@@ -21,10 +21,26 @@ vessel:
   capacity: "250–300 ml"
 datePublished: 2026-08-06
 dateModified: 2026-08-06
+espresso:
+  dose: 18
+  ratio: 2
 ingredients:
-  - 18 g freshly ground coffee
-  - 100–120 g fresh ice
-  - 5 g sugar, optional
+  - name: "freshly ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 36
+    unit: "g"
+    role: "espresso-yield"
+  - name: "fresh ice"
+    amountMin: 100
+    amountMax: 120
+    unit: "g"
+  - name: "sugar"
+    amount: 5
+    unit: "g"
+    note: "optional"
 equipmentSet: espresso
 equipmentExtra:
   - Cocktail shaker

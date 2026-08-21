@@ -22,8 +22,13 @@ vessel:
 datePublished: 2026-07-18
 dateModified: 2026-08-15
 ingredients:
-  - 18 g medium-fine ground coffee (for a 3-cup pot)
-  - Hot water to the safety valve
+  - name: "medium-fine ground coffee"
+    amount: 18
+    unit: "g"
+    note: "for a 3-cup pot"
+  - name: "hot water"
+    displayAmount: "to the safety valve"
+    scalable: false
 equipmentSet: moka-pot
 ---
 

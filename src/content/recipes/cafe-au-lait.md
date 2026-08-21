@@ -22,9 +22,15 @@ vessel:
 datePublished: 2026-08-06
 dateModified: 2026-08-06
 ingredients:
-  - 12 g freshly ground coffee
-  - 200 g filtered water
-  - 180 g whole milk or plant alternative
+  - name: "freshly ground coffee"
+    amount: 12
+    unit: "g"
+  - name: "filtered water"
+    amount: 200
+    unit: "ml"
+  - name: "whole milk or plant alternative"
+    amount: 180
+    unit: "ml"
 equipmentSet: filter
 equipmentExtra:
   - Small saucepan or milk pitcher

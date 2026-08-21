@@ -25,11 +25,30 @@ vessel:
   capacity: "250–300 ml"
 datePublished: 2026-08-03
 dateModified: 2026-08-15
+espresso:
+  dose: 18
+  ratio: 2
 ingredients:
-  - 18 g freshly ground coffee, brewed as 36–40 g espresso
-  - 20 g dark chocolate or 20 ml chocolate syrup
-  - 160–180 ml cold whole milk or a barista-style alternative
-  - Cocoa powder or grated chocolate (optional)
+  - name: "freshly ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 36
+    unit: "g"
+    role: "espresso-yield"
+  - name: "dark chocolate"
+    amount: 20
+    unit: "g"
+    note: "or use the same volume of chocolate syrup"
+  - name: "cold whole milk or a barista-style alternative"
+    amountMin: 160
+    amountMax: 180
+    unit: "ml"
+  - name: "cocoa powder or grated chocolate"
+    displayAmount: "as needed"
+    scalable: false
+    note: "optional"
 equipmentSet: milk
 equipmentOptional:
   - Milk thermometer

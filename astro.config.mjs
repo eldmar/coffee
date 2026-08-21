@@ -11,6 +11,7 @@ const SITE_URL = 'https://kavovo.uk';
 const SITEMAP_EXCLUSIONS = new Set([
   '/404/',
   '/search/',
+  '/saved/',
   '/shop/',
   '/subscription-confirmed/',
 ]);

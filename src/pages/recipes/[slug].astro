@@ -3,7 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Photo from '../../components/Photo.astro';
 import { photo } from '../../lib/photos';
 import Layout from '../../layouts/Layout.astro';
-import RecipeCard from '../../components/RecipeCard.astro';
+import RelatedContentCard from '../../components/RelatedContentCard.astro';
 import RecipeSchema from '../../components/RecipeSchema.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import RecipeExperience from '../../components/RecipeExperience.astro';
@@ -13,11 +13,16 @@ import {
   categoryPath,
   extractFaqs,
   extractSteps,
+  formatTimeShort,
   humanDuration,
   recipeFacts,
   shareText,
 } from '../../lib/recipes';
 import { equipmentFor } from '../../lib/equipment';
+import RecipeScaler from '../../components/RecipeScaler';
+import { formatIngredients } from '../../lib/recipe-scaling';
+import { selectRelatedRecipeSlugs } from '../../lib/related-content';
+import { pathBySlug, readingMinutes } from '../../lib/learn';
 
 export async function getStaticPaths() {
   const recipes = await getCollection('recipes');
@@ -35,26 +40,185 @@ const { data } = recipe;
 const facts = recipeFacts(data);
 const equipment = [...equipmentFor(data.equipmentSet), ...data.equipmentExtra];
 
-const guides = await getCollection('guides');
+const [guides, lessons, journalPosts] = await Promise.all([
+  getCollection('guides'),
+  getCollection('lessons'),
+  getCollection('journal'),
+]);
 const guide = guides.find((g) => g.data.method === data.brewMethod);
 
-// Related recipes are automatic unless editorially pinned in frontmatter.
-const automaticRelated = [
-  ...all.filter((r) => r.id !== recipe.id && r.data.category === data.category),
-  ...all.filter(
-    (r) =>
-      r.id !== recipe.id &&
-      r.data.category !== data.category &&
-      r.data.brewMethod === data.brewMethod,
-  ),
-].slice(0, 3);
-const related = data.relatedRecipes
-  ? data.relatedRecipes.map((slug) => {
-      const match = all.find((candidate) => candidate.id === slug);
-      if (!match) throw new Error(`Recipe "${recipe.id}" links to missing related recipe "${slug}".`);
-      return match;
-    })
-  : automaticRelated;
+const recipeSelectionData = all.map((entry) => ({
+  slug: entry.id,
+  title: entry.data.title,
+  category: entry.data.category,
+  brewMethod: entry.data.brewMethod,
+  temperature: entry.data.temperature,
+  milk: entry.data.milk,
+  ingredientNames: entry.data.ingredients.map((ingredient) => ingredient.name),
+  seasonalTags: entry.data.seasonalTags,
+  popular: entry.data.popular,
+}));
+const sourceSelectionData = recipeSelectionData.find((entry) => entry.slug === recipe.id)!;
+const manualRecipeSlugs = data.related?.recipes ?? data.relatedRecipes ?? [];
+for (const slug of manualRecipeSlugs) {
+  if (!all.some((candidate) => candidate.id === slug)) {
+    throw new Error(`Recipe "${recipe.id}" links to missing related recipe "${slug}".`);
+  }
+}
+
+const hasPublishedCategoryPeer = all.some(
+  (candidate) => candidate.id !== recipe.id && candidate.data.category === data.category,
+);
+const useCategoryFallback = data.category === 'coffee-cocktails' && !hasPublishedCategoryPeer;
+const selectedRecipeSlugs = selectRelatedRecipeSlugs(
+  sourceSelectionData,
+  recipeSelectionData,
+  manualRecipeSlugs,
+  useCategoryFallback ? 1 : 2,
+);
+const selectedRecipes = selectedRecipeSlugs.map((slug) => all.find((entry) => entry.id === slug)!);
+
+const findLesson = (slug: string) =>
+  lessons.find((lesson) => lesson.id === slug || lesson.id.endsWith(`/${slug}`));
+const manualLessons = (data.related?.learn ?? []).map((slug) => {
+  const lesson = findLesson(slug);
+  if (!lesson) throw new Error(`Recipe "${recipe.id}" links to missing Learn item "${slug}".`);
+  return lesson;
+});
+const educational: Array<
+  | { kind: 'guide'; entry: (typeof guides)[number] }
+  | { kind: 'learn'; entry: (typeof lessons)[number] }
+> = [];
+const educationIds = new Set<string>();
+const addLesson = (entry: (typeof lessons)[number] | undefined) => {
+  if (!entry || educationIds.has(`learn:${entry.id}`)) return;
+  educationIds.add(`learn:${entry.id}`);
+  educational.push({ kind: 'learn', entry });
+};
+const addGuide = (entry: (typeof guides)[number] | undefined) => {
+  if (!entry || educationIds.has(`guide:${entry.id}`)) return;
+  educationIds.add(`guide:${entry.id}`);
+  educational.push({ kind: 'guide', entry });
+};
+
+manualLessons.forEach(addLesson);
+if (manualLessons.length === 0) addGuide(guide);
+const automaticLessonIds = [
+  ...(data.temperature === 'iced' ? ['coffee-basics/cold-brew-vs-iced-coffee'] : []),
+  ...(data.category === 'milk-drinks' ? ['coffee-basics/cortado-vs-flat-white-vs-latte'] : []),
+  ...(data.brewMethod === 'espresso'
+    ? ['dial-in-espresso/espresso-ratio', 'dial-in-espresso/espresso-basics-dose-yield-time']
+    : []),
+  ...(data.brewMethod === 'filter' || data.brewMethod === 'v60'
+    ? ['coffee-basics/filter-coffee']
+    : []),
+  'coffee-basics/coffee-to-water-ratio',
+  'coffee-basics/why-water-matters',
+];
+automaticLessonIds.forEach((id) => addLesson(findLesson(id)));
+if (manualLessons.length > 0) addGuide(guide);
+
+const manualJournal = (data.related?.journal ?? []).map((slug) => {
+  const post = journalPosts.find((candidate) => candidate.id === slug);
+  if (!post) throw new Error(`Recipe "${recipe.id}" links to missing Journal item "${slug}".`);
+  return post;
+});
+const relevantJournal =
+  manualJournal[0] ??
+  (data.temperature === 'iced'
+    ? journalPosts.find((post) => post.id === 'ice-is-an-ingredient')
+    : undefined);
+const educationNeeded = relevantJournal ? 1 : 2;
+
+type RelatedCard = {
+  href: string;
+  title: string;
+  type: 'recipe' | 'guide' | 'learn' | 'journal' | 'collection';
+  typeLabel: string;
+  category: string;
+  image: string;
+  imageAlt: string;
+  time: string;
+  contentSlug: string;
+};
+
+const relatedCards: RelatedCard[] = [];
+if (useCategoryFallback) {
+  relatedCards.push({
+    href: categoryPath(data.category),
+    title: `${categoryLabel(data.category)} recipes`,
+    type: 'collection',
+    typeLabel: 'Recipe collection',
+    category: categoryLabel(data.category),
+    image: data.image,
+    imageAlt: data.imageAlt,
+    time: 'Browse the collection',
+    contentSlug: data.category,
+  });
+}
+selectedRecipes.forEach((entry) => {
+  relatedCards.push({
+    href: `/recipes/${entry.id}/`,
+    title: entry.data.title,
+    type: 'recipe',
+    typeLabel: 'Recipe',
+    category: categoryLabel(entry.data.category),
+    image: entry.data.image,
+    imageAlt: entry.data.imageAlt,
+    time: formatTimeShort(entry.data),
+    contentSlug: entry.id,
+  });
+});
+
+const pathImage: Record<string, string> = {
+  'coffee-basics': 'learn-basics',
+  'dial-in-espresso': 'learn-espresso',
+  'understand-your-beans': 'learn-beans',
+};
+educational.slice(0, educationNeeded).forEach((item) => {
+  if (item.kind === 'guide') {
+    const canonical = all.find((entry) => entry.id === item.entry.data.canonicalRecipe);
+    if (!canonical) return;
+    relatedCards.push({
+      href: `/guides/${item.entry.id}/`,
+      title: item.entry.data.title,
+      type: 'guide',
+      typeLabel: 'Brew guide',
+      category: item.entry.data.difficulty,
+      image: canonical.data.image,
+      imageAlt: canonical.data.imageAlt,
+      time: `${readingMinutes(item.entry.data.readingTime)} read`,
+      contentSlug: item.entry.id,
+    });
+    return;
+  }
+  const pathTitle = pathBySlug(item.entry.data.path)?.title ?? 'Learn';
+  relatedCards.push({
+    href: `/learn/${item.entry.id}/`,
+    title: item.entry.data.title,
+    type: 'learn',
+    typeLabel: 'Learn',
+    category: pathTitle,
+    image: item.entry.data.image ?? pathImage[item.entry.data.path] ?? 'hero',
+    imageAlt:
+      item.entry.data.imageAlt ?? `Coffee brewing scene for the ${pathTitle} learning path.`,
+    time: `${readingMinutes(item.entry.data.readingTime)} read`,
+    contentSlug: item.entry.id.split('/').at(-1)!,
+  });
+});
+if (relevantJournal) {
+  relatedCards.push({
+    href: `/journal/${relevantJournal.id}/`,
+    title: relevantJournal.data.title,
+    type: 'journal',
+    typeLabel: 'Journal',
+    category: relevantJournal.data.category ?? 'Journal',
+    image: relevantJournal.data.image ?? 'hero',
+    imageAlt: relevantJournal.data.imageAlt ?? 'A KAVOVO Journal coffee story.',
+    time: `${readingMinutes(relevantJournal.data.readingTime ?? 1)} read`,
+    contentSlug: relevantJournal.id,
+  });
+}
 
 // Absolute URL for social cards and structured data.
 const ogImagePath = data.ogImage ?? photo(data.image).src;
@@ -69,6 +233,11 @@ const steps = extractSteps(recipe.body ?? '');
 const faqs = extractFaqs(recipe.body ?? '');
 const share = shareText(data, steps, recipeUrl);
 const usesScrollableTables = recipe.id === 'iced-americano';
+const initialIngredientLines = formatIngredients(
+  data.ingredients,
+  { servings: 1, units: 'metric', ...(data.espresso ? { dose: data.espresso.dose } : {}) },
+  data.espresso,
+);
 ---
 
 <Layout
@@ -79,7 +248,7 @@ const usesScrollableTables = recipe.id === 'iced-americano';
   publishedTime={data.datePublished}
   modifiedTime={data.dateModified}
 >
-  <article class="recipe mx-auto max-w-3xl px-5 py-12">
+  <article class="recipe mx-auto max-w-3xl px-5 py-12" data-recipe-slug={recipe.id}>
     <RecipeSchema recipe={recipe} />
 
     <div class="hidden print:mb-6 print:block">
@@ -105,7 +274,13 @@ const usesScrollableTables = recipe.id === 'iced-americano';
       <span>
         Updated <time datetime={data.dateModified.toISOString()}>{dateFmt(data.dateModified)}</time>
       </span>
-      <span class="ml-auto flex items-center gap-2 print:hidden">
+      <span class="ml-auto flex flex-wrap items-center justify-end gap-2 print:hidden">
+        <button type="button" data-save-recipe aria-pressed="false" aria-label={`Save ${data.title} recipe`} class="recipe-action recipe-action--secondary">
+          <svg data-save-icon width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 4.8A1.8 1.8 0 0 1 7.8 3h8.4A1.8 1.8 0 0 1 18 4.8V21l-6-3.8L6 21Z" />
+          </svg>
+          <span data-save-label>Save recipe</span>
+        </button>
         <button type="button" data-share data-share-text={share} data-share-url={recipeUrl} class="recipe-action recipe-action--primary">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="18" cy="5" r="3" />
@@ -123,6 +298,10 @@ const usesScrollableTables = recipe.id === 'iced-americano';
           </svg>
           Print recipe
         </button>
+        <a data-view-saved href="/saved/" hidden class="min-h-11 items-center px-2 text-sm font-medium text-accent hover:underline">
+          View saved
+        </a>
+        <span data-save-status role="status" aria-live="polite" hidden class="save-toast"></span>
         <span data-share-status role="status" aria-live="polite" class="text-xs font-medium text-accent"></span>
       </span>
     </div>
@@ -151,7 +330,7 @@ const usesScrollableTables = recipe.id === 'iced-americano';
       {facts.map(([label, value]) => (
         <div>
           <dt class="eyebrow">{label}</dt>
-          <dd class="mt-1 text-sm font-medium" data-recipe-measurement>{value}</dd>
+          <dd class="mt-1 text-sm font-medium" data-recipe-measurement data-fact-label={label}>{value}</dd>
         </div>
       ))}
     </dl>
@@ -165,14 +344,13 @@ const usesScrollableTables = recipe.id === 'iced-americano';
     }
 
     <div class="mt-10 grid gap-8 sm:grid-cols-2">
-      <section class="recipe-block" data-recipe-ingredients>
-        <h2 class="font-display text-xl font-medium">Ingredients</h2>
-        <ul class="mt-3 flex flex-col gap-2 text-sm text-ink-soft">
-          {data.ingredients.map((item) => (
-            <li class="border-b border-line pb-2">{item}</li>
-          ))}
-        </ul>
-      </section>
+      <RecipeScaler
+        client:load
+        recipeSlug={recipe.id}
+        ingredients={data.ingredients}
+        espresso={data.espresso}
+        servingNote={data.cupScaling?.note}
+      />
       <section class="recipe-block">
         <h2 class="font-display text-xl font-medium">Equipment</h2>
         <ul class="mt-3 flex flex-col gap-2 text-sm text-ink-soft">
@@ -202,9 +380,8 @@ const usesScrollableTables = recipe.id === 'iced-americano';
     <RecipeExperience
       title={data.title}
       steps={steps}
-      baseCups={data.cupScaling?.baseCups}
-      cupNote={data.cupScaling?.note}
-      batchScaling={data.cupScaling?.batchScaling}
+      ingredients={initialIngredientLines}
+      espresso={data.espresso}
     />
 
     <div
@@ -220,40 +397,19 @@ const usesScrollableTables = recipe.id === 'iced-americano';
 
     <FaqSchema items={faqs} />
 
-    {
-      guide && (
-        <aside class="mt-10 rounded-lg border border-line bg-card p-5 print:hidden">
-          <p class="text-sm text-ink-soft" data-recipe-guide-link>
-            New to this method? The{' '}
-            <a href={`/guides/${guide.id}/`} class="font-medium text-accent hover:underline">
-              {guide.data.title} brew guide
-            </a>{' '}
-            covers the technique behind this recipe.
-          </p>
-        </aside>
-      )
-    }
-
-    {
-      related.length > 0 && (
-        <section class="mt-12 border-t border-line pt-8 print:hidden">
-          <h2 class="font-display text-2xl font-medium">Related recipes</h2>
-          <div class="mt-6 grid gap-6 sm:grid-cols-3">
-            {related.map((r) => (
-              <RecipeCard
-                slug={r.id}
-                title={r.data.title}
-                image={r.data.image}
-                category={r.data.category}
-                activeTime={r.data.activeTime}
-                totalTime={r.data.totalTime}
-                totalTimeLabel={r.data.totalTimeLabel}
-              />
-            ))}
-          </div>
-        </section>
-      )
-    }
+    <section class="mt-12 border-t border-line pt-8 print:hidden" aria-labelledby="related-content-heading">
+      <span class="eyebrow">Continue exploring</span>
+      <h2 id="related-content-heading" class="mt-2 font-display text-2xl font-medium">
+        Related recipes and guides
+      </h2>
+      <ul class="related-content-list mt-6 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-3 md:grid md:grid-cols-2 md:overflow-visible md:pb-0">
+        {relatedCards.map((card) => (
+          <li class="w-[82%] shrink-0 snap-start sm:w-[46%] md:w-auto">
+            <RelatedContentCard {...card} sourceRecipe={recipe.id} />
+          </li>
+        ))}
+      </ul>
+    </section>
   </article>
 </Layout>
 
@@ -337,6 +493,28 @@ const usesScrollableTables = recipe.id === 'iced-americano';
     outline-offset: 2px;
   }
 
+  .save-toast {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 60;
+    max-width: min(22rem, calc(100vw - 2rem));
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    background: var(--color-ink);
+    color: var(--color-card);
+    box-shadow: 0 10px 30px rgb(43 33 27 / 0.2);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .related-content-list {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line) transparent;
+    scroll-padding-inline: 0.25rem;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .recipe-action {
       transition: none;
@@ -389,6 +567,80 @@ const usesScrollableTables = recipe.id === 'iced-americano';
 </style>
 
 <script>
+  import { trackRetentionEvent } from '../../lib/analytics';
+  import { recipeShareUrl, type RecipeSettings } from '../../lib/recipe-scaling';
+  import {
+    RETENTION_KEYS,
+    isRecipeSaved,
+    recordRecentRecipe,
+    subscribeRetentionKey,
+    toggleSavedRecipe,
+  } from '../../lib/retention/storage';
+
+  const recipeRoot = document.querySelector<HTMLElement>('[data-recipe-slug]');
+  const recipeSlug = recipeRoot?.dataset.recipeSlug;
+  const saveButton = document.querySelector<HTMLButtonElement>('[data-save-recipe]');
+  const saveLabel = document.querySelector<HTMLElement>('[data-save-label]');
+  const saveIcon = document.querySelector<SVGElement>('[data-save-icon]');
+  const viewSaved = document.querySelector<HTMLAnchorElement>('[data-view-saved]');
+  const saveStatus = document.querySelector<HTMLElement>('[data-save-status]');
+
+  function refreshSaveButton() {
+    if (!recipeSlug || !saveButton || !saveLabel) return;
+    const saved = isRecipeSaved(recipeSlug);
+    saveButton.setAttribute('aria-pressed', String(saved));
+    saveButton.setAttribute(
+      'aria-label',
+      saved ? `Remove ${document.querySelector('h1')?.textContent?.trim() ?? 'recipe'} from saved recipes` : `Save ${document.querySelector('h1')?.textContent?.trim() ?? 'recipe'} recipe`,
+    );
+    saveLabel.textContent = saved ? 'Saved ✓' : 'Save recipe';
+    saveIcon?.setAttribute('fill', saved ? 'currentColor' : 'none');
+    if (viewSaved) {
+      viewSaved.hidden = !saved;
+      viewSaved.classList.toggle('inline-flex', saved);
+    }
+  }
+
+  if (recipeSlug) {
+    recordRecentRecipe(recipeSlug);
+    refreshSaveButton();
+    subscribeRetentionKey(RETENTION_KEYS.savedRecipes, refreshSaveButton);
+  }
+
+  saveButton?.addEventListener('click', () => {
+    if (!recipeSlug) return;
+    const saved = toggleSavedRecipe(recipeSlug);
+    trackRetentionEvent(saved ? 'recipe_saved' : 'recipe_removed', { recipe_slug: recipeSlug });
+    if (saveStatus) {
+      saveStatus.textContent = saved ? 'Recipe saved on this device.' : 'Recipe removed from saved.';
+      saveStatus.hidden = false;
+      window.setTimeout(() => {
+        saveStatus.hidden = true;
+      }, 3000);
+    }
+  });
+
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-related-content]')) {
+    link.addEventListener('click', () => {
+      const contentType = link.dataset.contentType;
+      const contentSlug = link.dataset.contentSlug;
+      const sourceRecipe = link.dataset.sourceRecipe;
+      if (
+        !sourceRecipe ||
+        !contentSlug ||
+        !contentType ||
+        !['recipe', 'guide', 'learn', 'journal'].includes(contentType)
+      ) {
+        return;
+      }
+      trackRetentionEvent('related_content_clicked', {
+        recipe_slug: sourceRecipe,
+        content_type: contentType as 'recipe' | 'guide' | 'learn' | 'journal',
+        content_slug: contentSlug,
+      });
+    });
+  }
+
   document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
 
   // Share: the system sheet where it exists, clipboard everywhere else.
@@ -432,7 +684,23 @@ const usesScrollableTables = recipe.id === 'iced-americano';
 
   shareButton?.addEventListener('click', async () => {
     const text = shareButton.dataset.shareText ?? '';
-    const url = shareButton.dataset.shareUrl ?? window.location.href;
+    const baseUrl = shareButton.dataset.shareUrl ?? window.location.href;
+    const scaler = document.querySelector<HTMLElement>('[data-recipe-scaler]');
+    const experience = document.querySelector<HTMLElement>('[data-recipe-experience]');
+    const servingsValue = Number(scaler?.dataset.servings);
+    const unitsValue = scaler?.dataset.units;
+    const doseValue = Number(scaler?.dataset.dose);
+    const settings: RecipeSettings = {
+      servings: servingsValue === 2 || servingsValue === 3 ? servingsValue : 1,
+      units: unitsValue === 'us' ? 'us' : 'metric',
+      ...(Number.isFinite(doseValue) ? { dose: doseValue } : {}),
+    };
+    const baseDose = Number(experience?.dataset.espressoDose);
+    const ratio = Number(experience?.dataset.espressoRatio);
+    const espresso = Number.isFinite(baseDose) && Number.isFinite(ratio)
+      ? { dose: baseDose, ratio }
+      : undefined;
+    const url = recipeShareUrl(baseUrl, settings, espresso);
 
     if (navigator.share) {
       try {

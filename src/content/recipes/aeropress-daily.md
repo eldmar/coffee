@@ -22,8 +22,13 @@ vessel:
 datePublished: 2026-07-18
 dateModified: 2026-08-15
 ingredients:
-  - 15 g medium ground coffee
-  - 220 ml water at 90 °C
+  - name: "medium-ground coffee"
+    amount: 15
+    unit: "g"
+  - name: "water"
+    amount: 220
+    unit: "ml"
+    temperatureC: 90
 equipmentSet: aeropress
 equipmentOptional:
   - Metal filter for more body

@@ -1,6 +1,22 @@
 ---
+import { getCollection } from 'astro:content';
 import Photo from './Photo.astro';
 import { LEARN_PATHS, pathHref } from '../lib/learn';
+import ContinueLearning from './retention/ContinueLearning';
+
+const allLessons = await getCollection('lessons');
+const pathReferences = LEARN_PATHS.filter((path) => path.status === 'published').map((path) => ({
+  slug: path.slug,
+  title: path.title,
+  lessons: allLessons
+    .filter((lesson) => lesson.data.path === path.slug)
+    .sort((left, right) => left.data.order - right.data.order)
+    .map((lesson) => ({
+      slug: lesson.id.split('/').at(-1),
+      title: lesson.data.title,
+      href: `/learn/${lesson.id}/`,
+    })),
+}));
 ---
 
 <section class="mx-auto grid max-w-6xl items-start gap-10 px-5 py-16 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.6fr)]">
@@ -10,6 +26,7 @@ import { LEARN_PATHS, pathHref } from '../lib/learn';
     <p class="mt-4 max-w-xs text-ink-soft">
       A clear beginner path that walks you through everything—from choosing your beans to brewing a cup you'll love.
     </p>
+    <ContinueLearning client:load paths={pathReferences} />
     <a
       href="/learn/"
       class="mt-6 inline-block rounded-md border border-ink/25 px-5 py-2.5 text-sm font-medium transition-colors hover:border-ink/50"

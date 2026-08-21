@@ -4,6 +4,7 @@ const nav = [
   { label: 'Brew Guides', href: '/guides/' },
   { label: 'Learn', href: '/learn/' },
   { label: 'Journal', href: '/journal/' },
+  { label: 'Saved', href: '/saved/', saved: true },
   { label: 'Shop', href: '/shop/' },
 ];
 const { pathname } = Astro.url;
@@ -25,12 +26,22 @@ const { pathname } = Astro.url;
       {nav.map((item) => (
         <a
           href={item.href}
+          data-saved-link={item.saved ? '' : undefined}
           class:list={[
-            'transition-colors hover:text-ink',
+            'inline-flex items-center gap-1.5 transition-colors hover:text-ink',
             pathname.startsWith(item.href) && 'font-medium text-ink',
           ]}
         >
           {item.label}
+          {
+            item.saved && (
+              <span
+                data-saved-count
+                hidden
+                class="inline-flex min-w-5 items-center justify-center rounded-full bg-ivory px-1.5 py-0.5 text-[11px] font-semibold text-ink"
+              />
+            )
+          }
         </a>
       ))}
     </nav>
@@ -97,12 +108,22 @@ const { pathname } = Astro.url;
       {nav.map((item) => (
         <a
           href={item.href}
+          data-saved-link={item.saved ? '' : undefined}
           class:list={[
-            'rounded-md px-3 py-2.5 text-[15px] font-medium transition-colors hover:bg-ivory',
+            'flex items-center justify-between rounded-md px-3 py-2.5 text-[15px] font-medium transition-colors hover:bg-ivory',
             pathname.startsWith(item.href) ? 'bg-ivory text-ink' : 'text-ink-soft',
           ]}
         >
-          {item.label}
+          <span>{item.label}</span>
+          {
+            item.saved && (
+              <span
+                data-saved-count
+                hidden
+                class="inline-flex min-w-6 items-center justify-center rounded-full bg-card px-1.5 py-0.5 text-xs font-semibold text-ink"
+              />
+            )
+          }
         </a>
       ))}
       <a
@@ -180,6 +201,12 @@ const { pathname } = Astro.url;
 </style>
 
 <script>
+  import {
+    RETENTION_KEYS,
+    getSavedRecipes,
+    subscribeRetentionKey,
+  } from '../lib/retention/storage';
+
   const toggle = document.getElementById('menu-toggle');
   const menu = document.getElementById('mobile-menu');
 
@@ -198,4 +225,18 @@ const { pathname } = Astro.url;
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') setMenu(false);
   });
+
+  function refreshSavedCount() {
+    const count = getSavedRecipes().items.length;
+    for (const badge of document.querySelectorAll<HTMLElement>('[data-saved-count]')) {
+      badge.textContent = String(count);
+      badge.hidden = count === 0;
+    }
+    for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-saved-link]')) {
+      link.setAttribute('aria-label', count > 0 ? `Saved recipes, ${count}` : 'Saved recipes');
+    }
+  }
+
+  refreshSavedCount();
+  subscribeRetentionKey(RETENTION_KEYS.savedRecipes, refreshSavedCount);
 </script>

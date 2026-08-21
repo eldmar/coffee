@@ -21,9 +21,21 @@ vessel:
   capacity: "180–220 ml"
 datePublished: 2026-08-05
 dateModified: 2026-08-06
+espresso:
+  dose: 18
+  ratio: 2
 ingredients:
-  - 18 g freshly ground coffee
-  - 120 g filtered water
+  - name: "freshly ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 36
+    unit: "g"
+    role: "espresso-yield"
+  - name: "filtered water"
+    amount: 120
+    unit: "ml"
 equipmentSet: americano
 ---
 

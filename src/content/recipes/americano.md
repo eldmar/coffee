@@ -25,9 +25,22 @@ vessel:
   capacity: "200–250 ml"
 datePublished: 2026-08-03
 dateModified: 2026-08-20
+espresso:
+  dose: 18
+  ratio: 2
 ingredients:
-  - 18 g freshly ground coffee, brewed as 36–40 g espresso
-  - 120–180 ml fresh hot water
+  - name: "freshly ground coffee"
+    amount: 18
+    unit: "g"
+    role: "coffee-dose"
+  - name: "espresso, target yield"
+    amount: 36
+    unit: "g"
+    role: "espresso-yield"
+  - name: "fresh hot water"
+    amountMin: 120
+    amountMax: 180
+    unit: "ml"
 equipmentSet: americano
 relatedRecipes:
   - iced-americano

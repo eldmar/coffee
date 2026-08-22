@@ -796,25 +796,38 @@ if (existsSync(searchPage)) {
   }
 }
 
-const savedPage = join(DIST, 'saved', 'index.html');
+const savedPage = join(DIST, 'recipes', 'saved', 'index.html');
 if (existsSync(savedPage)) {
   const html = readFileSync(savedPage, 'utf8');
   if (!/<meta name="robots" content="noindex, follow">/i.test(html)) {
-    problems.push('saved/index.html is missing noindex, follow');
+    problems.push('recipes/saved/index.html is missing noindex, follow');
   }
-  if (!/<link rel="canonical" href="https:\/\/kavovo\.uk\/saved\/">/i.test(html)) {
-    problems.push('saved/index.html canonical is not /saved/');
+  if (!/<link rel="canonical" href="https:\/\/kavovo\.uk\/recipes\/saved\/">/i.test(html)) {
+    problems.push('recipes/saved/index.html canonical is not /recipes/saved/');
   }
   for (const marker of [
     'Saved recipes',
     'not synced between devices',
     'No saved recipes yet',
-    'Browse recipes',
+    "Save recipes you want to brew again and they'll appear here.",
+    'Explore recipes',
   ]) {
-    if (!html.includes(marker)) problems.push(`saved/index.html is missing: ${marker}`);
+    if (!html.includes(marker)) problems.push(`recipes/saved/index.html is missing: ${marker}`);
   }
 } else {
   problems.push('Saved recipes page was not built');
+}
+
+if (existsSync(join(DIST, 'saved', 'index.html'))) {
+  problems.push('legacy /saved/ page should be handled by a redirect, not emitted as HTML');
+}
+
+const redirectsPage = join(DIST, '_redirects');
+if (
+  !existsSync(redirectsPage) ||
+  !readFileSync(redirectsPage, 'utf8').includes('/saved/ /recipes/saved/ 301')
+) {
+  problems.push('Cloudflare redirects are missing the /saved/ to /recipes/saved/ 301');
 }
 
 const irishCoffeePage = join(DIST, 'recipes', 'irish-coffee', 'index.html');
@@ -843,6 +856,9 @@ if (existsSync(recipesPage)) {
   if (!html.includes('bg-line object-cover')) {
     problems.push('recipes/index.html cards are missing image skeleton backgrounds');
   }
+  if (!html.includes('href="/recipes/saved/"') || !html.includes('data-show-zero')) {
+    problems.push('recipes/index.html is missing the Saved recipes button with a live count');
+  }
   if (!html.includes('Iced Salted Vanilla Cloud Foam')) {
     problems.push('recipes/index.html is missing Iced Salted Vanilla Cloud Foam');
   }
@@ -854,17 +870,54 @@ if (existsSync(recipesPage)) {
 const homepage = join(DIST, 'index.html');
 if (existsSync(homepage)) {
   const html = readFileSync(homepage, 'utf8');
+  if (!html.includes('data-recipes-menu-panel') || !html.includes('href="/recipes/saved/"')) {
+    problems.push('header is missing Saved recipes inside the Recipes menu');
+  }
+  if (html.includes('href="/saved/"')) {
+    problems.push('header still links to the legacy top-level /saved/ route');
+  }
   for (const marker of [
     'From the Journal',
     'View all Journal stories',
+    'The Myth of the Perfect Coffee Recipe',
     'Ice Is an Ingredient: Why Your Iced Coffee Tastes Watery',
-    'Why We Built KAVOVO',
   ]) {
     if (!html.includes(marker)) problems.push(`homepage Journal section is missing: ${marker}`);
   }
   if ((html.match(/Read the story/g) ?? []).length !== 2) {
     problems.push('homepage Journal section should show exactly two latest stories');
   }
+}
+
+const perfectRecipeJournalPage = join(
+  DIST,
+  'journal',
+  'the-myth-of-the-perfect-coffee-recipe',
+  'index.html',
+);
+if (existsSync(perfectRecipeJournalPage)) {
+  const html = readFileSync(perfectRecipeJournalPage, 'utf8');
+  const schemas = schemasIn(html);
+  if (!html.includes('<title>Why the Perfect Coffee Recipe Does Not Exist | KAVOVO</title>')) {
+    problems.push('perfect coffee recipe Journal article is missing its exact SEO title');
+  }
+  if (
+    !html.includes(
+      '<link rel="canonical" href="https://kavovo.uk/journal/the-myth-of-the-perfect-coffee-recipe/">',
+    )
+  ) {
+    problems.push('perfect coffee recipe Journal article is missing its canonical URL');
+  }
+  for (const type of ['Article', 'BreadcrumbList']) {
+    if (!schemas.some((schema) => schema?.['@type'] === type)) {
+      problems.push(`perfect coffee recipe Journal article is missing ${type} schema`);
+    }
+  }
+  if (!html.includes('journal-the-myth-of-the-perfect-coffee-recipe.')) {
+    problems.push('perfect coffee recipe Journal article is missing its responsive hero image');
+  }
+} else {
+  problems.push('perfect coffee recipe Journal article was not built');
 }
 
 for (const page of pages) {
@@ -1237,7 +1290,13 @@ for (const entry of readdirSync(DIST, { withFileTypes: true })) {
   if (xml.includes('<loc>https://kavovo.uk/learn/coffee-basics/filter-coffee/</loc>')) {
     filterCoffeeInSitemap = true;
   }
-  for (const excludedPath of ['/404/', '/search/', '/shop/', '/subscription-confirmed/']) {
+  for (const excludedPath of [
+    '/404/',
+    '/search/',
+    '/recipes/saved/',
+    '/shop/',
+    '/subscription-confirmed/',
+  ]) {
     if (xml.includes(`<loc>https://kavovo.uk${excludedPath}</loc>`)) {
       problems.push(`${entry.name} includes excluded page ${excludedPath}`);
     }

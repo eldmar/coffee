@@ -3,6 +3,9 @@
 # turns a dead guess into the real file.
 /sitemap.xml /sitemap-index.xml 301
 
+# Saved recipes now live inside the Recipes section.
+/saved/ /recipes/saved/ 301
+
 # Two Journal articles were retired. Both were already indexed, so send anyone
 # arriving from a search result or bookmark to the Journal rather than a 404.
 /journal/the-case-for-slow-mornings/ /journal/ 301

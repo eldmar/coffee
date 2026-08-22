@@ -70,6 +70,14 @@ function canonicalRedirect(request: Request): Response | null {
   return Response.redirect(url.toString(), 301);
 }
 
+function legacyPathRedirect(request: Request): Response | null {
+  const url = new URL(request.url);
+  if (url.pathname !== '/saved' && url.pathname !== '/saved/') return null;
+
+  url.pathname = '/recipes/saved/';
+  return Response.redirect(url.toString(), 301);
+}
+
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"']/g, (character) => {
     const entities: Record<string, string> = {
@@ -392,6 +400,9 @@ export const worker = {
   async fetch(request: Request, env: Env): Promise<Response> {
     const redirect = canonicalRedirect(request);
     if (redirect) return redirect;
+
+    const pathRedirect = legacyPathRedirect(request);
+    if (pathRedirect) return pathRedirect;
 
     const { pathname } = new URL(request.url);
     if (pathname === '/api/subscribe') return subscribe(request, env);

@@ -84,6 +84,20 @@ describe('subscription worker routing', () => {
     expect(assetsFetch).not.toHaveBeenCalled();
   });
 
+  it('redirects the legacy Saved route while preserving the query string', async () => {
+    const { env, assetsFetch } = makeEnv();
+    const response = await worker.fetch(
+      new Request('https://kavovo.uk/saved/?from=bookmark'),
+      env,
+    );
+
+    expect(response.status).toBe(301);
+    expect(response.headers.get('Location')).toBe(
+      'https://kavovo.uk/recipes/saved/?from=bookmark',
+    );
+    expect(assetsFetch).not.toHaveBeenCalled();
+  });
+
   it('delegates non-API requests to static assets', async () => {
     const { env, assetsFetch } = makeEnv();
     const request = new Request('https://coffee.example/recipes/');

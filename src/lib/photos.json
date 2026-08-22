@@ -2716,5 +2716,44 @@
       }
     ],
     "src": "/img/journal-ice-is-an-ingredient.8645a8b0-800.jpg"
+  },
+  "journal-the-myth-of-the-perfect-coffee-recipe": {
+    "width": 800,
+    "height": 600,
+    "avif": [
+      {
+        "url": "/img/journal-the-myth-of-the-perfect-coffee-recipe.35c03626-400.avif",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/journal-the-myth-of-the-perfect-coffee-recipe.35c03626-800.avif",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/journal-the-myth-of-the-perfect-coffee-recipe.35c03626-1200.avif",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/journal-the-myth-of-the-perfect-coffee-recipe.35c03626-400.webp",
+        "width": 400,
+        "height": 300
+      },
+      {
+        "url": "/img/journal-the-myth-of-the-perfect-coffee-recipe.35c03626-800.webp",
+        "width": 800,
+        "height": 600
+      },
+      {
+        "url": "/img/journal-the-myth-of-the-perfect-coffee-recipe.35c03626-1200.webp",
+        "width": 1200,
+        "height": 900
+      }
+    ],
+    "src": "/img/journal-the-myth-of-the-perfect-coffee-recipe.35c03626-800.jpg"
   }
 }

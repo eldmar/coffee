@@ -1,13 +1,12 @@
 ---
 const nav = [
-  { label: 'Recipes', href: '/recipes/' },
   { label: 'Brew Guides', href: '/guides/' },
   { label: 'Learn', href: '/learn/' },
   { label: 'Journal', href: '/journal/' },
-  { label: 'Saved', href: '/saved/', saved: true },
   { label: 'Shop', href: '/shop/' },
 ];
 const { pathname } = Astro.url;
+const recipesActive = pathname.startsWith('/recipes/');
 ---
 
 <header class="sticky top-0 z-40 border-b border-line bg-paper/95 backdrop-blur">
@@ -23,25 +22,77 @@ const { pathname } = Astro.url;
     </a>
 
     <nav class="hidden flex-1 justify-center gap-6 text-sm text-ink-soft lg:flex" aria-label="Main">
+      <div class="relative" data-recipes-menu>
+        <button
+          type="button"
+          data-recipes-menu-toggle
+          aria-expanded="false"
+          aria-controls="recipes-menu-panel"
+          class:list={[
+            'inline-flex items-center gap-1.5 transition-colors hover:text-ink',
+            recipesActive && 'font-medium text-ink',
+          ]}
+        >
+          Recipes
+          <svg
+            data-recipes-menu-chevron
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+        <div
+          id="recipes-menu-panel"
+          data-recipes-menu-panel
+          hidden
+          class="absolute left-1/2 top-full z-50 mt-3 w-52 -translate-x-1/2 rounded-md border border-line bg-card p-1.5 shadow-lg"
+        >
+          <a
+            href="/recipes/"
+            aria-current={pathname === '/recipes/' ? 'page' : undefined}
+            class:list={[
+              'flex min-h-10 items-center rounded px-3 text-sm transition-colors hover:bg-ivory hover:text-ink',
+              pathname === '/recipes/' ? 'bg-ivory font-medium text-ink' : 'text-ink-soft',
+            ]}
+          >
+            All recipes
+          </a>
+          <a
+            href="/recipes/saved/"
+            data-saved-link
+            aria-current={pathname === '/recipes/saved/' ? 'page' : undefined}
+            class:list={[
+              'flex min-h-10 items-center justify-between gap-3 rounded px-3 text-sm transition-colors hover:bg-ivory hover:text-ink',
+              pathname === '/recipes/saved/' ? 'bg-ivory font-medium text-ink' : 'text-ink-soft',
+            ]}
+          >
+            <span>Saved recipes</span>
+            <span
+              data-saved-count
+              hidden
+              class="inline-flex min-w-5 items-center justify-center rounded-full bg-paper px-1.5 py-0.5 text-[11px] font-semibold text-ink"
+            />
+          </a>
+        </div>
+      </div>
+
       {nav.map((item) => (
         <a
           href={item.href}
-          data-saved-link={item.saved ? '' : undefined}
           class:list={[
-            'inline-flex items-center gap-1.5 transition-colors hover:text-ink',
+            'inline-flex items-center transition-colors hover:text-ink',
             pathname.startsWith(item.href) && 'font-medium text-ink',
           ]}
         >
           {item.label}
-          {
-            item.saved && (
-              <span
-                data-saved-count
-                hidden
-                class="inline-flex min-w-5 items-center justify-center rounded-full bg-ivory px-1.5 py-0.5 text-[11px] font-semibold text-ink"
-              />
-            )
-          }
         </a>
       ))}
     </nav>
@@ -105,25 +156,77 @@ const { pathname } = Astro.url;
         </label>
         <button type="submit" class="sr-only">Search</button>
       </form>
+      <div data-mobile-recipes-menu>
+        <button
+          type="button"
+          data-mobile-recipes-toggle
+          aria-expanded={String(recipesActive)}
+          aria-controls="mobile-recipes-panel"
+          class:list={[
+            'flex min-h-11 w-full items-center justify-between rounded-md px-3 text-[15px] font-medium transition-colors hover:bg-ivory',
+            recipesActive ? 'bg-ivory text-ink' : 'text-ink-soft',
+          ]}
+        >
+          Recipes
+          <svg
+            data-mobile-recipes-chevron
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+        <div
+          id="mobile-recipes-panel"
+          data-mobile-recipes-panel
+          hidden={!recipesActive}
+          class="mt-1 space-y-1 border-l border-line pl-3"
+        >
+          <a
+            href="/recipes/"
+            aria-current={pathname === '/recipes/' ? 'page' : undefined}
+            class:list={[
+              'flex min-h-11 items-center rounded-md px-3 text-sm transition-colors hover:bg-ivory',
+              pathname === '/recipes/' ? 'font-medium text-ink' : 'text-ink-soft',
+            ]}
+          >
+            All recipes
+          </a>
+          <a
+            href="/recipes/saved/"
+            data-saved-link
+            aria-current={pathname === '/recipes/saved/' ? 'page' : undefined}
+            class:list={[
+              'flex min-h-11 items-center justify-between gap-3 rounded-md px-3 text-sm transition-colors hover:bg-ivory',
+              pathname === '/recipes/saved/' ? 'font-medium text-ink' : 'text-ink-soft',
+            ]}
+          >
+            <span>Saved recipes</span>
+            <span
+              data-saved-count
+              hidden
+              class="inline-flex min-w-6 items-center justify-center rounded-full bg-card px-1.5 py-0.5 text-xs font-semibold text-ink"
+            />
+          </a>
+        </div>
+      </div>
+
       {nav.map((item) => (
         <a
           href={item.href}
-          data-saved-link={item.saved ? '' : undefined}
           class:list={[
-            'flex items-center justify-between rounded-md px-3 py-2.5 text-[15px] font-medium transition-colors hover:bg-ivory',
+            'flex items-center rounded-md px-3 py-2.5 text-[15px] font-medium transition-colors hover:bg-ivory',
             pathname.startsWith(item.href) ? 'bg-ivory text-ink' : 'text-ink-soft',
           ]}
         >
-          <span>{item.label}</span>
-          {
-            item.saved && (
-              <span
-                data-saved-count
-                hidden
-                class="inline-flex min-w-6 items-center justify-center rounded-full bg-card px-1.5 py-0.5 text-xs font-semibold text-ink"
-              />
-            )
-          }
+          {item.label}
         </a>
       ))}
       <a
@@ -175,6 +278,14 @@ const { pathname } = Astro.url;
       transform 0.3s ease,
       opacity 0.2s ease;
   }
+  [data-recipes-menu-chevron],
+  [data-mobile-recipes-chevron] {
+    transition: transform 0.2s ease;
+  }
+  [data-recipes-menu-toggle][aria-expanded='true'] [data-recipes-menu-chevron],
+  [data-mobile-recipes-toggle][aria-expanded='true'] [data-mobile-recipes-chevron] {
+    transform: rotate(180deg);
+  }
   #menu-toggle.open .burger-line:nth-child(1) {
     transform: translateY(5px) rotate(45deg);
   }
@@ -194,7 +305,9 @@ const { pathname } = Astro.url;
     #mobile-menu,
     .menu-clip,
     .menu-inner,
-    .burger-line {
+    .burger-line,
+    [data-recipes-menu-chevron],
+    [data-mobile-recipes-chevron] {
       transition: none !important;
     }
   }
@@ -209,6 +322,11 @@ const { pathname } = Astro.url;
 
   const toggle = document.getElementById('menu-toggle');
   const menu = document.getElementById('mobile-menu');
+  const recipesMenu = document.querySelector<HTMLElement>('[data-recipes-menu]');
+  const recipesMenuToggle = document.querySelector<HTMLButtonElement>('[data-recipes-menu-toggle]');
+  const recipesMenuPanel = document.querySelector<HTMLElement>('[data-recipes-menu-panel]');
+  const mobileRecipesToggle = document.querySelector<HTMLButtonElement>('[data-mobile-recipes-toggle]');
+  const mobileRecipesPanel = document.querySelector<HTMLElement>('[data-mobile-recipes-panel]');
 
   function setMenu(open: boolean) {
     if (!toggle || !menu) return;
@@ -222,18 +340,63 @@ const { pathname } = Astro.url;
     setMenu(!menu?.classList.contains('open'));
   });
 
+  function setRecipesMenu(open: boolean) {
+    if (!recipesMenuToggle || !recipesMenuPanel) return;
+    recipesMenuToggle.setAttribute('aria-expanded', String(open));
+    recipesMenuPanel.hidden = !open;
+  }
+
+  recipesMenuToggle?.addEventListener('click', () => {
+    setRecipesMenu(recipesMenuToggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  document.addEventListener('click', (event) => {
+    if (recipesMenu && event.target instanceof Node && !recipesMenu.contains(event.target)) {
+      setRecipesMenu(false);
+    }
+  });
+
+  recipesMenu?.addEventListener('focusout', (event) => {
+    if (!(event.relatedTarget instanceof Node) || !recipesMenu.contains(event.relatedTarget)) {
+      setRecipesMenu(false);
+    }
+  });
+
+  function setMobileRecipesMenu(open: boolean) {
+    if (!mobileRecipesToggle || !mobileRecipesPanel) return;
+    mobileRecipesToggle.setAttribute('aria-expanded', String(open));
+    mobileRecipesPanel.hidden = !open;
+  }
+
+  mobileRecipesToggle?.addEventListener('click', () => {
+    setMobileRecipesMenu(mobileRecipesToggle.getAttribute('aria-expanded') !== 'true');
+  });
+
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') setMenu(false);
+    if (event.key !== 'Escape') return;
+    if (recipesMenuToggle?.getAttribute('aria-expanded') === 'true') {
+      setRecipesMenu(false);
+      recipesMenuToggle.focus();
+      return;
+    }
+    if (menu?.classList.contains('open')) {
+      setMenu(false);
+      toggle?.focus();
+    }
   });
 
   function refreshSavedCount() {
     const count = getSavedRecipes().items.length;
     for (const badge of document.querySelectorAll<HTMLElement>('[data-saved-count]')) {
       badge.textContent = String(count);
-      badge.hidden = count === 0;
+      badge.hidden = count === 0 && !badge.hasAttribute('data-show-zero');
     }
     for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-saved-link]')) {
-      link.setAttribute('aria-label', count > 0 ? `Saved recipes, ${count}` : 'Saved recipes');
+      const includeZero = link.hasAttribute('data-show-zero');
+      link.setAttribute(
+        'aria-label',
+        count > 0 || includeZero ? `Saved recipes, ${count}` : 'Saved recipes',
+      );
     }
   }
 

@@ -52,13 +52,13 @@ export default function SavedRecipesPage({ recipes }: Props) {
           <div className="border-y border-line py-12 text-center">
             <h2 className="font-display text-2xl font-medium">No saved recipes yet</h2>
             <p className="mx-auto mt-3 max-w-md text-ink-soft">
-              Save recipes you want to brew again and they'll appear here on this device.
+              Save recipes you want to brew again and they'll appear here.
             </p>
             <a
               href="/recipes/"
               className="mt-6 inline-flex min-h-11 items-center rounded-md bg-accent px-5 text-sm font-medium text-accent-ink hover:bg-accent-dark"
             >
-              Browse recipes <span aria-hidden="true">&#8594;</span>
+              Explore recipes <span aria-hidden="true">&#8594;</span>
             </a>
           </div>
         ) : (

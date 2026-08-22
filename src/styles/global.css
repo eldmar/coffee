@@ -597,6 +597,14 @@ button:disabled,
   background-color: var(--color-accent-dark);
 }
 
+/* The Brew Assistant trigger is fixed only at this desktop breakpoint.
+   Keep the lesson action above it with a 16px gap. */
+@media (min-width: 79.5rem) {
+  .jump-next {
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 @keyframes jump-next-in {
   from {
     opacity: 0;

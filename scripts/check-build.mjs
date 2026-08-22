@@ -856,7 +856,7 @@ if (existsSync(recipesPage)) {
   if (!html.includes('bg-line object-cover')) {
     problems.push('recipes/index.html cards are missing image skeleton backgrounds');
   }
-  if (!html.includes('href="/recipes/saved/"') || !html.includes('data-show-zero')) {
+  if (!html.includes('href="/recipes/saved/"') || !html.includes('data-saved-recipes-link')) {
     problems.push('recipes/index.html is missing the Saved recipes button with a live count');
   }
   if (!html.includes('Iced Salted Vanilla Cloud Foam')) {
@@ -870,8 +870,11 @@ if (existsSync(recipesPage)) {
 const homepage = join(DIST, 'index.html');
 if (existsSync(homepage)) {
   const html = readFileSync(homepage, 'utf8');
-  if (!html.includes('data-recipes-menu-panel') || !html.includes('href="/recipes/saved/"')) {
-    problems.push('header is missing Saved recipes inside the Recipes menu');
+  if ((html.match(/data-main-recipes-link/g) ?? []).length !== 2) {
+    problems.push('header should expose one direct Recipes link on desktop and mobile');
+  }
+  if (html.includes('data-recipes-menu') || html.includes('data-mobile-recipes-menu')) {
+    problems.push('header still contains the Recipes dropdown');
   }
   if (html.includes('href="/saved/"')) {
     problems.push('header still links to the legacy top-level /saved/ route');
@@ -886,6 +889,42 @@ if (existsSync(homepage)) {
   }
   if ((html.match(/Read the story/g) ?? []).length !== 2) {
     problems.push('homepage Journal section should show exactly two latest stories');
+  }
+}
+
+for (const activeRecipesPage of [
+  recipesPage,
+  savedPage,
+  join(DIST, 'recipes', 'flat-white', 'index.html'),
+  join(DIST, 'recipes', 'iced-coffee', 'index.html'),
+]) {
+  if (!existsSync(activeRecipesPage)) continue;
+  const html = readFileSync(activeRecipesPage, 'utf8');
+  if (
+    !/<a(?=[^>]*data-main-recipes-link)(?=[^>]*aria-current="page")[^>]*>\s*Recipes\s*<\/a>/i.test(
+      html,
+    )
+  ) {
+    problems.push(`${relative(DIST, activeRecipesPage)} does not mark Recipes as active`);
+  }
+}
+
+for (const page of pages) {
+  const html = readFileSync(page, 'utf8');
+  if (!html.includes('data-save-recipe')) continue;
+
+  const heading = html.match(/<h1[^>]*>([^<]+)<\/h1>/i)?.[1]?.trim();
+  const saveLabel = html.match(
+    /<button(?=[^>]*data-save-recipe)[^>]*aria-label="([^"]+)"/i,
+  )?.[1];
+  if (!heading || saveLabel !== `Save ${heading}`) {
+    problems.push(`${relative(DIST, page)} has an incorrect initial Save recipe aria-label`);
+  }
+  if (!html.includes('data-view-saved href="/recipes/saved/"')) {
+    problems.push(`${relative(DIST, page)} is missing its View saved link`);
+  }
+  if (!/data-save-status[^>]*role="status"[^>]*aria-live="polite"/i.test(html)) {
+    problems.push(`${relative(DIST, page)} is missing the polite Save recipe status region`);
   }
 }
 

@@ -14,11 +14,19 @@ export interface RetentionRecipe {
 
 interface Props {
   recipe: RetentionRecipe;
+  headingLevel?: 'h2' | 'h3';
   onOpen?: () => void;
   onRemove?: () => void;
 }
 
-export default function RetentionRecipeCard({ recipe, onOpen, onRemove }: Props) {
+export default function RetentionRecipeCard({
+  recipe,
+  headingLevel = 'h3',
+  onOpen,
+  onRemove,
+}: Props) {
+  const Heading = headingLevel;
+
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-lg border border-line bg-card transition-shadow hover:shadow-md">
       <a href={`/recipes/${recipe.slug}/`} onClick={onOpen} className="group flex flex-1 flex-col">
@@ -35,7 +43,7 @@ export default function RetentionRecipeCard({ recipe, onOpen, onRemove }: Props)
         />
         <span className="flex flex-1 flex-col gap-1.5 p-5">
           <span className="eyebrow">{categoryLabel(recipe.category)}</span>
-          <h3 className="font-display text-xl font-medium">{recipe.title}</h3>
+          <Heading className="font-display text-xl font-medium">{recipe.title}</Heading>
           <span className="mt-auto flex items-center gap-2 pt-2 text-sm text-ink-soft">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <circle cx="12" cy="12" r="9" />

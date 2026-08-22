@@ -17,13 +17,19 @@ interface Props {
 export default function SavedRecipesPage({ recipes }: Props) {
   const [entries, setEntries] = useState<SavedRecipeEntry[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [removalAnnouncement, setRemovalAnnouncement] = useState(0);
 
   useEffect(() => {
     const refresh = () => setEntries(getSavedRecipes().items);
     refresh();
     setHydrated(true);
     trackRetentionEvent('saved_recipes_opened', {});
-    return subscribeRetentionKey(RETENTION_KEYS.savedRecipes, refresh);
+    const unsubscribe = subscribeRetentionKey(RETENTION_KEYS.savedRecipes, refresh);
+    window.addEventListener('pageshow', refresh);
+    return () => {
+      unsubscribe();
+      window.removeEventListener('pageshow', refresh);
+    };
   }, []);
 
   const saved = useMemo(() => {
@@ -37,11 +43,21 @@ export default function SavedRecipesPage({ recipes }: Props) {
   return (
     <>
       {hydrated && (
-        <p className="mt-6 text-sm font-medium text-ink-soft" aria-live="polite">
+        <p className="mt-6 text-sm font-medium text-ink-soft">
           {saved.length} saved {saved.length === 1 ? 'recipe' : 'recipes'}
         </p>
       )}
-      <div className="mt-8 min-h-48" aria-live="polite">
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="mt-2 min-h-5 text-sm font-medium text-accent"
+      >
+        {removalAnnouncement > 0 && (
+          <span key={removalAnnouncement}>Recipe removed from saved recipes.</span>
+        )}
+      </div>
+      <div className="mt-3 min-h-48">
         {!hydrated ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-hidden="true">
             {[0, 1, 2].map((item) => (
@@ -67,8 +83,10 @@ export default function SavedRecipesPage({ recipes }: Props) {
               <li key={recipe.slug}>
                 <RetentionRecipeCard
                   recipe={recipe}
+                  headingLevel="h2"
                   onRemove={() => {
                     setRecipeSaved(recipe.slug, false);
+                    setRemovalAnnouncement((current) => current + 1);
                     trackRetentionEvent('recipe_removed', { recipe_slug: recipe.slug });
                   }}
                 />

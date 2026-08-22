@@ -275,7 +275,7 @@ const initialIngredientLines = formatIngredients(
         Updated <time datetime={data.dateModified.toISOString()}>{dateFmt(data.dateModified)}</time>
       </span>
       <span class="ml-auto flex flex-wrap items-center justify-end gap-2 print:hidden">
-        <button type="button" data-save-recipe aria-pressed="false" aria-label={`Save ${data.title} recipe`} class="recipe-action recipe-action--secondary">
+        <button type="button" data-save-recipe aria-pressed="false" aria-label={`Save ${data.title}`} class="recipe-action recipe-action--secondary">
           <svg data-save-icon width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M6 4.8A1.8 1.8 0 0 1 7.8 3h8.4A1.8 1.8 0 0 1 18 4.8V21l-6-3.8L6 21Z" />
           </svg>
@@ -301,7 +301,7 @@ const initialIngredientLines = formatIngredients(
         <a data-view-saved href="/recipes/saved/" hidden class="min-h-11 items-center px-2 text-sm font-medium text-accent hover:underline">
           View saved
         </a>
-        <span data-save-status role="status" aria-live="polite" hidden class="save-toast"></span>
+        <div data-save-status role="status" aria-live="polite" aria-atomic="true" hidden class="save-toast"></div>
         <span data-share-status role="status" aria-live="polite" class="text-xs font-medium text-accent"></span>
       </span>
     </div>
@@ -584,16 +584,18 @@ const initialIngredientLines = formatIngredients(
   const saveIcon = document.querySelector<SVGElement>('[data-save-icon]');
   const viewSaved = document.querySelector<HTMLAnchorElement>('[data-view-saved]');
   const saveStatus = document.querySelector<HTMLElement>('[data-save-status]');
+  let saveStatusTimeout: number | undefined;
 
   function refreshSaveButton() {
     if (!recipeSlug || !saveButton || !saveLabel) return;
     const saved = isRecipeSaved(recipeSlug);
+    const recipeTitle = document.querySelector('h1')?.textContent?.trim() ?? 'Recipe';
     saveButton.setAttribute('aria-pressed', String(saved));
     saveButton.setAttribute(
       'aria-label',
-      saved ? `Remove ${document.querySelector('h1')?.textContent?.trim() ?? 'recipe'} from saved recipes` : `Save ${document.querySelector('h1')?.textContent?.trim() ?? 'recipe'} recipe`,
+      saved ? `Remove ${recipeTitle} from saved recipes` : `Save ${recipeTitle}`,
     );
-    saveLabel.textContent = saved ? 'Saved ✓' : 'Save recipe';
+    saveLabel.textContent = saved ? '✓ Saved' : 'Save recipe';
     saveIcon?.setAttribute('fill', saved ? 'currentColor' : 'none');
     if (viewSaved) {
       viewSaved.hidden = !saved;
@@ -612,9 +614,12 @@ const initialIngredientLines = formatIngredients(
     const saved = toggleSavedRecipe(recipeSlug);
     trackRetentionEvent(saved ? 'recipe_saved' : 'recipe_removed', { recipe_slug: recipeSlug });
     if (saveStatus) {
-      saveStatus.textContent = saved ? 'Recipe saved on this device.' : 'Recipe removed from saved.';
+      if (saveStatusTimeout) window.clearTimeout(saveStatusTimeout);
+      saveStatus.textContent = saved
+        ? 'Recipe saved on this device.'
+        : 'Recipe removed from saved recipes.';
       saveStatus.hidden = false;
-      window.setTimeout(() => {
+      saveStatusTimeout = window.setTimeout(() => {
         saveStatus.hidden = true;
       }, 3000);
     }

@@ -148,6 +148,18 @@ describe('retention storage behaviour', () => {
     expect(getSavedRecipes()).toEqual({ version: 1, items: [] });
   });
 
+  it('does not duplicate a recipe when it is saved again', () => {
+    const storage = memoryLocalStorage();
+    installWindow(storage);
+
+    setRecipeSaved('flat-white', true, 100);
+    setRecipeSaved('flat-white', true, 200);
+
+    expect(getSavedRecipes().items).toEqual([
+      { slug: 'flat-white', savedAt: '1970-01-01T00:00:00.200Z' },
+    ]);
+  });
+
   it('migrates the prototype field names into the documented version 1 shape', () => {
     expect(
       sanitiseLearnProgress({

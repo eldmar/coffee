@@ -44,6 +44,8 @@ const TYPE_ORDER: Record<SearchContentType, number> = {
   journal: 3,
 };
 
+const SEARCH_STOP_WORDS = new Set(['vs', 'and', 'or', 'the']);
+
 export function normalizeSearchText(value: string): string {
   return value
     .normalize('NFKD')
@@ -60,11 +62,14 @@ function stem(token: string): string {
   return token;
 }
 
-function tokens(value: string): string[] {
+function normalizedTerms(value: string): string[] {
   return normalizeSearchText(value)
     .split(/\s+/u)
-    .filter(Boolean)
-    .map(stem);
+    .filter((token) => token && !SEARCH_STOP_WORDS.has(token));
+}
+
+function tokens(value: string): string[] {
+  return normalizedTerms(value).map(stem);
 }
 
 function tokenMatches(fieldToken: string, queryToken: string): boolean {
@@ -95,9 +100,9 @@ function scoreDocument(doc: SearchDoc, rawQuery: string): number {
   const stemmedTitle = tokens(doc.title).join(' ');
   const stemmedQuery = queryTokens.join(' ');
 
-  if (title === normalizedQuery || stemmedTitle === stemmedQuery) return 100;
-  if (title.startsWith(normalizedQuery) || stemmedTitle.startsWith(stemmedQuery)) return 80;
-  if (fieldMatches(doc.title, queryTokens)) return 60;
+  if (title === normalizedQuery || stemmedTitle === stemmedQuery) return 120;
+  if (title.startsWith(normalizedQuery) || stemmedTitle.startsWith(stemmedQuery)) return 100;
+  if (fieldMatches(doc.title, queryTokens)) return 80;
   if (fieldMatches(doc.keywords, queryTokens)) return 40;
   if (fieldMatches(`${doc.description} ${doc.summary ?? ''}`, queryTokens)) return 20;
   if (fieldMatches(doc.body, queryTokens)) return 5;
@@ -150,7 +155,7 @@ function normalizedWithSourceMap(value: string): {
 
 export function highlightSearchText(text: string, query: string): HighlightPart[] {
   const mapped = normalizedWithSourceMap(text);
-  const queryTerms = normalizeSearchText(query).split(/\s+/u).filter(Boolean);
+  const queryTerms = normalizedTerms(query);
   const terms = [...new Set(queryTerms.flatMap((term) => [term, stem(term)]))].filter(Boolean);
   const ranges: Array<{ start: number; end: number }> = [];
 
@@ -190,9 +195,17 @@ export function highlightSearchText(text: string, query: string): HighlightPart[
 export function rankSearchDocs(docs: SearchDoc[], query: string): RankedSearchResult[] {
   if (!query.trim()) return [];
 
-  return docs
+  const scored = docs
     .map((doc) => ({ doc, score: scoreDocument(doc, query) }))
-    .filter((result) => result.score > 0)
+    .filter((result) => result.score > 0);
+  const significantQueryTokens = tokens(query);
+  const hasStrongTitleMatch =
+    significantQueryTokens.length > 1 && scored.some((result) => result.score >= 80);
+
+  return scored
+    // When a multi-word title clearly matches the intent, body-only mentions
+    // are noise. Cross-field matches remain available when no title matches.
+    .filter((result) => !hasStrongTitleMatch || result.score >= 20)
     .sort(
       (a, b) =>
         b.score - a.score ||

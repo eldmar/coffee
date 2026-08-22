@@ -2,7 +2,7 @@
 path: coffee-basics
 order: 12
 title: "Cappuccino vs Flat White: What’s the Difference?"
-seoTitle: "Cappuccino vs Flat White: Milk, Foam & Strength"
+seoTitle: "Cappuccino vs Flat White: Milk, Foam & Strength | KAVOVO"
 seoDescription: Compare Cappuccino and Flat White by espresso, milk, foam, texture, cup size and strength, with practical guidance for making each at home.
 excerpt: A Cappuccino has more aerated milk and a fuller foam texture, while a Flat White uses less air and integrates thin, glossy microfoam with the espresso.
 readingTime: 7

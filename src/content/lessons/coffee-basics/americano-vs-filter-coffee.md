@@ -2,7 +2,7 @@
 path: coffee-basics
 order: 10
 title: "Americano vs Filter Coffee: What’s the Difference?"
-seoTitle: "Americano vs Filter Coffee: Taste, Strength & Brewing"
+seoTitle: "Americano vs Filter Coffee: Taste, Strength & Brewing | KAVOVO"
 seoDescription: Compare Americano and filter coffee by brewing method, taste, body, caffeine and strength, then choose the better black coffee for your routine.
 excerpt: An Americano dilutes espresso after extraction, while filter coffee is brewed at its final strength as water passes through coffee grounds and a filter.
 readingTime: 8

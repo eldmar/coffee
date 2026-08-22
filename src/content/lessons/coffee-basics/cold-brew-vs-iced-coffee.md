@@ -2,7 +2,7 @@
 path: coffee-basics
 order: 11
 title: "Cold Brew vs Iced Coffee: What’s the Difference?"
-seoTitle: "Cold Brew vs Iced Coffee: Taste, Caffeine & Method"
+seoTitle: "Cold Brew vs Iced Coffee: Taste, Caffeine & Method | KAVOVO"
 seoDescription: Compare Cold Brew and iced coffee by brewing temperature, time, taste, caffeine and storage, then choose the right cold coffee method.
 excerpt: Cold Brew extracts coffee with cool water for many hours, while iced coffee is brewed hot or as espresso and then chilled over ice.
 readingTime: 8

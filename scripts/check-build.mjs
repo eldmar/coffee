@@ -358,7 +358,7 @@ for (const [pathSegments, expected] of [
   [
     ['recipes', 'iced-americano'],
     {
-      title: 'Iced Americano Recipe: Coffee, Water & Ice Ratio',
+      title: 'Iced Americano Recipe: Coffee, Water & Ice Ratio | KAVOVO',
       description:
         'Make a balanced Iced Americano with espresso, cold water and ice. Includes the correct ratio, a milk variation and tips to prevent watery coffee.',
       h1: 'Iced Americano Recipe',
@@ -450,7 +450,7 @@ for (const [pathSegments, expected] of [
   [
     ['learn', 'understand-your-beans', 'arabica-vs-robusta'],
     {
-      title: 'Arabica vs Robusta: Taste, Caffeine & Espresso',
+      title: 'Arabica vs Robusta: Taste, Caffeine & Espresso | KAVOVO',
       description:
         'Compare Arabica and Robusta coffee by taste, caffeine, crema, growing conditions and price. Learn which beans work best for espresso and everyday brewing.',
       h1: 'Arabica vs Robusta: What’s the Difference?',
@@ -459,7 +459,7 @@ for (const [pathSegments, expected] of [
   [
     ['learn', 'coffee-basics', 'cortado-vs-flat-white-vs-latte'],
     {
-      title: 'Cortado vs Flat White vs Latte — Key Differences',
+      title: 'Cortado vs Flat White vs Latte — Key Differences | KAVOVO',
       description:
         'Compare a Cortado, Flat White and Latte by espresso, milk, cup size, foam and coffee strength, then choose the right drink for your taste.',
       h1: 'Cortado vs Flat White vs Latte: What’s the Difference?',
@@ -468,7 +468,7 @@ for (const [pathSegments, expected] of [
   [
     ['learn', 'coffee-basics', 'americano-vs-filter-coffee'],
     {
-      title: 'Americano vs Filter Coffee: Taste, Strength & Brewing',
+      title: 'Americano vs Filter Coffee: Taste, Strength & Brewing | KAVOVO',
       description:
         'Compare Americano and filter coffee by brewing method, taste, body, caffeine and strength, then choose the better black coffee for your routine.',
       h1: 'Americano vs Filter Coffee: What’s the Difference?',
@@ -477,7 +477,7 @@ for (const [pathSegments, expected] of [
   [
     ['learn', 'coffee-basics', 'cold-brew-vs-iced-coffee'],
     {
-      title: 'Cold Brew vs Iced Coffee: Taste, Caffeine & Method',
+      title: 'Cold Brew vs Iced Coffee: Taste, Caffeine & Method | KAVOVO',
       description:
         'Compare Cold Brew and iced coffee by brewing temperature, time, taste, caffeine and storage, then choose the right cold coffee method.',
       h1: 'Cold Brew vs Iced Coffee: What’s the Difference?',
@@ -486,7 +486,7 @@ for (const [pathSegments, expected] of [
   [
     ['learn', 'coffee-basics', 'cappuccino-vs-flat-white'],
     {
-      title: 'Cappuccino vs Flat White: Milk, Foam & Strength',
+      title: 'Cappuccino vs Flat White: Milk, Foam & Strength | KAVOVO',
       description:
         'Compare Cappuccino and Flat White by espresso, milk, foam, texture, cup size and strength, with practical guidance for making each at home.',
       h1: 'Cappuccino vs Flat White: What’s the Difference?',
@@ -495,7 +495,7 @@ for (const [pathSegments, expected] of [
   [
     ['learn', 'dial-in-espresso', 'espresso-ratio'],
     {
-      title: 'Espresso Ratio Guide: 1:2, 1:2.5 and 1:3',
+      title: 'Espresso Ratio Guide: 1:2, 1:2.5 and 1:3 | KAVOVO',
       description:
         'Calculate espresso yield from your coffee dose and compare 1:1.5, 1:2, 1:2.5 and 1:3 ratios by taste, roast level and practical use.',
       h1: 'Espresso Ratio: 1:2, 1:2.5 or 1:3?',

@@ -31,6 +31,16 @@ export interface RecipeSettingsEventDetail extends RecipeSettings {
   ingredientLines: string[];
   doseLabel?: string;
   yieldLabel?: string;
+  totalDoseLabel?: string;
+  totalYieldLabel?: string;
+  shotInstruction?: string;
+}
+
+export interface EspressoShotPlan {
+  perShotDose: number;
+  perShotYield: number;
+  totalDose: number;
+  totalYield: number;
 }
 
 const GRAMS_TO_OUNCES = 0.03527396195;
@@ -83,6 +93,36 @@ export function formatQuantity(
 ): string {
   const converted = convertAmount(amount, unit, units, role);
   return `${formatNumber(converted.amount, converted.decimals)}${converted.unit ? ` ${converted.unit}` : ''}`;
+}
+
+export function espressoShotPlan(
+  settings: RecipeSettings,
+  espresso: EspressoRecipe,
+): EspressoShotPlan {
+  const perShotDose = settings.dose ?? espresso.dose;
+  const perShotYield = perShotDose * espresso.ratio;
+  return {
+    perShotDose,
+    perShotYield,
+    totalDose: perShotDose * settings.servings,
+    totalYield: perShotYield * settings.servings,
+  };
+}
+
+export function espressoShotInstruction(
+  settings: RecipeSettings,
+  espresso: EspressoRecipe,
+): string {
+  const plan = espressoShotPlan(settings, espresso);
+  const dose = formatQuantity(plan.perShotDose, 'g', settings.units, 'coffee-dose');
+  const shotYield = formatQuantity(
+    plan.perShotYield,
+    'g',
+    settings.units,
+    'espresso-yield',
+  );
+  const shotCount = settings.servings === 1 ? '1 shot' : `${settings.servings} separate shots`;
+  return `Pull ${shotCount}, using ${dose} of coffee and targeting ${shotYield} yield for each shot.`;
 }
 
 function ingredientBaseAmount(
@@ -204,10 +244,10 @@ export function scaleInstructionMeasurements(
           closeTo(min, baseYield) ||
           (max !== undefined && (closeTo(max, baseYield) || (min <= baseYield && max >= baseYield)));
         if (isDose) {
-          nextMin = settings.dose * settings.servings;
+          nextMin = settings.dose;
           nextMax = undefined;
         } else if (isYield) {
-          nextMin = settings.dose * espresso.ratio * settings.servings;
+          nextMin = settings.dose * espresso.ratio;
           nextMax = undefined;
         }
       }

@@ -79,7 +79,8 @@ const stepTotal = Math.max(steps.length, 1);
       </div>
 
       <details class="recipe-brew-ingredients" open>
-        <summary>Current ingredients</summary>
+        <summary data-brew-ingredients-summary>Current ingredients</summary>
+        <p data-brew-shot-plan hidden class="recipe-brew-shot-plan"></p>
         <ul data-brew-ingredient-list>
           {ingredients.map((ingredient) => <li>{ingredient}</li>)}
         </ul>
@@ -295,6 +296,15 @@ const stepTotal = Math.max(steps.length, 1);
     gap: 0.25rem;
     margin-top: 0.375rem;
     color: var(--color-ink-soft);
+  }
+
+  .recipe-brew-shot-plan {
+    margin: 0.375rem 0 0.625rem;
+    border-left: 2px solid var(--color-accent);
+    padding-left: 0.75rem;
+    color: var(--color-ink);
+    font-weight: 600;
+    line-height: 1.45;
   }
 
   .recipe-brew-step {
@@ -527,6 +537,10 @@ const stepTotal = Math.max(steps.length, 1);
     const stepProgress = dialog.querySelector<HTMLProgressElement>('[data-step-progress]');
     const stepStatus = tools.querySelector<HTMLElement>('[data-step-status]');
     const brewIngredientList = dialog.querySelector<HTMLUListElement>('[data-brew-ingredient-list]');
+    const brewIngredientSummary = dialog.querySelector<HTMLElement>(
+      '[data-brew-ingredients-summary]',
+    );
+    const brewShotPlan = dialog.querySelector<HTMLElement>('[data-brew-shot-plan]');
 
     let currentIndex = 0;
 
@@ -641,6 +655,18 @@ const stepTotal = Math.max(steps.length, 1);
             return item;
           }),
         );
+      }
+
+      if (brewIngredientSummary) {
+        brewIngredientSummary.textContent =
+          settings.servings > 1
+            ? `Total ingredients for ${settings.servings} servings`
+            : 'Current ingredients';
+      }
+
+      if (brewShotPlan) {
+        brewShotPlan.textContent = settings.shotInstruction ?? '';
+        brewShotPlan.hidden = !settings.shotInstruction;
       }
 
       if (settings.doseLabel) {

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { trackRetentionEvent } from '../lib/analytics';
 import {
+  espressoShotInstruction,
+  espressoShotPlan,
   formatIngredients,
   formatQuantity,
   parseRecipeSettings,
@@ -46,24 +48,24 @@ export default function RecipeScaler({ recipeSlug, ingredients, espresso, servin
     () => formatIngredients(ingredients, settings, espresso),
     [espresso, ingredients, settings],
   );
+  const shotPlan =
+    espresso && settings.dose !== undefined ? espressoShotPlan(settings, espresso) : undefined;
   const doseLabel =
-    espresso && settings.dose !== undefined
-      ? formatQuantity(
-          settings.dose * settings.servings,
-          'g',
-          settings.units,
-          'coffee-dose',
-        )
+    shotPlan
+      ? formatQuantity(shotPlan.perShotDose, 'g', settings.units, 'coffee-dose')
       : undefined;
   const yieldLabel =
-    espresso && settings.dose !== undefined
-      ? formatQuantity(
-          settings.dose * espresso.ratio,
-          'g',
-          settings.units,
-          'espresso-yield',
-        )
+    shotPlan
+      ? formatQuantity(shotPlan.perShotYield, 'g', settings.units, 'espresso-yield')
       : undefined;
+  const totalDoseLabel = shotPlan
+    ? formatQuantity(shotPlan.totalDose, 'g', settings.units, 'coffee-dose')
+    : undefined;
+  const totalYieldLabel = shotPlan
+    ? formatQuantity(shotPlan.totalYield, 'g', settings.units, 'espresso-yield')
+    : undefined;
+  const shotInstruction =
+    espresso && settings.servings > 1 ? espressoShotInstruction(settings, espresso) : undefined;
 
   useEffect(() => {
     if (!hydrated) return;
@@ -72,9 +74,21 @@ export default function RecipeScaler({ recipeSlug, ingredients, espresso, servin
       ingredientLines,
       ...(doseLabel ? { doseLabel } : {}),
       ...(yieldLabel ? { yieldLabel } : {}),
+      ...(totalDoseLabel ? { totalDoseLabel } : {}),
+      ...(totalYieldLabel ? { totalYieldLabel } : {}),
+      ...(shotInstruction ? { shotInstruction } : {}),
     };
     window.dispatchEvent(new CustomEvent('kavovo:recipe-settings', { detail }));
-  }, [doseLabel, hydrated, ingredientLines, settings, yieldLabel]);
+  }, [
+    doseLabel,
+    hydrated,
+    ingredientLines,
+    settings,
+    shotInstruction,
+    totalDoseLabel,
+    totalYieldLabel,
+    yieldLabel,
+  ]);
 
   function changeServings(servings: 1 | 2 | 3) {
     setSettings((current) => ({ ...current, servings }));
@@ -172,11 +186,30 @@ export default function RecipeScaler({ recipeSlug, ingredients, espresso, servin
                 <span className="text-ink-soft">g</span>
               </span>
             </label>
-            <p className="pb-2 text-sm text-ink-soft">
-              Target yield <strong className="font-semibold text-ink">{yieldLabel}</strong>
-              <span className="ml-2">Ratio 1:{espresso.ratio}</span>
-            </p>
+            <p className="pb-2 text-sm text-ink-soft">Ratio 1:{espresso.ratio}</p>
           </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2" aria-label="Espresso shot plan">
+            <div className="rounded-md border border-line bg-card p-3">
+              <p className="text-xs font-medium text-ink-soft">Per shot</p>
+              <p className="mt-1 font-mono text-sm font-semibold text-ink">
+                {doseLabel} in <span aria-hidden="true">&#8594;</span> {yieldLabel} out
+              </p>
+            </div>
+            {settings.servings > 1 && (
+              <div className="rounded-md border border-line bg-card p-3">
+                <p className="text-xs font-medium text-ink-soft">
+                  Total for {settings.servings} servings
+                </p>
+                <p className="mt-1 font-mono text-sm font-semibold text-ink">
+                  {totalDoseLabel} coffee <span aria-hidden="true">&#8594;</span>{' '}
+                  {totalYieldLabel} espresso
+                </p>
+              </div>
+            )}
+          </div>
+          {shotInstruction && (
+            <p className="mt-3 text-sm font-medium leading-relaxed text-ink">{shotInstruction}</p>
+          )}
           <p className="mt-3 text-xs leading-relaxed text-ink-soft">
             Keep the same target time and adjust the grind if needed.
           </p>

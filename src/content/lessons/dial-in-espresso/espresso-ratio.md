@@ -2,7 +2,7 @@
 path: dial-in-espresso
 order: 8
 title: "Espresso Ratio: 1:2, 1:2.5 or 1:3?"
-seoTitle: "Espresso Ratio Guide: 1:2, 1:2.5 and 1:3"
+seoTitle: "Espresso Ratio Guide: 1:2, 1:2.5 and 1:3 | KAVOVO"
 seoDescription: "Calculate espresso yield from your coffee dose and compare 1:1.5, 1:2, 1:2.5 and 1:3 ratios by taste, roast level and practical use."
 excerpt: Espresso ratio compares dry coffee dose with liquid yield in the cup. A longer ratio extracts more but also makes the shot less concentrated.
 readingTime: 9

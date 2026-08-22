@@ -1,7 +1,7 @@
 ---
 title: Iced Americano Recipe
 description: An Iced Americano combines a double espresso with cold water and plenty of ice. The measured dilution keeps it bold and refreshing rather than watery.
-seoTitle: "Iced Americano Recipe: Coffee, Water & Ice Ratio"
+seoTitle: "Iced Americano Recipe: Coffee, Water & Ice Ratio | KAVOVO"
 seoDescription: Make a balanced Iced Americano with espresso, cold water and ice. Includes the correct ratio, a milk variation and tips to prevent watery coffee.
 seoKeywords:
   - iced americano

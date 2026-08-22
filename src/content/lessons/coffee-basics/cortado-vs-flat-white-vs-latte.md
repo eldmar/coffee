@@ -2,7 +2,7 @@
 path: coffee-basics
 order: 9
 title: "Cortado vs Flat White vs Latte: What’s the Difference?"
-seoTitle: "Cortado vs Flat White vs Latte — Key Differences"
+seoTitle: "Cortado vs Flat White vs Latte — Key Differences | KAVOVO"
 seoDescription: Compare a Cortado, Flat White and Latte by espresso, milk, cup size, foam and coffee strength, then choose the right drink for your taste.
 excerpt: A Cortado uses the least milk and tastes most intense, a Flat White adds silky microfoam in a compact cup, and a Latte is larger, milkier and softer.
 readingTime: 8

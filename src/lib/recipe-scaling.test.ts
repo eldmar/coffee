@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
+  espressoShotInstruction,
+  espressoShotPlan,
   formatIngredient,
   parseRecipeSettings,
   recipeShareUrl,
@@ -46,6 +48,19 @@ describe('structured ingredient scaling', () => {
     ).toBe('300 ml milk');
   });
 
+  it('separates per-shot espresso values from serving totals', () => {
+    const settings = { servings: 2 as const, units: 'metric' as const, dose: 20 };
+    expect(espressoShotPlan(settings, espresso)).toEqual({
+      perShotDose: 20,
+      perShotYield: 40,
+      totalDose: 40,
+      totalYield: 80,
+    });
+    expect(espressoShotInstruction(settings, espresso)).toBe(
+      'Pull 2 separate shots, using 20 g of coffee and targeting 40 g yield for each shot.',
+    );
+  });
+
   it('converts metric mass, volume, and temperature to US customary units', () => {
     expect(
       formatIngredient(
@@ -88,14 +103,24 @@ describe('recipe settings URLs', () => {
 });
 
 describe('Brew Mode measurements', () => {
-  it('scales mass and volume but not seconds or temperature', () => {
+  it('keeps espresso measurements per shot while scaling milk for all servings', () => {
     expect(
       scaleInstructionMeasurements(
         'Use 18 g coffee and 150 ml milk for 30 seconds at 60 °C.',
         { servings: 2, units: 'metric', dose: 20 },
         espresso,
       ),
-    ).toBe('Use 40 g coffee and 300 ml milk for 30 seconds at 60 °C.');
+    ).toBe('Use 20 g coffee and 300 ml milk for 30 seconds at 60 °C.');
+  });
+
+  it('never turns multiple servings into one oversized espresso extraction', () => {
+    expect(
+      scaleInstructionMeasurements(
+        'Grind 18 g into the portafilter and pull 36–40 g espresso.',
+        { servings: 3, units: 'metric', dose: 20 },
+        espresso,
+      ),
+    ).toBe('Grind 20 g into the portafilter and pull 40 g espresso.');
   });
 
   it('converts Brew Mode measurements and collapses an espresso range to its target', () => {

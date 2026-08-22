@@ -32,8 +32,8 @@ describe('search ranking', () => {
     );
 
     expect(results.map(({ doc: result, score }) => [result.title, score])).toEqual([
-      ['Espresso', 100],
-      ['Espresso tonic', 80],
+      ['Espresso', 120],
+      ['Espresso tonic', 100],
       ['Coffee glossary', 40],
       ['Dial in your coffee', 20],
       ['Coffee basics', 5],
@@ -46,7 +46,7 @@ describe('search ranking', () => {
       'CAFE',
     );
 
-    expect(results[0]).toMatchObject({ score: 80, doc: { url: '/cafe-cubano/' } });
+    expect(results[0]).toMatchObject({ score: 100, doc: { url: '/cafe-cubano/' } });
     expect(normalizeSearchText('Crème BRÛLÉE')).toBe('creme brulee');
     expect(highlightSearchText('Café Cubano', 'cafe')).toEqual([
       { text: 'Café', match: true },
@@ -84,6 +84,29 @@ describe('search ranking', () => {
 
     expect(results).toHaveLength(1);
     expect(results[0]).toMatchObject({ score: 5, doc: { title: 'Espresso' } });
+  });
+
+  it('ignores comparison stop words and removes weak body mentions behind a title match', () => {
+    const results = rankSearchDocs(
+      [
+        doc({
+          type: 'learn',
+          title: 'Arabica vs Robusta: What is the difference?',
+          url: '/learn/arabica-vs-robusta/',
+        }),
+        doc({
+          type: 'learn',
+          title: 'Cold Brew vs Iced Coffee',
+          body: 'A Robusta blend may contain more caffeine than 100% Arabica.',
+          url: '/learn/cold-brew-vs-iced-coffee/',
+        }),
+      ],
+      'arabica vs robusta',
+    );
+
+    expect(results.map(({ doc: result }) => result.url)).toEqual([
+      '/learn/arabica-vs-robusta/',
+    ]);
   });
 
   it('filters ranked results by a URL-safe content type', () => {

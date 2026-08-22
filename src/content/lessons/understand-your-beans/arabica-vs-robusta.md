@@ -2,7 +2,7 @@
 path: understand-your-beans
 order: 1
 title: "Arabica vs Robusta: What’s the Difference?"
-seoTitle: "Arabica vs Robusta: Taste, Caffeine & Espresso"
+seoTitle: "Arabica vs Robusta: Taste, Caffeine & Espresso | KAVOVO"
 seoDescription: Compare Arabica and Robusta coffee by taste, caffeine, crema, growing conditions and price. Learn which beans work best for espresso and everyday brewing.
 excerpt: "Arabica is usually sweeter and more aromatic, while Robusta brings more caffeine, body and bitterness. Neither is automatically better: the right choice depends on the coffee, roast and drink you want to make."
 readingTime: 10

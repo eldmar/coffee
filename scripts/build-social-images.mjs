@@ -87,6 +87,11 @@ const cards = [
     title: ['Iced Americano', 'Recipe'],
     fontSize: 66,
   },
+  {
+    file: 'iced-matcha-latte.webp',
+    source: 'iced-matcha-latte.webp',
+    plain: true,
+  },
 ];
 
 const overlay = (eyebrow, title, fontSize = 82) => Buffer.from(`
@@ -109,12 +114,17 @@ const logo = await sharp(readFileSync('public/images/kavovo-lockup.svg'))
 
 for (const card of cards) {
   const output = join(OUT_DIR, card.file);
-  await sharp(join('photos-src', card.source))
-    .resize(WIDTH, HEIGHT, { fit: 'cover', position: 'centre' })
-    .composite([
+  const image = sharp(join('photos-src', card.source)).resize(WIDTH, HEIGHT, {
+    fit: 'cover',
+    position: 'centre',
+  });
+  if (!card.plain) {
+    image.composite([
       { input: overlay(card.eyebrow, card.title, card.fontSize), left: 0, top: 0 },
       { input: logo, left: 92, top: 84 },
-    ])
+    ]);
+  }
+  await image
     .webp({ quality: 78, effort: 6 })
     .toFile(output);
 

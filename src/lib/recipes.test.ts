@@ -24,6 +24,17 @@ describe('recipe structured data helpers', () => {
     ).toBe('Iced Americano Recipe, espresso-based drink, served over ice');
   });
 
+  it('does not describe a no-brewer milk drink as coffee', () => {
+    expect(
+      recipeKeywords({
+        title: 'Iced Matcha Latte',
+        brewMethod: 'no-brewer',
+        temperature: 'iced',
+        milk: 'milk',
+      }),
+    ).toBe('Iced Matcha Latte recipe, no-brewer drink, served over ice, milk-based drink');
+  });
+
   it('derives a short step name from the first action', () => {
     expect(
       recipeStepName(

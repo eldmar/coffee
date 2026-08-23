@@ -70,11 +70,14 @@ const hasPublishedCategoryPeer = all.some(
   (candidate) => candidate.id !== recipe.id && candidate.data.category === data.category,
 );
 const useCategoryFallback = data.category === 'coffee-cocktails' && !hasPublishedCategoryPeer;
+const relatedRecipeLimit = data.related?.recipes.length
+  ? Math.min(3, Math.max(2, data.related.recipes.length))
+  : 2;
 const selectedRecipeSlugs = selectRelatedRecipeSlugs(
   sourceSelectionData,
   recipeSelectionData,
   manualRecipeSlugs,
-  useCategoryFallback ? 1 : 2,
+  useCategoryFallback ? 1 : relatedRecipeLimit,
 );
 const selectedRecipes = selectedRecipeSlugs.map((slug) => all.find((entry) => entry.id === slug)!);
 
@@ -128,7 +131,13 @@ const relevantJournal =
   (data.temperature === 'iced'
     ? journalPosts.find((post) => post.id === 'ice-is-an-ingredient')
     : undefined);
-const educationNeeded = relevantJournal ? 1 : 2;
+const educationNeeded = Math.max(
+  0,
+  4 -
+    selectedRecipes.length -
+    (useCategoryFallback ? 1 : 0) -
+    (relevantJournal ? 1 : 0),
+);
 
 type RelatedCard = {
   href: string;
@@ -324,7 +333,10 @@ const initialIngredientLines = formatIngredients(
     />
 
     <dl
-      class="mt-8 grid grid-cols-2 gap-4 rounded-lg border border-line bg-card p-5 sm:grid-cols-4"
+      class:list={[
+        'mt-8 grid grid-cols-2 gap-4 rounded-lg border border-line bg-card p-5',
+        facts.length > 4 ? 'sm:grid-cols-5' : 'sm:grid-cols-4',
+      ]}
       data-recipe-facts
     >
       {facts.map(([label, value]) => (

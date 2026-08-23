@@ -36,6 +36,7 @@ const METHODS = new Set([
   'filter',
   'phin',
   'cezve',
+  'no-brewer',
 ]);
 
 /** Parse only the public URL contract; unsupported and legacy values are ignored. */

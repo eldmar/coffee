@@ -35,6 +35,12 @@ export const EQUIPMENT_SETS = {
   ],
   phin: ['Vietnamese phin filter', 'Coffee grinder', 'Digital scale', 'Kettle', 'Timer'],
   cezve: ['Cezve', 'Coffee grinder', 'Digital scale', 'Low heat source'],
+  matcha: [
+    'Small bowl or matcha bowl',
+    'Fine sieve',
+    'Bamboo matcha whisk or handheld milk frother',
+    'Digital scale or measuring spoon',
+  ],
 } as const;
 
 export type EquipmentSet = keyof typeof EQUIPMENT_SETS;

@@ -7,11 +7,17 @@ const ingredient = z
     amount: z.number().positive().optional(),
     amountMin: z.number().positive().optional(),
     amountMax: z.number().positive().optional(),
-    unit: z.enum(['g', 'ml', 'tsp', 'tbsp']).optional(),
+    unit: z.enum(['g', 'ml', 'tsp', 'tbsp', 'cup']).optional(),
+    usAmount: z.number().positive().optional(),
+    usAmountMin: z.number().positive().optional(),
+    usAmountMax: z.number().positive().optional(),
+    usUnit: z.enum(['tsp', 'tbsp', 'cup']).optional(),
     displayAmount: z.string().optional(),
     scalable: z.boolean().default(true),
     role: z.enum(['ingredient', 'coffee-dose', 'espresso-yield']).default('ingredient'),
     temperatureC: z.number().optional(),
+    temperatureCMin: z.number().optional(),
+    temperatureCMax: z.number().optional(),
     note: z.string().optional(),
   })
   .refine(
@@ -55,6 +61,7 @@ const recipes = defineCollection({
       'filter',
       'phin',
       'cezve',
+      'no-brewer',
     ]),
     temperature: z.enum(['hot', 'iced']),
     milk: z.enum(['black', 'milk']),
@@ -69,6 +76,7 @@ const recipes = defineCollection({
     // Brew guides read their Quick start time from here, so it stays canonical.
     brewTimeLabel: z.string().optional(),
     yield: z.string().default('1 drink'),
+    difficulty: z.enum(['Easy', 'Intermediate', 'Advanced']).optional(),
     // Optional schema-specific value when the visible serving detail is richer.
     schemaYield: z.string().optional(),
     // Ground coffee going in, and the volume of finished drink coming out —
@@ -105,6 +113,7 @@ const recipes = defineCollection({
       'filter',
       'phin',
       'cezve',
+      'matcha',
     ]),
     // Essential but specific to one recipe, e.g. a teaspoon for a macchiato.
     equipmentExtra: z.array(z.string()).default([]),

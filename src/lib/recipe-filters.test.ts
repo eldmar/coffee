@@ -27,6 +27,16 @@ describe('recipe filter URLs', () => {
     ).toBe('method=v60&temperature=iced&milk=with-milk');
   });
 
+  it('keeps the no-brewer method in shareable catalogue URLs', () => {
+    expect(parseRecipeFilterSearch('?method=no-brewer')).toEqual({
+      query: '',
+      method: 'no-brewer',
+      temp: 'any',
+      milk: 'any',
+    });
+    expect(serialiseRecipeFilters({ method: 'no-brewer' })).toBe('method=no-brewer');
+  });
+
   it('clears the query when every filter is reset', () => {
     expect(serialiseRecipeFilters({ query: '', method: 'any', temp: 'any', milk: 'any' })).toBe('');
   });

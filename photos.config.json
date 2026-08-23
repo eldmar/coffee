@@ -22,6 +22,7 @@
     "iced-latte": "iced-latte.png",
     "brown-sugar-shaken-espresso": "brown-sugar-shaken-espresso.webp",
     "iced-salted-vanilla-cloud-foam": "iced-salted-vanilla-cloud-foam.webp",
+    "iced-matcha-latte": "iced-matcha-latte.webp",
     "moka-pot-classic": "moka-pot-classic.png",
     "v60-pour-over": "v60-brewing.png",
     "learn-basics": "beans-bowl.png",
@@ -73,6 +74,7 @@
   },
   "wide": [
     "hero",
-    "shop-teaser"
+    "shop-teaser",
+    "iced-matcha-latte"
   ]
 }

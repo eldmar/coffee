@@ -16,9 +16,9 @@ export const CATEGORIES = [
     id: 'milk-drinks',
     label: 'Milk drinks',
     slug: 'milk-drinks',
-    title: 'Milk coffee recipes',
+    title: 'Milk drink recipes',
     description:
-      'Espresso and steamed milk in every ratio, from a 1:1 cortado to a milk-forward latte.',
+      'Coffee and tea drinks with milk, from a 1:1 cortado to a creamy iced matcha latte.',
   },
   {
     id: 'filter-coffee',
@@ -174,6 +174,7 @@ const METHOD_KEYWORDS = {
   filter: 'drip brewing',
   phin: 'Vietnamese phin brewing',
   cezve: 'cezve brewing',
+  'no-brewer': 'no-brewer drink',
 } as const;
 
 interface RecipeKeywordData {
@@ -190,7 +191,11 @@ export function recipeKeywords(data: RecipeKeywordData): string {
     METHOD_KEYWORDS[data.brewMethod],
     data.temperature === 'iced' ? 'served over ice' : 'made at home',
   ];
-  if (data.milk === 'milk') keywords.push('milk-based coffee');
+  if (data.milk === 'milk') {
+    keywords.push(
+      data.brewMethod === 'no-brewer' ? 'milk-based drink' : 'milk-based coffee',
+    );
+  }
   return [...new Set(keywords)].join(', ');
 }
 
@@ -231,6 +236,7 @@ export function isoDuration(minutes: number): string {
 export interface RecipeFactData {
   dose: string;
   drinkYield: string;
+  difficulty?: 'Easy' | 'Intermediate' | 'Advanced';
   water?: string;
   brewerSize?: string;
   brewTime: number;
@@ -242,8 +248,8 @@ export interface RecipeFactData {
 
 /**
  * Espresso drinks are judged by what goes in and what lands in the cup;
- * brew-method recipes by their coffee-to-water ratio. Difficulty is
- * deliberately absent — on this catalogue it only ever said "easy".
+ * brew-method recipes by their coffee-to-water ratio. Difficulty appears only
+ * when it provides useful editorial information for the recipe.
  */
 export function recipeFacts(data: RecipeFactData): [string, string][] {
   if (data.water) {
@@ -254,12 +260,14 @@ export function recipeFacts(data: RecipeFactData): [string, string][] {
       ['Brewer size', data.brewerSize ?? '—'],
     ];
   }
-  return [
+  const facts: [string, string][] = [
     ['Dose', data.dose],
     ['Yield', data.drinkYield],
     ['Time', formatTime(data)],
-    ['Vessel', `${data.vessel.name}, ${data.vessel.capacity}`],
   ];
+  if (data.difficulty) facts.push(['Difficulty', data.difficulty]);
+  facts.push(['Vessel', `${data.vessel.name}, ${data.vessel.capacity}`]);
+  return facts;
 }
 
 /**

@@ -61,6 +61,12 @@ describe('related recipe selection', () => {
     ]);
   });
 
+  it('keeps an explicit editorial list even when all choices share a category', () => {
+    expect(
+      selectRelatedRecipeSlugs(source, candidates, ['alpha', 'beta', 'gamma'], 3),
+    ).toEqual(['alpha', 'beta', 'gamma']);
+  });
+
   it('is stable and limits one category to two cards', () => {
     expect(selectRelatedRecipeSlugs(source, candidates, [], 3)).toEqual(['beta', 'gamma', 'delta']);
     expect(selectRelatedRecipeSlugs(source, [...candidates].reverse(), [], 3)).toEqual([

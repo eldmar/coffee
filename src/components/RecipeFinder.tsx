@@ -33,6 +33,7 @@ const methodOptions = [
   ['filter', 'Filter brewer'],
   ['phin', 'Vietnamese phin'],
   ['cezve', 'Cezve'],
+  ['no-brewer', 'No brewer'],
 ] as const;
 
 const tempOptions = [

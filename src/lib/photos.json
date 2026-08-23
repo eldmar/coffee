@@ -594,6 +594,55 @@
     ],
     "src": "/img/iced-salted-vanilla-cloud-foam.a68bd6ed-800.jpg"
   },
+  "iced-matcha-latte": {
+    "width": 800,
+    "height": 534,
+    "avif": [
+      {
+        "url": "/img/iced-matcha-latte.541ff69a-400.avif",
+        "width": 400,
+        "height": 267
+      },
+      {
+        "url": "/img/iced-matcha-latte.541ff69a-800.avif",
+        "width": 800,
+        "height": 534
+      },
+      {
+        "url": "/img/iced-matcha-latte.541ff69a-1200.avif",
+        "width": 1200,
+        "height": 800
+      },
+      {
+        "url": "/img/iced-matcha-latte.541ff69a-1600.avif",
+        "width": 1600,
+        "height": 1067
+      }
+    ],
+    "webp": [
+      {
+        "url": "/img/iced-matcha-latte.541ff69a-400.webp",
+        "width": 400,
+        "height": 267
+      },
+      {
+        "url": "/img/iced-matcha-latte.541ff69a-800.webp",
+        "width": 800,
+        "height": 534
+      },
+      {
+        "url": "/img/iced-matcha-latte.541ff69a-1200.webp",
+        "width": 1200,
+        "height": 800
+      },
+      {
+        "url": "/img/iced-matcha-latte.541ff69a-1600.webp",
+        "width": 1600,
+        "height": 1067
+      }
+    ],
+    "src": "/img/iced-matcha-latte.541ff69a-800.jpg"
+  },
   "moka-pot-classic": {
     "width": 800,
     "height": 600,

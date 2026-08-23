@@ -75,6 +75,45 @@ describe('structured ingredient scaling', () => {
       ),
     ).toBe('0.6 oz coffee');
   });
+
+  it('uses editorial US measures and scales common cup fractions', () => {
+    expect(
+      formatIngredient(
+        { name: 'milk', amount: 150, unit: 'ml', usAmount: 2 / 3, usUnit: 'cup' },
+        { servings: 2, units: 'us' },
+      ),
+    ).toBe('1⅓ cups milk');
+    expect(
+      formatIngredient(
+        {
+          name: 'ice',
+          amountMin: 120,
+          amountMax: 150,
+          unit: 'g',
+          usAmountMin: 1,
+          usAmountMax: 1.5,
+          usUnit: 'cup',
+        },
+        { servings: 1, units: 'us' },
+      ),
+    ).toBe('1–1½ cups ice');
+  });
+
+  it('formats a temperature range in the selected units', () => {
+    const water = {
+      name: 'water',
+      amount: 60,
+      unit: 'ml' as const,
+      temperatureCMin: 75,
+      temperatureCMax: 80,
+    };
+    expect(formatIngredient(water, { servings: 1, units: 'metric' })).toBe(
+      '60 ml water at 75–80 °C',
+    );
+    expect(formatIngredient(water, { servings: 1, units: 'us' })).toBe(
+      '2 US fl oz water at 167–176 °F',
+    );
+  });
 });
 
 describe('recipe settings URLs', () => {

@@ -71,15 +71,15 @@ export function selectRelatedRecipeSlugs(
   const selectedSlugs = new Set<string>();
   const categoryCounts = new Map<string, number>();
 
-  const add = (candidate: RelatedRecipeData | undefined) => {
+  const add = (candidate: RelatedRecipeData | undefined, enforceCategoryLimit = true) => {
     if (!candidate || selectedSlugs.has(candidate.slug) || selected.length >= limit) return;
-    if ((categoryCounts.get(candidate.category) ?? 0) >= 2) return;
+    if (enforceCategoryLimit && (categoryCounts.get(candidate.category) ?? 0) >= 2) return;
     selected.push(candidate);
     selectedSlugs.add(candidate.slug);
     categoryCounts.set(candidate.category, (categoryCounts.get(candidate.category) ?? 0) + 1);
   };
 
-  manual.forEach((slug) => add(bySlug.get(slug)));
+  manual.forEach((slug) => add(bySlug.get(slug), false));
 
   available
     .filter((candidate) => !selectedSlugs.has(candidate.slug))

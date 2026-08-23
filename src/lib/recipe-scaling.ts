@@ -1,6 +1,6 @@
 import type { UnitPreference } from './retention/storage';
 
-export type IngredientUnit = 'g' | 'ml' | 'tsp' | 'tbsp';
+export type IngredientUnit = 'g' | 'ml' | 'tsp' | 'tbsp' | 'cup';
 export type IngredientRole = 'ingredient' | 'coffee-dose' | 'espresso-yield';
 
 export interface StructuredIngredient {
@@ -9,10 +9,16 @@ export interface StructuredIngredient {
   amountMin?: number;
   amountMax?: number;
   unit?: IngredientUnit;
+  usAmount?: number;
+  usAmountMin?: number;
+  usAmountMax?: number;
+  usUnit?: Extract<IngredientUnit, 'tsp' | 'tbsp' | 'cup'>;
   displayAmount?: string;
   scalable?: boolean;
   role?: IngredientRole;
   temperatureC?: number;
+  temperatureCMin?: number;
+  temperatureCMax?: number;
   note?: string;
 }
 
@@ -75,7 +81,7 @@ function convertAmount(
     };
   }
   if (unit === 'ml') return { amount: roundTo(amount, 1), unit, decimals: 0 };
-  if (unit === 'tsp' || unit === 'tbsp') {
+  if (unit === 'tsp' || unit === 'tbsp' || unit === 'cup') {
     return { amount: roundTo(amount, 0.25), unit, decimals: 2 };
   }
   return {
@@ -143,6 +149,49 @@ function formatTemperature(celsius: number, units: UnitPreference): string {
   return `${formatNumber(celsius, 1)} °C`;
 }
 
+const COMMON_FRACTIONS = [
+  [0.25, '¼'],
+  [1 / 3, '⅓'],
+  [0.5, '½'],
+  [2 / 3, '⅔'],
+  [0.75, '¾'],
+] as const;
+
+function formatCommonFraction(value: number): string {
+  const whole = Math.floor(value + Number.EPSILON);
+  const remainder = value - whole;
+  if (Math.abs(remainder) < 0.015) return String(whole);
+
+  const fraction = COMMON_FRACTIONS.find(
+    ([candidate]) => Math.abs(remainder - candidate) < 0.02,
+  );
+  if (!fraction) return formatNumber(value, 2);
+  return `${whole || ''}${fraction[1]}`;
+}
+
+function formatUsOverrideNumber(amount: number, unit: 'tsp' | 'tbsp' | 'cup'): string {
+  return unit === 'cup' ? formatCommonFraction(amount) : formatNumber(amount, 2);
+}
+
+function formatUsOverride(amount: number, unit: 'tsp' | 'tbsp' | 'cup'): string {
+  const number = formatUsOverrideNumber(amount, unit);
+  const label = unit === 'cup' && Math.abs(amount - 1) > 0.015 ? 'cups' : unit;
+  return `${number} ${label}`;
+}
+
+function formatTemperatureRange(
+  minimum: number,
+  maximum: number,
+  units: UnitPreference,
+): string {
+  if (units === 'us') {
+    const minF = Math.round((minimum * 9) / 5 + 32);
+    const maxF = Math.round((maximum * 9) / 5 + 32);
+    return `${minF}–${maxF} °F`;
+  }
+  return `${formatNumber(minimum, 1)}–${formatNumber(maximum, 1)} °C`;
+}
+
 export function formatIngredient(
   ingredient: StructuredIngredient,
   settings: RecipeSettings,
@@ -152,7 +201,29 @@ export function formatIngredient(
   const factor = ingredient.scalable === false ? 1 : settings.servings;
   let amountText = ingredient.displayAmount;
 
-  if (ingredient.amount !== undefined) {
+  if (
+    settings.units === 'us' &&
+    ingredient.usAmount !== undefined &&
+    ingredient.usUnit !== undefined
+  ) {
+    amountText = formatUsOverride(ingredient.usAmount * factor, ingredient.usUnit);
+  } else if (
+    settings.units === 'us' &&
+    ingredient.usAmountMin !== undefined &&
+    ingredient.usAmountMax !== undefined &&
+    ingredient.usUnit !== undefined
+  ) {
+    const min = ingredient.usAmountMin * factor;
+    const max = ingredient.usAmountMax * factor;
+    const label =
+      ingredient.usUnit === 'cup' && (min !== 1 || max !== 1)
+        ? 'cups'
+        : ingredient.usUnit;
+    amountText = `${formatUsOverrideNumber(min, ingredient.usUnit)}–${formatUsOverrideNumber(
+      max,
+      ingredient.usUnit,
+    )} ${label}`;
+  } else if (ingredient.amount !== undefined) {
     const base = ingredientBaseAmount(ingredient.amount, role, settings, espresso);
     const converted = convertAmount(base * factor, ingredient.unit, settings.units, role);
     amountText = `${formatNumber(converted.amount, converted.decimals)}${converted.unit ? ` ${converted.unit}` : ''}`;
@@ -163,9 +234,15 @@ export function formatIngredient(
   }
 
   const temperature =
-    ingredient.temperatureC === undefined
-      ? ''
-      : ` at ${formatTemperature(ingredient.temperatureC, settings.units)}`;
+    ingredient.temperatureCMin !== undefined && ingredient.temperatureCMax !== undefined
+      ? ` at ${formatTemperatureRange(
+          ingredient.temperatureCMin,
+          ingredient.temperatureCMax,
+          settings.units,
+        )}`
+      : ingredient.temperatureC === undefined
+        ? ''
+        : ` at ${formatTemperature(ingredient.temperatureC, settings.units)}`;
   const note = ingredient.note ? ` (${ingredient.note})` : '';
   return `${amountText ?? ''}${amountText ? ' ' : ''}${ingredient.name}${temperature}${note}`.trim();
 }

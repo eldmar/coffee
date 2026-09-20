@@ -21,6 +21,10 @@ vessel:
   capacity: "250–300 ml"
 datePublished: 2026-07-18
 dateModified: 2026-08-15
+stepTimings:
+  # timer starts with the pour in step 1: a flat four-minute steep
+  - step: 2
+    at: 240
 ingredients:
   - name: "coarsely ground coffee"
     amount: 30

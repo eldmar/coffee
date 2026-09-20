@@ -30,3 +30,15 @@ export function photo(key: string): Photo {
 export function srcset(sources: PhotoSource[]): string {
   return sources.map((s) => `${s.url} ${s.width}w`).join(', ');
 }
+
+/**
+ * Reverse lookup from a rendered photo URL back to its entry.
+ *
+ * Open Graph wants og:image:width and og:image:height, but the layout only ever
+ * sees the finished path. Social cards are a fixed 1200x630 (enforced by
+ * scripts/build-social-images.mjs); a photo's size has to come back out of the
+ * manifest it was generated from.
+ */
+export function photoBySrc(src: string): Photo | undefined {
+  return Object.values(photos).find((entry) => entry.src === src);
+}

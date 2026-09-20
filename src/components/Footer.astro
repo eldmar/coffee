@@ -1,5 +1,6 @@
 ---
 import { LEARN_PATHS, pathHref } from '../lib/learn';
+import ThemeToggle from './ThemeToggle.astro';
 
 const year = new Date().getFullYear();
 
@@ -74,10 +75,11 @@ const columns = [
       class="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-5 gap-y-2 px-5 py-4 text-xs text-ink-soft md:justify-between"
     >
       <p>&copy; {year} KAVOVO. All rights reserved.</p>
-      <div class="flex gap-5">
+      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
         <a href="/terms/" class="hover:text-ink">Terms</a>
         <a href="/privacy/" class="hover:text-ink">Privacy</a>
         <a href="/accessibility/" class="hover:text-ink">Accessibility</a>
+        <ThemeToggle />
       </div>
     </div>
   </div>

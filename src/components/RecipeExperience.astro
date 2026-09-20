@@ -1,14 +1,22 @@
 ---
 import type { EspressoRecipe } from '../lib/recipe-scaling';
 
+export interface StepTiming {
+  /** 1-based position in the Steps list. */
+  step: number;
+  /** Elapsed seconds, from the moment the timer starts, by which it is done. */
+  at: number;
+}
+
 interface Props {
   title: string;
   steps: string[];
+  stepTimings?: StepTiming[];
   ingredients: string[];
   espresso?: EspressoRecipe;
 }
 
-const { title, steps, ingredients, espresso } = Astro.props;
+const { title, steps, stepTimings, ingredients, espresso } = Astro.props;
 const stepTotal = Math.max(steps.length, 1);
 ---
 
@@ -16,6 +24,9 @@ const stepTotal = Math.max(steps.length, 1);
   data-recipe-experience
   data-espresso-dose={espresso?.dose}
   data-espresso-ratio={espresso?.ratio}
+  data-step-timings={stepTimings && stepTimings.length > 0
+    ? JSON.stringify(stepTimings)
+    : undefined}
 >
   <div data-recipe-tools hidden class="recipe-tools print:hidden">
     <div class="recipe-tools__copy">
@@ -69,6 +80,11 @@ const stepTotal = Math.max(steps.length, 1);
           <button type="button" data-reset-timer class="recipe-tool-button">Reset timer</button>
         </div>
       </section>
+
+      <!-- Not a live region: it reticks four times a second, which would make a
+           screen reader unusable. Crossing a mark is announced once, through the
+           existing polite status line instead. -->
+      <p class="recipe-brew-cue" data-step-cue hidden></p>
 
       <div class="recipe-wake-row">
         <label data-wake-control hidden class="recipe-wake-control">
@@ -242,6 +258,22 @@ const stepTotal = Math.max(steps.length, 1);
     background: var(--color-ivory);
   }
 
+  .recipe-brew-cue {
+    margin-top: -4px;
+    padding: 0 20px 4px;
+    color: var(--color-ink-soft);
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  .recipe-brew-cue[hidden] {
+    display: none;
+  }
+
+  .recipe-brew-cue[data-state='over'] {
+    color: var(--color-accent);
+  }
+
   .recipe-brew-timer__time {
     display: block;
     min-width: 7ch;
@@ -412,7 +444,7 @@ const stepTotal = Math.max(steps.length, 1);
     content: '✓';
     border-color: var(--color-accent);
     background: var(--color-accent);
-    color: var(--color-ivory);
+    color: var(--color-accent-ink);
     text-decoration: none;
   }
 
@@ -613,6 +645,8 @@ const stepTotal = Math.max(steps.length, 1);
       nextButton.textContent = isLast ? (done ? 'Brew complete' : 'Finish brew') : done ? 'Next step' : 'Mark done & next';
       if (stepComplete) stepComplete.textContent = done ? 'Completed' : '';
 
+      renderCue();
+
       if (focus) requestAnimationFrame(() => currentStep.focus());
     };
 
@@ -690,7 +724,62 @@ const stepTotal = Math.max(steps.length, 1);
     const totalElapsed = () =>
       elapsedMilliseconds + (timerStartedAt === undefined ? 0 : Date.now() - timerStartedAt);
 
+    // Cue marks are optional: a recipe whose steps are not clock-driven has no
+    // data-step-timings and everything below stays inert.
+    const stepCue = dialog.querySelector<HTMLElement>('[data-step-cue]');
+    const timingByStep = new Map<number, number>();
+    try {
+      const raw = JSON.parse(experience.dataset.stepTimings ?? '[]') as Array<{
+        step?: unknown;
+        at?: unknown;
+      }>;
+      for (const entry of raw) {
+        if (typeof entry?.step === 'number' && typeof entry?.at === 'number') {
+          timingByStep.set(entry.step, entry.at);
+        }
+      }
+    } catch {
+      // A malformed attribute just means no cues, never a broken brew mode.
+    }
+
+    const announcedMarks = new Set<number>();
+
+    const clock = (seconds: number) =>
+      `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
+
+    const renderCue = () => {
+      if (!stepCue) return;
+      const target = timingByStep.get(currentIndex + 1);
+      if (target === undefined) {
+        stepCue.hidden = true;
+        return;
+      }
+
+      stepCue.hidden = false;
+      const running = timerStartedAt !== undefined || elapsedMilliseconds > 0;
+      if (!running) {
+        delete stepCue.dataset.state;
+        stepCue.textContent = `Finish this step by ${clock(target)}`;
+        return;
+      }
+
+      const remaining = target - totalElapsed() / 1000;
+      if (remaining >= 0) {
+        delete stepCue.dataset.state;
+        stepCue.textContent = `${clock(remaining)} left — finish by ${clock(target)}`;
+        return;
+      }
+
+      stepCue.dataset.state = 'over';
+      stepCue.textContent = `${clock(-remaining)} past ${clock(target)}`;
+      if (!announcedMarks.has(currentIndex) && stepStatus) {
+        announcedMarks.add(currentIndex);
+        stepStatus.textContent = `Step ${currentIndex + 1} is due at ${clock(target)}.`;
+      }
+    };
+
     const renderTimer = () => {
+      renderCue();
       if (!timerDisplay) return;
       const seconds = Math.floor(totalElapsed() / 1000);
       const hours = Math.floor(seconds / 3600);
@@ -729,6 +818,7 @@ const stepTotal = Math.max(steps.length, 1);
       timerInterval = undefined;
       timerStartedAt = undefined;
       elapsedMilliseconds = 0;
+      announcedMarks.clear();
       if (timerButton) timerButton.textContent = 'Start timer';
       renderTimer();
     });

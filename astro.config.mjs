@@ -6,10 +6,13 @@ import { satteri } from '@astrojs/markdown-satteri';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import satteriRecipeStepIds from './src/lib/satteri-recipe-step-ids.mjs';
+import { contentLastmod } from './src/lib/sitemap-lastmod.mjs';
 
 const SITE_URL = 'https://kavovo.uk';
+const LASTMOD = contentLastmod();
 const SITEMAP_EXCLUSIONS = new Set([
   '/404/',
+  '/offline/',
   '/search/',
   '/recipes/saved/',
   '/shop/',
@@ -42,6 +45,12 @@ export default defineConfig({
 
   integrations: [
     react(),
-    sitemap({ filter: (page) => !SITEMAP_EXCLUSIONS.has(new URL(page).pathname) }),
+    sitemap({
+      filter: (page) => !SITEMAP_EXCLUSIONS.has(new URL(page).pathname),
+      serialize(item) {
+        const lastmod = LASTMOD[new URL(item.url).pathname];
+        return lastmod ? { ...item, lastmod } : item;
+      },
+    }),
   ],
 });

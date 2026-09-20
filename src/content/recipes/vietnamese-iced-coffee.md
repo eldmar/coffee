@@ -21,6 +21,10 @@ vessel:
   capacity: "250–300 ml"
 datePublished: 2026-08-06
 dateModified: 2026-08-06
+stepTimings:
+  # timer starts with the bloom water in step 6; the drip that follows is a 4-6 min range, so it carries no mark
+  - step: 6
+    at: 30
 ingredients:
   - name: "medium-fine dark-roast coffee"
     amount: 20

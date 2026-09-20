@@ -1,0 +1,148 @@
+---
+/**
+ * Colour scheme control.
+ *
+ * Auto is the default and means "whatever the OS says" — the CSS already does
+ * that through light-dark(), so Auto simply removes the override. The control
+ * is hidden until its script runs: a theme switch that does nothing without
+ * JavaScript is worse than no switch at all.
+ */
+---
+
+<fieldset class="theme-toggle" data-theme-toggle hidden>
+  <legend class="theme-toggle__legend">Theme</legend>
+  <div class="theme-toggle__options">
+    {
+      [
+        { value: 'auto', label: 'Auto' },
+        { value: 'light', label: 'Light' },
+        { value: 'dark', label: 'Dark' },
+      ].map((option) => (
+        <label class="theme-toggle__option">
+          <input type="radio" name="kavovo-theme" value={option.value} class="sr-only" />
+          <span>{option.label}</span>
+        </label>
+      ))
+    }
+  </div>
+</fieldset>
+
+<style>
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .theme-toggle[hidden] {
+    display: none;
+  }
+
+  .theme-toggle__legend {
+    float: left;
+    padding: 0;
+    color: var(--color-ink-soft);
+  }
+
+  .theme-toggle__options {
+    display: flex;
+    gap: 2px;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
+    padding: 2px;
+  }
+
+  .theme-toggle__option {
+    border-radius: calc(var(--radius-md) - 3px);
+    padding: 3px 9px;
+    color: var(--color-ink-soft);
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+  }
+
+  .theme-toggle__option:hover {
+    color: var(--color-ink);
+  }
+
+  /* The radio is visually hidden but still focusable, so the ring has to be
+     drawn by the label it sits inside. */
+  .theme-toggle__option:has(:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .theme-toggle__option:has(:checked) {
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .theme-toggle__option {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = 'kavovo.theme';
+  // Mirrors --color-paper in src/styles/global.css.
+  const BAR_COLOUR = { light: '#fbf8f2', dark: '#1a1512' };
+
+  type Choice = 'auto' | 'light' | 'dark';
+
+  const isChoice = (value: string | null): value is Choice =>
+    value === 'auto' || value === 'light' || value === 'dark';
+
+  function read(): Choice {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return isChoice(stored) ? stored : 'auto';
+    } catch {
+      return 'auto';
+    }
+  }
+
+  function apply(choice: Choice) {
+    const root = document.documentElement;
+    if (choice === 'auto') delete root.dataset.theme;
+    else root.dataset.theme = choice;
+
+    for (const meta of document.head.querySelectorAll('meta[name="theme-color"]')) meta.remove();
+    if (choice === 'auto') {
+      // Hand the OS back its two media-scoped tags.
+      for (const [scheme, colour] of Object.entries(BAR_COLOUR)) {
+        const meta = document.createElement('meta');
+        meta.name = 'theme-color';
+        meta.content = colour;
+        meta.media = `(prefers-color-scheme: ${scheme})`;
+        document.head.append(meta);
+      }
+    } else {
+      const meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      meta.content = BAR_COLOUR[choice];
+      document.head.append(meta);
+    }
+  }
+
+  for (const toggle of document.querySelectorAll<HTMLFieldSetElement>('[data-theme-toggle]')) {
+    const current = read();
+    const selected = toggle.querySelector<HTMLInputElement>(`input[value="${current}"]`);
+    if (selected) selected.checked = true;
+    toggle.hidden = false;
+
+    toggle.addEventListener('change', (event) => {
+      const input = event.target;
+      if (!(input instanceof HTMLInputElement) || !isChoice(input.value)) return;
+      apply(input.value);
+      try {
+        localStorage.setItem(STORAGE_KEY, input.value);
+      } catch {
+        // The choice still applies to this page; it just will not be remembered.
+      }
+    });
+  }
+</script>

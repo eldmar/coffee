@@ -1,0 +1,30 @@
+{
+  "name": "KAVOVO — Coffee Recipes & Brewing Guides",
+  "short_name": "KAVOVO",
+  "description": "Straightforward drink recipes and practical brewing guides for people making coffee at home.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "lang": "en-GB",
+  "dir": "ltr",
+  "background_color": "#fbf8f2",
+  "theme_color": "#fbf8f2",
+  "categories": ["food", "lifestyle"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "All recipes", "url": "/recipes/" },
+    { "name": "Saved recipes", "url": "/recipes/saved/" },
+    { "name": "Fix my coffee", "url": "/assistant/" }
+  ]
+}

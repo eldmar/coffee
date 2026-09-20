@@ -21,6 +21,12 @@ vessel:
   capacity: "300 ml"
 datePublished: 2026-07-18
 dateModified: 2026-08-15
+stepTimings:
+  # timer starts with the pour in step 2: seal and wait until 1:30, then a 30 s press
+  - step: 3
+    at: 90
+  - step: 4
+    at: 120
 ingredients:
   - name: "medium-ground coffee"
     amount: 15

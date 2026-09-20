@@ -813,6 +813,26 @@ if (existsSync(searchPage)) {
 // The corpus moved out of /search/ into a file the page fetches, so every guard
 // that a renamed page cannot silently vanish from search has to follow it
 // there. An empty string keeps the checks below reporting rather than throwing.
+// The service worker is the one file on the site that can outlive a bad deploy
+// in someone's browser, and the offline page is the only thing it can fall back
+// to. If either stops being emitted, the failure is invisible until someone
+// loses signal.
+for (const [file, why] of [
+  ['sw.js', 'the site has no offline fallback'],
+  ['manifest.webmanifest', 'the site can no longer be installed'],
+  ['offline/index.html', 'the service worker has nothing to fall back to'],
+]) {
+  if (!existsSync(join(DIST, file))) problems.push(`${file} was not built — ${why}`);
+}
+if (existsSync(join(DIST, 'sw.js'))) {
+  const worker = readFileSync(join(DIST, 'sw.js'), 'utf8');
+  // Caching a subscribe POST, or answering one from cache, would be a bug with
+  // real consequences for someone's inbox.
+  if (!worker.includes("startsWith('/api/')")) {
+    problems.push('sw.js no longer excludes /api/ from caching');
+  }
+}
+
 // Every widget that reads its data from a file instead of island props fails
 // silently when that file is missing: the page still builds, the widget just
 // never appears. These are cheap to assert, so assert them.

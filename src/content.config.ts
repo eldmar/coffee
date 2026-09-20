@@ -126,6 +126,25 @@ const recipes = defineCollection({
         note: z.string().optional(),
       })
       .optional(),
+    /**
+     * Cue marks for the brew-mode timer, for recipes where the clock is part of
+     * the method rather than an estimate.
+     *
+     * `step` is the 1-based position in the Steps list; `at` is the elapsed
+     * time, in seconds from the moment the timer starts, by which that step
+     * should be finished. Brew mode counts down to the next mark and says so
+     * when it passes. Recipes whose steps are not timed simply omit this — the
+     * stopwatch behaves exactly as it does today.
+     */
+    stepTimings: z
+      .array(
+        z.object({
+          step: z.number().int().min(1),
+          at: z.number().int().min(1),
+        }),
+      )
+      .min(1)
+      .optional(),
     // Set only when editorially chosen recipes should replace the automatic list.
     relatedRecipes: z.array(z.string()).length(3).optional(),
     related: z

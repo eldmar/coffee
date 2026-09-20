@@ -22,6 +22,14 @@ vessel:
 datePublished: 2026-07-18
 dateModified: 2026-08-15
 popular: true
+stepTimings:
+  # timer starts with the pour in step 2: bloom to 0:30, 250 g by 2:00, drawdown by ~3:00
+  - step: 3
+    at: 30
+  - step: 4
+    at: 120
+  - step: 5
+    at: 180
 ingredients:
   - name: "medium-fine ground coffee"
     amount: 15

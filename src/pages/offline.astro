@@ -1,0 +1,48 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+/**
+ * Served by the service worker when a page is requested with no network and no
+ * cached copy. Everything on it has to work offline, so it links only to what
+ * the reader is most likely to have already opened.
+ */
+---
+
+<Layout
+  title="Offline — KAVOVO"
+  description="You are offline. Recipes you have already opened are still available."
+  noindex
+>
+  <section class="mx-auto max-w-xl px-5 py-20 text-center">
+    <span class="eyebrow">No connection</span>
+    <h1 class="mt-2 font-display text-4xl font-medium">You are offline</h1>
+    <p class="mt-4 text-ink-soft">
+      This page has not been opened on this device yet, so there is no copy to fall back on.
+      Recipes and guides you have already visited still work — including brew mode and its timer.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <button
+        type="button"
+        data-retry
+        class="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-accent-ink transition-colors hover:bg-accent-dark"
+      >
+        Try again
+      </button>
+      <a
+        href="/recipes/saved/"
+        class="rounded-md border border-line px-5 py-2.5 text-sm font-medium transition-colors hover:border-ink/50"
+      >
+        Saved recipes
+      </a>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const retry = document.querySelector<HTMLButtonElement>('[data-retry]');
+  retry?.addEventListener('click', () => {
+    window.location.reload();
+  });
+  // Coming back online is the usual way out of here.
+  window.addEventListener('online', () => window.location.reload());
+</script>

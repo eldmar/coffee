@@ -9,32 +9,50 @@
   --font-display: "Newsreader Variable", Georgia, serif;
   --font-sans: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
 
-  /* Core brand palette */
+  /* Core brand palette. These four are the brand itself and never move — dark
+     mode redresses the semantic tokens below, which is what the components
+     actually reference. */
   --color-espresso: #2b211b;
   --color-kalyna: #a43b32;
   --color-sage: #606848;
-  --color-ivory: #f3ebdd;
 
-  /* Semantic surfaces, derived from the palette */
-  --color-paper: #fbf8f2;
-  --color-card: #fffdf8;
-  --color-line: #e5dbc9;
+  /* Every semantic colour is declared once with both schemes. light-dark()
+     resolves against the used color-scheme, so `prefers-color-scheme` works
+     with no JavaScript and the toggle only has to set color-scheme itself. */
+
+  /* Semantic surfaces. --color-ivory is the sunken one: it started as a brand
+     tint and has always doubled as a surface, so it follows the scheme too. */
+  --color-paper: light-dark(#fbf8f2, #1a1512);
+  --color-card: light-dark(#fffdf8, #231c18);
+  --color-ivory: light-dark(#f3ebdd, #2b2320);
+  --color-line: light-dark(#e5dbc9, #3a302a);
+  /* --color-line is 1.3:1 on our surfaces: right for a rule between sections,
+     far below the 3:1 WCAG 1.4.11 wants on the edge of a control you have to
+     find and operate. Controls get this one instead — same warm family, 3.4:1
+     on paper in light and 3.7:1 in dark. */
+  --color-line-strong: light-dark(#948669, #827367);
 
   /* Semantic text */
-  --color-ink: var(--color-espresso);
-  --color-ink-soft: #6f6357;
+  --color-ink: light-dark(#2b211b, #f2ece2);
+  --color-ink-soft: light-dark(#6f6357, #b3a496);
 
-  /* Semantic accents */
-  --color-accent: var(--color-kalyna);
-  --color-accent-dark: #86302a;
-  --color-accent-ink: var(--color-ivory);
+  /* Semantic accents. Kalyna is too dark to read on a dark page, so dark mode
+     lifts it; --color-accent-dark stays the hover step in both directions. */
+  --color-accent: light-dark(#a43b32, #e2796d);
+  --color-accent-dark: light-dark(#86302a, #f0948a);
+  --color-accent-ink: light-dark(#f3ebdd, #1a1512);
+
+  /* An intentionally inverted chip — the brew assistant's launcher, which has
+     to read as a control floating over the page rather than part of it. */
+  --color-chip: light-dark(#2b211b, #3b302a);
+  --color-chip-ink: light-dark(#f3ebdd, #f2ece2);
 
   /* Focus and validation. Kalyna is reserved for real errors, so focus is
      sage — inside a form a red ring reads as "you typed something wrong". */
-  --color-focus: var(--color-sage);
-  --color-focus-ring: rgb(96 104 72 / 14%);
-  --color-invalid: var(--color-kalyna);
-  --color-invalid-ring: rgb(164 59 50 / 14%);
+  --color-focus: light-dark(#606848, #9db07a);
+  --color-focus-ring: light-dark(rgb(96 104 72 / 14%), rgb(157 176 122 / 22%));
+  --color-invalid: light-dark(#a43b32, #e2796d);
+  --color-invalid-ring: light-dark(rgb(164 59 50 / 14%), rgb(226 121 109 / 22%));
 
   /* Radii */
   --radius-md: 0.5rem;
@@ -47,6 +65,17 @@
 
 html {
   scroll-behavior: smooth;
+  /* Both schemes are on offer, so light-dark() follows the OS and native
+     controls, scrollbars and form widgets are repainted to match. */
+  color-scheme: light dark;
+}
+
+html[data-theme='light'] {
+  color-scheme: light;
+}
+
+html[data-theme='dark'] {
+  color-scheme: dark;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -91,6 +120,15 @@ body {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--color-accent);
+}
+
+/* A field is identified by its box alone, so that box has to clear 3:1. (A
+   button carries a visible label, so its border is decorative and exempt.) These
+   rules are unlayered and therefore beat the `border-line` utility the markup
+   carries, the same way the focus and invalid states below do. */
+:where(input, select, textarea):not([type='checkbox']):not([type='radio']),
+.field-shell {
+  border-color: var(--color-line-strong);
 }
 
 /* Visible keyboard focus on every interactive element. Never replaced by
@@ -619,9 +657,10 @@ button:disabled,
 }
 
 /* Sage on a sage panel is no focus indicator at all. Any dark brand surface
-   flips the focus tokens to ivory. */
+   flips the focus tokens to a light literal — the panel is brand-dark in both
+   schemes, so this must not follow the ivory surface token. */
 .on-brand {
-  --color-focus: var(--color-ivory);
+  --color-focus: #f3ebdd;
   --color-focus-ring: rgb(243 235 221 / 30%);
   --color-invalid-ring: rgb(243 235 221 / 30%);
 }

@@ -5,12 +5,15 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BrewAssistantWidget from '../components/BrewAssistantWidget.astro';
-import { photo } from '../lib/photos';
+import { photo, photoBySrc } from '../lib/photos';
 
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  /** Describes the card image. Falls back to the title, which every social
+      card renders as its headline, so it is never wrong for those. */
+  ogImageAlt?: string;
   ogType?: 'website' | 'article';
   publishedTime?: Date;
   modifiedTime?: Date;
@@ -22,6 +25,7 @@ const {
   title = 'Coffee Recipes & Brewing Guides | KAVOVO',
   description = 'Straightforward drink recipes, practical brewing guides and, soon, coffee chosen for the way you brew.',
   ogImage,
+  ogImageAlt,
   ogType = 'website',
   publishedTime,
   modifiedTime,
@@ -29,7 +33,14 @@ const {
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImageUrl = new URL(ogImage ?? photo('hero').src, Astro.site);
+const ogImagePath = ogImage ?? photo('hero').src;
+const ogImageUrl = new URL(ogImagePath, Astro.site);
+// Width and height let LinkedIn, WhatsApp and Slack lay the card out before the
+// image arrives; without them they often fall back to a small thumbnail. Only
+// emitted when the size is actually known — a guess here is worse than silence.
+const ogImageSize = ogImagePath.startsWith('/social/')
+  ? { width: 1200, height: 630 }
+  : photoBySrc(ogImagePath);
 const showBrewWidget = Astro.url.pathname.replace(/\/+$/, '') !== '/assistant';
 const revealBrewWidgetAfterScroll = Astro.url.pathname === '/';
 ---
@@ -46,6 +57,7 @@ const revealBrewWidgetAfterScroll = Astro.url.pathname === '/';
     <link rel="icon" href="/favicon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content="KAVOVO" />
     {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
@@ -54,10 +66,45 @@ const revealBrewWidgetAfterScroll = Astro.url.pathname === '/';
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content={ogImageAlt ?? title} />
+    {ogImageSize && (
+      <>
+        <meta property="og:image:width" content={String(ogImageSize.width)} />
+        <meta property="og:image:height" content={String(ogImageSize.height)} />
+      </>
+    )}
+    <meta property="og:locale" content="en_GB" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={ogImageAlt ?? title} />
+    {/* Both values mirror --color-paper in src/styles/global.css. Without an
+        explicit choice the pair follows the OS on its own; the script below
+        collapses them to one when the reader has picked a side. */}
+    <meta name="theme-color" content="#fbf8f2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1512" media="(prefers-color-scheme: dark)" />
+    <script is:inline>
+      // Runs during head parsing so an explicitly chosen theme is on <html>
+      // before the first paint. Everything else about the theme is CSS:
+      // light-dark() resolves against color-scheme, which data-theme sets.
+      (() => {
+        try {
+          const stored = localStorage.getItem('kavovo.theme');
+          if (stored !== 'light' && stored !== 'dark') return;
+          document.documentElement.dataset.theme = stored;
+          for (const meta of document.head.querySelectorAll('meta[name="theme-color"]')) {
+            meta.remove();
+          }
+          const meta = document.createElement('meta');
+          meta.name = 'theme-color';
+          meta.content = stored === 'dark' ? '#1a1512' : '#fbf8f2';
+          document.head.append(meta);
+        } catch {
+          // Private mode and blocked storage just mean the OS setting wins.
+        }
+      })();
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -67,5 +114,17 @@ const revealBrewWidgetAfterScroll = Astro.url.pathname === '/';
       <slot />
     </main>
     <Footer />
+    <script>
+      // Registered after load so it never competes with the page's own
+      // requests. The worker only ever adds an offline fallback: every page is
+      // still fetched from the network first when there is one.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {
+            // An unsupported or blocked worker just means no offline copy.
+          });
+        });
+      }
+    </script>
   </body>
 </html>

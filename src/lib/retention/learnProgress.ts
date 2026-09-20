@@ -6,6 +6,13 @@ export interface LessonReference {
   href: string;
 }
 
+/** A published path and its lessons, as served by /learn-paths.json. */
+export interface PathReference {
+  slug: string;
+  title: string;
+  lessons: LessonReference[];
+}
+
 export interface ContinueLearningResult {
   lesson: LessonReference;
   completedCount: number;

@@ -30,6 +30,14 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    build: {
+      // `font-src 'self'` in public/_headers blocks data: URIs, so any font
+      // small enough for Vite to inline is a font the browser then refuses to
+      // load — it happened silently to Manrope's cyrillic-ext subset. Fonts
+      // always stay real files; everything else keeps Vite's default rule.
+      assetsInlineLimit: (filePath) =>
+        /\.(?:woff2?|ttf|otf|eot)$/i.test(filePath) ? false : undefined,
+    },
   },
 
   integrations: [

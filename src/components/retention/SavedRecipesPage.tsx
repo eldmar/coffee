@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { trackRetentionEvent } from '../../lib/analytics';
+import { loadRetentionCatalogue } from '../../lib/retention/catalogue';
 import {
   RETENTION_KEYS,
   getSavedRecipes,
@@ -10,12 +11,9 @@ import {
 import RecentlyViewed from './RecentlyViewed';
 import RetentionRecipeCard, { type RetentionRecipe } from './RetentionRecipeCard';
 
-interface Props {
-  recipes: RetentionRecipe[];
-}
-
-export default function SavedRecipesPage({ recipes }: Props) {
+export default function SavedRecipesPage() {
   const [entries, setEntries] = useState<SavedRecipeEntry[]>([]);
+  const [catalogue, setCatalogue] = useState<RetentionRecipe[]>();
   const [hydrated, setHydrated] = useState(false);
   const [removalAnnouncement, setRemovalAnnouncement] = useState(0);
 
@@ -32,17 +30,34 @@ export default function SavedRecipesPage({ recipes }: Props) {
     };
   }, []);
 
+  // Nobody with an empty collection needs the catalogue, and anybody with a
+  // full one must not see the empty state flash while it arrives — hence
+  // `ready` rather than `hydrated` in the render below.
+  useEffect(() => {
+    if (entries.length === 0 || catalogue) return;
+
+    let active = true;
+    void loadRetentionCatalogue().then((loaded) => {
+      if (active) setCatalogue(loaded);
+    });
+    return () => {
+      active = false;
+    };
+  }, [catalogue, entries.length]);
+
+  const ready = hydrated && (entries.length === 0 || catalogue !== undefined);
+
   const saved = useMemo(() => {
-    const bySlug = new Map(recipes.map((recipe) => [recipe.slug, recipe]));
+    const bySlug = new Map((catalogue ?? []).map((recipe) => [recipe.slug, recipe]));
     return [...entries]
       .sort((left, right) => Date.parse(right.savedAt) - Date.parse(left.savedAt))
       .map((entry) => bySlug.get(entry.slug))
       .filter((recipe): recipe is RetentionRecipe => Boolean(recipe));
-  }, [entries, recipes]);
+  }, [catalogue, entries]);
 
   return (
     <>
-      {hydrated && (
+      {ready && (
         <p className="mt-6 text-sm font-medium text-ink-soft">
           {saved.length} saved {saved.length === 1 ? 'recipe' : 'recipes'}
         </p>
@@ -58,7 +73,7 @@ export default function SavedRecipesPage({ recipes }: Props) {
         )}
       </div>
       <div className="mt-3 min-h-48">
-        {!hydrated ? (
+        {!ready ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" aria-hidden="true">
             {[0, 1, 2].map((item) => (
               <div key={item} className="h-80 animate-pulse rounded-lg border border-line bg-card" />
@@ -96,7 +111,7 @@ export default function SavedRecipesPage({ recipes }: Props) {
         )}
       </div>
 
-      <RecentlyViewed recipes={recipes} className="mt-16 border-t border-line pt-10" />
+      <RecentlyViewed className="mt-16 border-t border-line pt-10" />
     </>
   );
 }

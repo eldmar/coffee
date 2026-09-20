@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { loadSearchIndex } from '../lib/search-index';
 import {
   filterSearchResults,
   highlightSearchText,
@@ -8,10 +9,6 @@ import {
   type SearchDoc,
   type SearchTypeFilter,
 } from '../lib/search';
-
-interface Props {
-  docs: SearchDoc[];
-}
 
 const INITIAL_RESULT_COUNT = 20;
 
@@ -48,12 +45,36 @@ function resultSummary(doc: SearchDoc, query: string): string {
   return doc.description;
 }
 
-export default function SearchResults({ docs }: Props) {
+type IndexState = 'loading' | 'ready' | 'error';
+
+export default function SearchResults() {
+  const [docs, setDocs] = useState<SearchDoc[]>([]);
+  const [indexState, setIndexState] = useState<IndexState>('loading');
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<SearchTypeFilter>('all');
   const [ready, setReady] = useState(false);
   const [visibleCount, setVisibleCount] = useState(INITIAL_RESULT_COUNT);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // The corpus is a separate file now, so it is fetched rather than parsed out
+  // of the page. Everything above the results — the input, the type filters —
+  // works while it is in flight.
+  useEffect(() => {
+    let active = true;
+    loadSearchIndex().then(
+      (index) => {
+        if (!active) return;
+        setDocs(index);
+        setIndexState('ready');
+      },
+      () => {
+        if (active) setIndexState('error');
+      },
+    );
+    return () => {
+      active = false;
+    };
+  }, []);
 
   // Seed from the URL so a shared link reproduces the same results.
   useEffect(() => {
@@ -191,16 +212,32 @@ export default function SearchResults({ docs }: Props) {
       )}
 
       <p className="mt-6 text-sm text-ink-soft" aria-live="polite">
-        {!query.trim()
-          ? `Search ${docs.length} recipes, guides and articles.`
-          : results.length === 0
-            ? 'No results.'
-            : `${results.length} ${results.length === 1 ? 'result' : 'results'}${
-                typeFilter === 'all' ? '' : ` in ${activeTypeLabel}`
-              } for “${query.trim()}”`}
+        {indexState === 'error'
+          ? 'Search is unavailable right now.'
+          : indexState === 'loading'
+            ? 'Loading search\u2026'
+            : !query.trim()
+              ? `Search ${docs.length} recipes, guides and articles.`
+              : results.length === 0
+                ? 'No results.'
+                : `${results.length} ${results.length === 1 ? 'result' : 'results'}${
+                    typeFilter === 'all' ? '' : ` in ${activeTypeLabel}`
+                  } for \u201c${query.trim()}\u201d`}
       </p>
 
-      {query.trim() && results.length === 0 && (
+      {indexState === 'error' && (
+        <div className="mt-6 border-y border-line py-8 text-center">
+          <p className="text-ink-soft">
+            The search index could not be loaded. You can still{' '}
+            <a href="/recipes/" className="text-accent underline">
+              browse all recipes
+            </a>
+            .
+          </p>
+        </div>
+      )}
+
+      {indexState === 'ready' && query.trim() && results.length === 0 && (
         <div className="mt-6 border-y border-line py-8 text-center">
           <p className="text-ink-soft">Nothing matched that. Try a drink name, brew method or ingredient.</p>
           <button

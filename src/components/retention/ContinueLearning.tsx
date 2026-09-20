@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { trackRetentionEvent } from '../../lib/analytics';
-import { mostRecentlyVisitedPath, type LessonReference } from '../../lib/retention/learnProgress';
+import { loadLearnPaths } from '../../lib/retention/learnPaths';
+import { mostRecentlyVisitedPath, type PathReference } from '../../lib/retention/learnProgress';
 import {
   RETENTION_KEYS,
   getLearnProgress,
@@ -8,24 +9,32 @@ import {
   type LearnProgressState,
 } from '../../lib/retention/storage';
 
-interface PathReference {
-  slug: string;
-  title: string;
-  lessons: LessonReference[];
-}
-
-interface Props {
-  paths: PathReference[];
-}
-
-export default function ContinueLearning({ paths }: Props) {
+export default function ContinueLearning() {
   const [state, setState] = useState<LearnProgressState>();
+  const [paths, setPaths] = useState<PathReference[]>([]);
 
   useEffect(() => {
     const refresh = () => setState(getLearnProgress());
     refresh();
     return subscribeRetentionKey(RETENTION_KEYS.learnProgress, refresh);
   }, []);
+
+  // mostRecentlyVisitedPath only ever returns a path that has been visited, so
+  // a visitor who has never opened a lesson can be answered from localStorage
+  // alone and the paths file left alone with it.
+  const started = Boolean(state) && Object.values(state?.paths ?? {}).some((p) => p?.lastVisitedAt);
+
+  useEffect(() => {
+    if (!started || paths.length > 0) return;
+
+    let active = true;
+    void loadLearnPaths().then((loaded) => {
+      if (active) setPaths(loaded);
+    });
+    return () => {
+      active = false;
+    };
+  }, [paths.length, started]);
 
   const next = useMemo(() => (state ? mostRecentlyVisitedPath(state, paths) : null), [paths, state]);
   if (!next) return null;

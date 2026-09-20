@@ -773,6 +773,26 @@ if (existsSync(v60GuidePage)) {
   }
 }
 
+// Astro wires client:visible up by observing the island's CHILDREN, not the
+// island itself (astro-island is display:contents and has no box of its own).
+// A component that server-renders to nothing therefore has nothing to observe:
+// the IntersectionObserver watches an empty list, never fires, and the island
+// stays inert at every scroll position — silently, with no error anywhere.
+// Those components have to use client:idle instead.
+for (const page of pages) {
+  const html = readFileSync(page, 'utf8');
+  for (const match of html.matchAll(/<astro-island([^>]*)>([\s\S]*?)<\/astro-island>/g)) {
+    const [, attrs, children] = match;
+    if (!/client="visible"/.test(attrs)) continue;
+    if (/<[a-zA-Z]/.test(children)) continue;
+    const component = attrs.match(/component-url="[^"]*\/([^/"]+)"/)?.[1]?.split('.')[0] ?? 'island';
+    problems.push(
+      `${relative(DIST, page)}: ${component} uses client:visible but server-renders nothing, ` +
+        'so it can never hydrate — use client:idle',
+    );
+  }
+}
+
 const searchPage = join(DIST, 'search', 'index.html');
 if (existsSync(searchPage)) {
   const html = readFileSync(searchPage, 'utf8');
@@ -788,9 +808,34 @@ if (existsSync(searchPage)) {
   if (!html.includes('aria-label="Filter search results by content type"')) {
     problems.push('search/index.html is missing content-type search filters');
   }
+}
+
+// The corpus moved out of /search/ into a file the page fetches, so every guard
+// that a renamed page cannot silently vanish from search has to follow it
+// there. An empty string keeps the checks below reporting rather than throwing.
+// Every widget that reads its data from a file instead of island props fails
+// silently when that file is missing: the page still builds, the widget just
+// never appears. These are cheap to assert, so assert them.
+for (const [file, widget] of [
+  ['recipes-index.json', 'Recently viewed and Saved recipes'],
+  ['learn-paths.json', 'Continue where you left off'],
+]) {
+  const path = join(DIST, file);
+  if (!existsSync(path)) {
+    problems.push(`${file} was not built — ${widget} can never render`);
+  } else if (JSON.parse(readFileSync(path, 'utf8')).length === 0) {
+    problems.push(`${file} is empty — ${widget} can never render`);
+  }
+}
+
+const searchIndexFile = join(DIST, 'search-index.json');
+const searchCorpus = existsSync(searchIndexFile) ? readFileSync(searchIndexFile, 'utf8') : '';
+if (!searchCorpus) {
+  problems.push('search-index.json was not built — /search/ has nothing to search');
+} else {
   for (const { segments } of comparisonGuides) {
     const href = `/${segments.join('/')}/`;
-    if (!html.includes(href)) {
+    if (!searchCorpus.includes(href)) {
       problems.push(`search index is missing comparison guide: ${href}`);
     }
   }
@@ -1174,23 +1219,15 @@ if (existsSync(icedRecipesPage)) {
   problems.push('Iced Coffee hub was not built');
 }
 
-if (
-  existsSync(searchPage) &&
-  !readFileSync(searchPage, 'utf8').includes('Iced Salted Vanilla Cloud Foam')
-) {
-  problems.push('search index is missing Iced Salted Vanilla Cloud Foam');
-}
-if (
-  existsSync(searchPage) &&
-  !readFileSync(searchPage, 'utf8').includes('Brown Sugar Shaken Espresso')
-) {
-  problems.push('search index is missing Brown Sugar Shaken Espresso');
-}
-if (existsSync(searchPage) && !readFileSync(searchPage, 'utf8').includes('Recipe collection')) {
-  problems.push('search index is missing the Iced Coffee recipe collection');
-}
-if (existsSync(searchPage) && !readFileSync(searchPage, 'utf8').includes('How to Make Filter Coffee')) {
-  problems.push('search index is missing the Filter Coffee guide');
+for (const [marker, label] of [
+  ['Iced Salted Vanilla Cloud Foam', 'Iced Salted Vanilla Cloud Foam'],
+  ['Brown Sugar Shaken Espresso', 'Brown Sugar Shaken Espresso'],
+  ['Recipe collection', 'the Iced Coffee recipe collection'],
+  ['How to Make Filter Coffee', 'the Filter Coffee guide'],
+]) {
+  if (searchCorpus && !searchCorpus.includes(marker)) {
+    problems.push(`search index is missing ${label}`);
+  }
 }
 
 const ratioPage = join(DIST, 'learn', 'coffee-basics', 'coffee-to-water-ratio', 'index.html');
@@ -1401,6 +1438,24 @@ if (existsSync(contentMap)) {
   for (const match of source.matchAll(/href:\s*'(\/[^']+)'/g)) {
     if (!existsSync(join(DIST, match[1], 'index.html'))) {
       problems.push(`brew assistant links to a page that does not exist: ${match[1]}`);
+    }
+  }
+}
+
+// `font-src 'self'` in public/_headers blocks data: URIs, so a font Vite
+// decided to inline is a font the browser refuses to load — a console error on
+// every page load, and a silent fallback to the system stack for whichever
+// range it covered. astro.config.mjs pins assetsInlineLimit to stop it; this
+// fails the build if that ever comes undone.
+const styleDir = join(DIST, '_astro');
+if (existsSync(styleDir)) {
+  for (const name of readdirSync(styleDir).filter((file) => file.endsWith('.css'))) {
+    const css = readFileSync(join(styleDir, name), 'utf8');
+    const inlined = css.match(/url\(\s*["']?data:(?:font|application\/font)[^)]*\)/g);
+    if (inlined) {
+      problems.push(
+        `_astro/${name} inlines ${inlined.length} font(s) as data: URIs, which the CSP blocks`,
+      );
     }
   }
 }

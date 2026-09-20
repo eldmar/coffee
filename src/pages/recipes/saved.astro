@@ -1,20 +1,7 @@
 ---
-import { getCollection } from 'astro:content';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import SavedRecipesPage from '../../components/retention/SavedRecipesPage';
-import { cardImage } from '../../lib/cardImage';
 import Layout from '../../layouts/Layout.astro';
-
-const recipes = (await getCollection('recipes')).map((recipe) => ({
-  slug: recipe.id,
-  title: recipe.data.title,
-  image: cardImage(recipe.data.image),
-  imageAlt: recipe.data.imageAlt,
-  category: recipe.data.category,
-  activeTime: recipe.data.activeTime,
-  totalTime: recipe.data.totalTime,
-  totalTimeLabel: recipe.data.totalTimeLabel,
-}));
 ---
 
 <Layout
@@ -30,7 +17,7 @@ const recipes = (await getCollection('recipes')).map((recipe) => ({
       Saved recipes are stored in this browser and are not synced between devices.
     </p>
 
-    <SavedRecipesPage client:load recipes={recipes} />
+    <SavedRecipesPage client:load />
     <noscript>
       <div class="mt-8 border-y border-line py-12 text-center">
         <h2 class="font-display text-2xl font-medium">No saved recipes yet</h2>

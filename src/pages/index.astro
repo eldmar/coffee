@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import { cardImage, thumbImage } from '../lib/cardImage';
+import { thumbImage } from '../lib/cardImage';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import TaskSelector from '../components/TaskSelector';
@@ -65,17 +65,6 @@ const finderRecipes = recipes.map((r) => ({
   totalTime: r.data.totalTime,
   totalTimeLabel: r.data.totalTimeLabel,
 }));
-
-const retentionRecipes = recipes.map((recipe) => ({
-  slug: recipe.id,
-  title: recipe.data.title,
-  image: cardImage(recipe.data.image),
-  imageAlt: recipe.data.imageAlt,
-  category: recipe.data.category,
-  activeTime: recipe.data.activeTime,
-  totalTime: recipe.data.totalTime,
-  totalTimeLabel: recipe.data.totalTimeLabel,
-}));
 ---
 
 <Layout>
@@ -110,8 +99,7 @@ const retentionRecipes = recipes.map((recipe) => ({
   </section>
 
   <RecentlyViewed
-    client:load
-    recipes={retentionRecipes}
+    client:idle
     className="mx-auto max-w-6xl border-t border-line px-5 py-12"
   />
 

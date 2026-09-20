@@ -18,7 +18,22 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "run_worker_first": true,
+    // Only the routes the Worker actually answers, plus the pages its
+    // canonical/legacy redirects have to intercept. Static assets used to bill
+    // a Worker invocation each: one page view is ~25 of them against a single
+    // HTML request, and none of them needed the Worker at all.
+    "run_worker_first": [
+      "/*",
+      "!/_astro/*",
+      "!/img/*",
+      "!/images/*",
+      "!/social/*",
+      "!/favicon.png",
+      "!/apple-touch-icon.png",
+      "!/robots.txt",
+      "!/sitemap-index.xml",
+      "!/sitemap-0.xml"
+    ],
     "not_found_handling": "404-page"
   },
   "vars": {

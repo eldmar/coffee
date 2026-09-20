@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { trackRetentionEvent } from '../../lib/analytics';
+import { loadRetentionCatalogue } from '../../lib/retention/catalogue';
 import {
   RETENTION_KEYS,
   clearRecentRecipes,
@@ -10,19 +11,14 @@ import {
 import RetentionRecipeCard, { type RetentionRecipe } from './RetentionRecipeCard';
 
 interface Props {
-  recipes: RetentionRecipe[];
   currentSlug?: string;
   className?: string;
   limit?: number;
 }
 
-export default function RecentlyViewed({
-  recipes,
-  currentSlug,
-  className = '',
-  limit = 4,
-}: Props) {
+export default function RecentlyViewed({ currentSlug, className = '', limit = 4 }: Props) {
   const [entries, setEntries] = useState<RecentRecipeEntry[]>([]);
+  const [recipes, setRecipes] = useState<RetentionRecipe[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -32,14 +28,34 @@ export default function RecentlyViewed({
     return subscribeRetentionKey(RETENTION_KEYS.recentRecipes, refresh);
   }, []);
 
+  const candidates = useMemo(
+    () => entries.filter((entry) => entry.slug !== currentSlug),
+    [currentSlug, entries],
+  );
+
+  // Two is the threshold the render below uses, so anything less can never
+  // produce a card and never needs the catalogue fetched.
+  const wanted = candidates.length >= 2;
+
+  useEffect(() => {
+    if (!wanted || recipes.length > 0) return;
+
+    let active = true;
+    void loadRetentionCatalogue().then((catalogue) => {
+      if (active) setRecipes(catalogue);
+    });
+    return () => {
+      active = false;
+    };
+  }, [recipes.length, wanted]);
+
   const visible = useMemo(() => {
     const bySlug = new Map(recipes.map((recipe) => [recipe.slug, recipe]));
-    return entries
-      .filter((entry) => entry.slug !== currentSlug)
+    return candidates
       .map((entry) => bySlug.get(entry.slug))
       .filter((recipe): recipe is RetentionRecipe => Boolean(recipe))
       .slice(0, limit);
-  }, [currentSlug, entries, limit, recipes]);
+  }, [candidates, limit, recipes]);
 
   if (!hydrated || visible.length < 2) return null;
 

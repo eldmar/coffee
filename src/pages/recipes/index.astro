@@ -32,17 +32,6 @@ const catalog = recipes.map((r) => ({
   ]),
 }));
 
-const retentionRecipes = recipes.map((recipe) => ({
-  slug: recipe.id,
-  title: recipe.data.title,
-  image: cardImage(recipe.data.image),
-  imageAlt: recipe.data.imageAlt,
-  category: recipe.data.category,
-  activeTime: recipe.data.activeTime,
-  totalTime: recipe.data.totalTime,
-  totalTimeLabel: recipe.data.totalTimeLabel,
-}));
-
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 
 const schema = {
@@ -76,7 +65,7 @@ const schema = {
           Espresso drinks, pour overs, and cold coffee — each with exact doses, times, and fixes for when things go wrong.
         </p>
       </div>
-      <SavedRecipesLink client:load validSlugs={recipes.map((recipe) => recipe.id)} />
+      <SavedRecipesLink client:idle validSlugs={recipes.map((recipe) => recipe.id)} />
     </div>
 
     <nav aria-label="Recipe categories" class="mt-8 flex flex-wrap gap-2">
@@ -103,8 +92,7 @@ const schema = {
     </div>
 
     <RecentlyViewed
-      client:load
-      recipes={retentionRecipes}
+      client:idle
       className="mt-16 border-t border-line pt-10"
     />
   </section>

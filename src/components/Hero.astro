@@ -5,21 +5,13 @@ import Photo from './Photo.astro';
 <section
   class="relative overflow-hidden bg-ivory md:h-[min(56.25vw,calc(100vh-4rem))] md:min-h-[640px] lg:min-h-[680px]"
 >
-  <Photo
-    name="hero"
-    alt=""
-    sizes="100vw"
-    class="absolute inset-0 hidden h-full w-full object-cover object-right md:block"
-    loading="eager"
-    fetchpriority="high"
-  />
   <div
-    class="absolute inset-0 hidden bg-gradient-to-r from-ivory via-ivory/70 to-transparent md:block lg:via-ivory/40 lg:to-55%"
+    class="absolute inset-0 z-10 hidden bg-gradient-to-r from-ivory via-ivory/70 to-transparent md:block lg:via-ivory/40 lg:to-55%"
     aria-hidden="true"
   >
   </div>
   <div
-    class="relative mx-auto max-w-6xl px-5 pt-14 pb-10 md:flex md:h-full md:items-center md:pt-0 md:pb-32"
+    class="relative z-20 mx-auto max-w-6xl px-5 pt-14 pb-10 md:flex md:h-full md:items-center md:pt-0 md:pb-32"
   >
     <div class="max-w-md">
       <h1 class="font-display text-5xl leading-[1.08] font-medium text-balance md:text-6xl">
@@ -44,11 +36,19 @@ import Photo from './Photo.astro';
       </div>
     </div>
   </div>
+  {/*
+    One photo, not one per breakpoint. Two <Photo> elements hidden with
+    `hidden`/`md:hidden` still both download — CSS cannot stop a fetch the
+    preload scanner has already started — so the phone paid for the desktop
+    hero and vice versa. A single element re-placed with `md:absolute` keeps
+    both layouts: in flow under the copy on mobile, filling the section behind
+    it from md up, stacked under the gradient (z-10) and the copy (z-20).
+  */}
   <Photo
     name="hero"
     alt="Latte with rosetta art beside a pour-over brewing on a wooden table"
     sizes="100vw"
-    class="h-72 w-full object-cover object-[70%_center] sm:h-80 md:hidden"
+    class="h-72 w-full object-cover object-[70%_center] sm:h-80 md:absolute md:inset-0 md:z-0 md:h-full md:object-right"
     loading="eager"
     fetchpriority="high"
   />

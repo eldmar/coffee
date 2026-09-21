@@ -78,6 +78,24 @@ html[data-theme='dark'] {
   color-scheme: dark;
 }
 
+/* The lockup is a single-colour SVG loaded through <img>, so no stylesheet can
+   reach the fills inside it. Inverting it is exact rather than approximate:
+   brightness(0) flattens the one colour to black and invert(1) lifts it to
+   white. This is the only part of the theme that cannot ride on light-dark(),
+   because a filter is not a colour — hence both schemes spelled out.
+
+   The print-only lockup on a recipe page deliberately has no class: paper is
+   white whatever the screen is doing. */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme='light']) .brand-logo {
+    filter: brightness(0) invert(1);
+  }
+}
+
+html[data-theme='dark'] .brand-logo {
+  filter: brightness(0) invert(1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

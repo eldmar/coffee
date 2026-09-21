@@ -32,6 +32,16 @@ const {
   noindex = false,
 } = Astro.props;
 
+/**
+ * Cloudflare Web Analytics, switched on by the presence of its token.
+ *
+ * Deliberately the manual beacon rather than Cloudflare's automatic injection:
+ * automatic injection happens outside this repository, so the privacy notice
+ * below could quietly drift out of step with what is actually collected. With
+ * the token here, the beacon and its disclosure are the same switch.
+ */
+const webAnalyticsToken = import.meta.env.PUBLIC_WEB_ANALYTICS_TOKEN;
+
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImagePath = ogImage ?? photo('hero').src;
 const ogImageUrl = new URL(ogImagePath, Astro.site);
@@ -114,6 +124,15 @@ const revealBrewWidgetAfterScroll = Astro.url.pathname === '/';
       <slot />
     </main>
     <Footer />
+    {
+      webAnalyticsToken && (
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: webAnalyticsToken })}
+        />
+      )
+    }
     <script>
       import { trackRetentionEvent } from '../lib/analytics';
 

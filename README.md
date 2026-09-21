@@ -42,6 +42,19 @@ The Worker applies separate rate limits to hashed email and IP keys. Their
 For local Worker testing, copy `.dev.vars.example` to `.dev.vars` and replace
 the placeholders. The local secrets file is ignored by Git.
 
+## Visitor statistics
+
+Cloudflare Web Analytics is off until `PUBLIC_WEB_ANALYTICS_TOKEN` is present in
+the build environment. Create the site in the Cloudflare dashboard and choose
+the **manual** setup — automatic injection would add the beacon outside this
+repository, where the privacy notice cannot see it and would drift out of step
+with what is actually collected. Copy the token from the snippet Cloudflare
+offers; the layout renders the beacon and the privacy notice reveals its
+visitor-statistics section from that one value.
+
+`public/_headers` already names the two Cloudflare hosts in the CSP, so nothing
+else has to change when the token is set.
+
 ## Deployment
 
 ```sh

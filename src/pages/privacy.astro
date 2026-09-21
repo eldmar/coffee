@@ -3,6 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import TextPage from '../components/TextPage.astro';
 
 const subscriptionsEnabled = import.meta.env.PUBLIC_SUBSCRIPTIONS_ENABLED === 'true';
+// Same switch that renders the beacon in the layout, so this section cannot
+// claim more or less than the site actually does.
+const webAnalyticsEnabled = Boolean(import.meta.env.PUBLIC_WEB_ANALYTICS_TOKEN);
 
 // TODO before launch: add the operating legal entity, its registered address and,
 // if required in your jurisdiction, a data protection contact. Have a lawyer review.
@@ -16,7 +19,7 @@ const subscriptionsEnabled = import.meta.env.PUBLIC_SUBSCRIPTIONS_ENABLED === 't
     eyebrow="Privacy"
     title="Privacy notice"
     intro="A short, honest description of what happens to data when you visit KAVOVO."
-    updated="2026-08-21"
+    updated="2026-09-21"
   >
     <h2>The short version</h2>
     <p>
@@ -102,6 +105,31 @@ const subscriptionsEnabled = import.meta.env.PUBLIC_SUBSCRIPTIONS_ENABLED === 't
       If you block analytics with a browser extension or a content blocker, the Brew Assistant carries on working
       exactly as before.
     </p>
+
+    {
+      webAnalyticsEnabled && (
+        <>
+          <h2>Visitor statistics</h2>
+          <p>
+            We use Cloudflare Web Analytics to count visits. It sets no cookies, does not fingerprint your device and
+            cannot follow you to other websites. There is no profile of you and nothing is sold or shared for
+            advertising.
+          </p>
+          <p>
+            For each page view it records the address of the page, the referring address if there is one, your browser
+            and operating system, your device type and the country the request came from. Requests carry a query string
+            only when a link or a form put one there — a search you run on this site is one such case.
+          </p>
+          <p>
+            Read the{' '}
+            <a href="https://www.cloudflare.com/web-analytics/" rel="external">
+              Cloudflare Web Analytics
+            </a>{' '}
+            description of what it measures.
+          </p>
+        </>
+      )
+    }
 
     <h2>Newsletter</h2>
     {

@@ -211,3 +211,123 @@ describe('validation', () => {
     expect(hasBlockingError(validate('v60', { dose: 15, time: 210 }))).toBe(true);
   });
 });
+
+describe('moka pot rules', () => {
+  const moka = (over: Partial<BrewInput> = {}) => filter('moka-pot', { dose: 17, water: 250, time: 240, ...over });
+
+  it('turns the hob down before touching the grinder when it sputters', () => {
+    const result = recommendation(moka({ behaviour: 'moka-sputtering', tastes: ['bitter'] }));
+    expect(result.adjustment.variable).toBe('heat');
+    expect(result.adjustment.direction).toBe('decrease');
+    // The guide says heat first: a grind change now would not be measurable.
+    expect(result.keepConstant).toContain('Grind');
+  });
+
+  it('coarsens the grind when barely anything comes through', () => {
+    const result = recommendation(moka({ behaviour: 'moka-stalled' }));
+    expect(result.adjustment.variable).toBe('grind');
+    expect(result.adjustment.direction).toBe('coarser');
+  });
+
+  it('blames the hob rather than the coffee when it burnt on high heat', () => {
+    const result = recommendation(moka({ tastes: ['bitter'], heatLevel: 'high' }));
+    expect(result.adjustment.variable).toBe('heat');
+  });
+
+  it('fills the basket before grinding finer when it tastes thin', () => {
+    const result = recommendation(moka({ tastes: ['weak'] }));
+    expect(result.adjustment.variable).toBe('dose');
+    expect(result.adjustment.direction).toBe('increase');
+  });
+
+  it('treats missing crema as normal rather than a fault', () => {
+    const result = diagnose(moka({ behaviour: 'moka-erupted' }));
+    expect(result.needsClarification).toBe(true);
+    expect(result.adjustment).toBeNull();
+  });
+});
+
+describe('cezve rules', () => {
+  const cezve = (over: Partial<BrewInput> = {}) => filter('cezve', { dose: 7, water: 70, time: 180, ...over });
+
+  it('lowers the heat when it boiled over', () => {
+    const result = recommendation(cezve({ behaviour: 'cezve-boiled-over' }));
+    expect(result.adjustment.variable).toBe('heat');
+    expect(result.adjustment.direction).toBe('decrease');
+  });
+
+  it('grinds finer when no foam formed', () => {
+    const result = recommendation(cezve({ behaviour: 'cezve-no-foam' }));
+    expect(result.adjustment.direction).toBe('finer');
+  });
+});
+
+describe('phin rules', () => {
+  const phin = (over: Partial<BrewInput> = {}) => filter('phin', { dose: 20, water: 90, time: 270, ...over });
+
+  it('tightens the press when it runs straight through', () => {
+    const result = recommendation(phin({ behaviour: 'phin-fast', tastes: ['weak'] }));
+    expect(result.adjustment.variable).toBe('puck_preparation');
+  });
+
+  it('backs the press off when it stalls', () => {
+    const result = recommendation(phin({ behaviour: 'phin-stalled' }));
+    expect(result.adjustment.variable).toBe('puck_preparation');
+  });
+});
+
+describe('batch filter rules', () => {
+  const batch = (over: Partial<BrewInput> = {}) => filter('batch-filter', { dose: 60, water: 1000, time: 300, ...over });
+
+  it('fixes an uneven bed before the grind', () => {
+    const result = recommendation(batch({ behaviour: 'batch-bed-uneven', tastes: ['sour'] }));
+    expect(result.adjustment.variable).toBe('agitation');
+    expect(result.keepConstant).toContain('Grind');
+  });
+
+  it('treats thin but balanced coffee as dilution, not extraction', () => {
+    const result = recommendation(batch({ dose: 45, tastes: ['weak'] }));
+    expect(result.adjustment.variable).toBe('dose');
+  });
+});
+
+describe('cold brew rules', () => {
+  const HOUR = 3600;
+  const cold = (over: Partial<BrewInput> = {}) =>
+    filter('cold-brew', { dose: 100, water: 1000, time: 16 * HOUR, ...over });
+
+  it('shortens a steep that ran past twenty hours', () => {
+    const result = recommendation(cold({ time: 24 * HOUR, tastes: ['bitter'] }));
+    expect(result.adjustment.variable).toBe('steep_time');
+    expect(result.adjustment.direction).toBe('decrease');
+  });
+
+  it('blames the grind, not the clock, when a normal steep tastes harsh', () => {
+    const result = recommendation(cold({ tastes: ['bitter'] }));
+    expect(result.adjustment.variable).toBe('grind');
+  });
+
+  it('lengthens a steep that was cut short', () => {
+    const result = recommendation(cold({ time: 8 * HOUR, tastes: ['weak'] }));
+    expect(result.adjustment.variable).toBe('steep_time');
+    expect(result.adjustment.direction).toBe('increase');
+  });
+
+  it('accepts a steep measured in hours that the filter range would reject', () => {
+    expect(hasBlockingError(validate('cold-brew', { dose: 100, water: 1000, time: 16 * HOUR }))).toBe(false);
+    expect(hasBlockingError(validate('v60', { dose: 15, water: 250, time: 16 * HOUR }))).toBe(true);
+  });
+});
+
+describe('every method', () => {
+  it('has rules, a clarify question and a related page that resolves', () => {
+    for (const method of Object.keys(RULES) as BrewInput['method'][]) {
+      expect(RULES[method].length, `${method} has no rules`).toBeGreaterThan(0);
+      const result = diagnose(filter(method, { tastes: [], behaviour: 'none' }));
+      expect(result.ruleId, `${method} produced no diagnosis`).toBeTruthy();
+      for (const key of result.relatedContent) {
+        expect(CONTENT[key], `${method} links to unknown content key ${key}`).toBeDefined();
+      }
+    }
+  });
+});

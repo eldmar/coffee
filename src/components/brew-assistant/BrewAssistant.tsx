@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { diagnose } from '../../lib/brew-assistant/rules';
+import { formatDuration } from '../../lib/brew-assistant/duration';
 import { parseAssistantParams } from '../../lib/brew-assistant/query';
 import { hasBlockingError, parseNumber, validate } from '../../lib/brew-assistant/validation';
 import {
@@ -33,6 +34,11 @@ const METHODS: [Method, string][] = [
   ['v60', 'V60'],
   ['aeropress', 'AeroPress'],
   ['french-press', 'French Press'],
+  ['moka-pot', 'Moka Pot'],
+  ['batch-filter', 'Filter machine'],
+  ['phin', 'Vietnamese Phin'],
+  ['cezve', 'Cezve'],
+  ['cold-brew', 'Cold Brew'],
 ];
 
 const TASTES: [Taste, string][] = [
@@ -58,6 +64,31 @@ const BEHAVIOURS: Record<Method, [Behaviour, string][]> = {
     ['v60-stalled', 'Drawdown stalled'],
     ['v60-fast', 'Drained very quickly'],
     ['v60-uneven', 'Uneven coffee bed'],
+    ['none', 'No visible problem'],
+  ],
+  'moka-pot': [
+    ['moka-sputtering', 'Spat and sputtered'],
+    ['moka-stalled', 'Barely a trickle'],
+    ['moka-erupted', 'Came up fast and loud'],
+    ['none', 'No visible problem'],
+  ],
+  cezve: [
+    ['cezve-boiled-over', 'Boiled over'],
+    ['cezve-no-foam', 'No foam formed'],
+    ['none', 'No visible problem'],
+  ],
+  phin: [
+    ['phin-fast', 'Dripped straight through'],
+    ['phin-stalled', 'Barely dripped'],
+    ['none', 'No visible problem'],
+  ],
+  'batch-filter': [
+    ['batch-bed-uneven', 'Uneven or dry coffee bed'],
+    ['batch-slow', 'Took much longer than usual'],
+    ['none', 'No visible problem'],
+  ],
+  'cold-brew': [
+    ['cold-brew-silty', 'Silty or cloudy'],
     ['none', 'No visible problem'],
   ],
   aeropress: [
@@ -106,6 +137,8 @@ interface Draft {
   dose: string;
   yieldOut: string;
   water: string;
+  /** Cold brew only. */
+  hours: string;
   minutes: string;
   seconds: string;
   temperature: string;
@@ -119,6 +152,7 @@ const emptyDraft = (): Draft => ({
   dose: '',
   yieldOut: '',
   water: '',
+  hours: '',
   minutes: '',
   seconds: '',
   temperature: '',
@@ -128,13 +162,30 @@ const emptyDraft = (): Draft => ({
   aeropressStyle: 'unknown',
 });
 
-/** Espresso is timed in seconds; the filter methods in minutes and seconds. */
-const totalSeconds = (draft: Draft, method: Method) =>
-  method === 'espresso'
-    ? (parseNumber(draft.seconds) ?? NaN)
-    : (parseNumber(draft.minutes) ?? 0) * 60 + (parseNumber(draft.seconds) ?? 0);
+/**
+ * Espresso is timed in seconds, most filter methods in minutes and seconds, and
+ * cold brew in hours. Everything leaves here as seconds, so no rule ever has to
+ * ask which unit it was handed.
+ */
+const totalSeconds = (draft: Draft, method: Method) => {
+  if (method === 'espresso') return parseNumber(draft.seconds) ?? NaN;
+  if (method === 'cold-brew') {
+    const hours = parseNumber(draft.hours);
+    return hours === null ? NaN : hours * 3600;
+  }
+  return (parseNumber(draft.minutes) ?? 0) * 60 + (parseNumber(draft.seconds) ?? 0);
+};
 
-const FILTER_METHODS: Method[] = ['v60', 'aeropress', 'french-press'];
+const FILTER_METHODS: Method[] = [
+  'v60',
+  'aeropress',
+  'french-press',
+  'moka-pot',
+  'batch-filter',
+  'phin',
+  'cezve',
+  'cold-brew',
+];
 
 /**
  * The homepage still sends legacy ?mode=. The floating widget uses ?method=.
@@ -509,6 +560,15 @@ export default function BrewAssistant() {
               onChange={(v) => setDraft((d) => ({ ...d, seconds: v }))}
               issue={issueFor('time')}
             />
+          ) : chosen === 'cold-brew' ? (
+            <NumberField
+              id="time"
+              label="Steep time"
+              unit="hours"
+              value={draft.hours}
+              onChange={(v) => setDraft((d) => ({ ...d, hours: v }))}
+              issue={issueFor('time')}
+            />
           ) : (
             <div>
               <span className="block text-sm font-medium">Total brew time</span>
@@ -678,7 +738,7 @@ export default function BrewAssistant() {
                   {attempt.input.yieldOut !== undefined && ` → ${attempt.input.yieldOut} g`}
                   {attempt.input.water !== undefined && ` → ${attempt.input.water} g water`}
                   {' · '}
-                  {attempt.input.time} sec
+                  {formatDuration(attempt.input.time)}
                 </p>
                 <p className="text-ink-soft">
                   {attempt.input.tastes.length > 0 ? attempt.input.tastes.join(', ') : 'no taste noted'}

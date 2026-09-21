@@ -37,6 +37,10 @@ const RANGES: Record<string, Range> = {
   filterWater: { hardMin: 0, hardMax: 5000, softMin: 50, softMax: 2000, unit: 'g' },
   filterTime: { hardMin: 0, hardMax: 3600, softMin: 30, softMax: 900, unit: 'sec' },
   temperature: { hardMin: 40, hardMax: 100, softMin: 70, softMax: 100, unit: '°C' },
+  // Cold brew is the one method whose clock runs in hours, not minutes. Kept in
+  // seconds like every other time so the rules never have to ask which unit
+  // they were handed.
+  coldBrewTime: { hardMin: 0, hardMax: 172800, softMin: 28800, softMax: 86400, unit: 'sec' },
 };
 
 function check(field: string, key: keyof typeof RANGES, value: number | undefined): FieldIssue[] {
@@ -98,7 +102,8 @@ export function validate(method: Method, input: Partial<BrewInput>): FieldIssue[
   } else {
     if (required('dose', input.dose)) issues.push(...check('dose', 'filterDose', input.dose));
     if (required('water', input.water)) issues.push(...check('water', 'filterWater', input.water));
-    if (required('time', input.time)) issues.push(...check('time', 'filterTime', input.time));
+    const timeKey = method === 'cold-brew' ? 'coldBrewTime' : 'filterTime';
+    if (required('time', input.time)) issues.push(...check('time', timeKey, input.time));
   }
 
   issues.push(...temperatureIssues(input));

@@ -1,6 +1,15 @@
 /** Shared types for the Brew Assistant. No DOM access anywhere in this folder. */
 
-export type Method = 'espresso' | 'v60' | 'aeropress' | 'french-press';
+export type Method =
+  | 'espresso'
+  | 'v60'
+  | 'aeropress'
+  | 'french-press'
+  | 'moka-pot'
+  | 'cezve'
+  | 'phin'
+  | 'batch-filter'
+  | 'cold-brew';
 
 export type Roast = 'light' | 'medium' | 'dark' | 'unknown';
 
@@ -28,6 +37,16 @@ export type Behaviour =
   | 'aeropress-hard'
   | 'french-press-sediment'
   | 'french-press-hard'
+  | 'moka-sputtering'
+  | 'moka-stalled'
+  | 'moka-erupted'
+  | 'cezve-boiled-over'
+  | 'cezve-no-foam'
+  | 'phin-fast'
+  | 'phin-stalled'
+  | 'batch-bed-uneven'
+  | 'batch-slow'
+  | 'cold-brew-silty'
   | 'none';
 
 /** The one recipe control a recommendation is allowed to move. */
@@ -38,7 +57,15 @@ export type AdjustableVariable =
   | 'temperature'
   | 'water'
   | 'agitation'
-  | 'puck_preparation';
+  | 'puck_preparation'
+  /**
+   * The hob setting, not the water temperature. On a moka pot and a cezve it
+   * is the main control there is, and calling it `temperature` would confuse
+   * it with how hot the water went in.
+   */
+  | 'heat'
+  /** Cold brew's only real clock: how long it sat. */
+  | 'steep_time';
 
 export type AdjustmentDirection = 'increase' | 'decrease' | 'finer' | 'coarser' | 'improve';
 
@@ -67,6 +94,8 @@ export interface BrewInput {
   grind?: 'fine' | 'medium-fine' | 'medium' | 'medium-coarse' | 'coarse' | 'unknown';
   /** AeroPress only. */
   aeropressStyle?: 'standard' | 'inverted' | 'unknown';
+  /** Stovetop methods: how high the hob was set. */
+  heatLevel?: 'low' | 'medium' | 'high' | 'unknown';
 }
 
 interface BrewDiagnosisBase {

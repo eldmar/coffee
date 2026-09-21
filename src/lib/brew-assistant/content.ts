@@ -55,6 +55,15 @@ export const CONTENT: Record<string, ContentLink> = {
   v60Guide: { label: 'V60 brew guide', href: '/guides/v60/' },
   aeropressGuide: { label: 'AeroPress brew guide', href: '/guides/aeropress/' },
   frenchPressGuide: { label: 'French Press brew guide', href: '/guides/french-press/' },
+  mokaPotGuide: { label: 'Moka Pot brew guide', href: '/guides/moka-pot/' },
+  filterCoffee: {
+    label: 'How to Make Filter Coffee',
+    href: '/learn/coffee-basics/filter-coffee/',
+  },
+  coldBrew: {
+    label: 'Cold Brew vs Iced Coffee',
+    href: '/learn/coffee-basics/cold-brew-vs-iced-coffee/',
+  },
 };
 
 export const linksFor = (keys: string[]): ContentLink[] =>

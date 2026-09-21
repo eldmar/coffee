@@ -6,7 +6,16 @@
  * and the local session id never leave the browser — see PROHIBITED below.
  */
 
-export type BrewMethod = 'espresso' | 'v60' | 'aeropress' | 'french_press';
+export type BrewMethod =
+  | 'espresso'
+  | 'v60'
+  | 'aeropress'
+  | 'french_press'
+  | 'moka_pot'
+  | 'cezve'
+  | 'phin'
+  | 'batch_filter'
+  | 'cold_brew';
 
 export type BrewEntryPoint =
   | 'homepage'
@@ -36,7 +45,9 @@ export type BrewAdjustment =
   | 'water'
   | 'temperature'
   | 'agitation'
-  | 'puck_preparation';
+  | 'puck_preparation'
+  | 'heat'
+  | 'steep_time';
 
 export type BrewDirection = 'finer' | 'coarser' | 'increase' | 'decrease' | 'improve';
 

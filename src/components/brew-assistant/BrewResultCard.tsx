@@ -1,12 +1,6 @@
 import { linksFor } from '../../lib/brew-assistant/content';
+import { formatDurationRange } from '../../lib/brew-assistant/duration';
 import type { BrewDiagnosis, Method } from '../../lib/brew-assistant/types';
-
-const clock = (seconds: number) =>
-  `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
-
-/** One unit for the pair, so a window reads "27–30 sec" rather than repeating it. */
-const timeRange = (min: number, max: number) =>
-  max >= 60 ? `${clock(min)}–${clock(max)}` : `${min}–${max} sec`;
 
 function targetLine(method: Method, target: BrewDiagnosis['nextTarget']): string {
   const parts: string[] = [];
@@ -16,7 +10,7 @@ function targetLine(method: Method, target: BrewDiagnosis['nextTarget']): string
   if (target.bypass !== undefined) parts.push(`${target.bypass} g bypass after pressing`);
   const time =
     target.timeMin !== undefined && target.timeMax !== undefined
-      ? timeRange(target.timeMin, target.timeMax)
+      ? formatDurationRange(target.timeMin, target.timeMax)
       : null;
   const joined = parts.join(' → ');
   const withTime = [joined, time].filter(Boolean).join(' · ');
@@ -35,6 +29,7 @@ export default function BrewResultCard({
   onContentClick?: (href: string) => void;
 }) {
   const links = linksFor(diagnosis.relatedContent);
+  const target = targetLine(diagnosis.method, diagnosis.nextTarget);
 
   if (diagnosis.needsClarification) {
     return (
@@ -88,12 +83,19 @@ export default function BrewResultCard({
       </h2>
 
       <dl className="mt-6 flex flex-col gap-4">
-        <div>
-          <dt className="text-[0.6875rem] font-semibold tracking-[0.14em] text-ink-soft uppercase">
-            Next target
-          </dt>
-          <dd className="mt-1 font-medium">{targetLine(diagnosis.method, diagnosis.nextTarget)}</dd>
-        </div>
+        {/*
+          Some methods have no number to aim at. A moka pot's dose is whatever
+          the basket holds and its lever is the hob, so printing an empty
+          "Next target" would be a heading over nothing.
+        */}
+        {target !== '' && (
+          <div>
+            <dt className="text-[0.6875rem] font-semibold tracking-[0.14em] text-ink-soft uppercase">
+              Next target
+            </dt>
+            <dd className="mt-1 font-medium">{target}</dd>
+          </div>
+        )}
         <div>
           <dt className="text-[0.6875rem] font-semibold tracking-[0.14em] text-ink-soft uppercase">
             Keep unchanged

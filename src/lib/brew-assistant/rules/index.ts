@@ -5,7 +5,9 @@ import type {
   Method,
 } from '../types';
 import { espressoRules } from './espresso';
+import { batchFilterRules, coldBrewRules, phinRules } from './drip';
 import { aeropressRules, frenchPressRules, v60Rules } from './filter';
+import { cezveRules, mokaPotRules } from './stovetop';
 import { clarify, firstMatch, type Rule } from './shared';
 
 const RULES: Record<Method, Rule[]> = {
@@ -13,6 +15,11 @@ const RULES: Record<Method, Rule[]> = {
   v60: v60Rules,
   aeropress: aeropressRules,
   'french-press': frenchPressRules,
+  'moka-pot': mokaPotRules,
+  cezve: cezveRules,
+  phin: phinRules,
+  'batch-filter': batchFilterRules,
+  'cold-brew': coldBrewRules,
 };
 
 const CLARIFY_QUESTION: Record<Method, string> = {
@@ -20,6 +27,11 @@ const CLARIFY_QUESTION: Record<Method, string> = {
   v60: 'Did the water drain faster or slower than you expected?',
   aeropress: 'Was the plunger easier or harder to push than usual?',
   'french-press': 'Was there more sediment than usual, or was the plunger hard to push?',
+  'moka-pot': 'Did it sputter, stall, or come through calmly?',
+  cezve: 'Did the foam rise slowly, or did it boil over?',
+  phin: 'Did it drip straight through, or barely drip at all?',
+  'batch-filter': 'Was the coffee bed evenly wet when it finished?',
+  'cold-brew': 'How long did it steep, and how coarse was the grind?',
 };
 
 const GUIDE_KEY: Record<Method, string> = {
@@ -27,6 +39,13 @@ const GUIDE_KEY: Record<Method, string> = {
   v60: 'v60Guide',
   aeropress: 'aeropressGuide',
   'french-press': 'frenchPressGuide',
+  'moka-pot': 'mokaPotGuide',
+  // No guide of their own yet, so they point at the closest lesson rather than
+  // at nothing. check-build.mjs fails if any of these stop resolving.
+  cezve: 'grindSize',
+  phin: 'filterCoffee',
+  'batch-filter': 'filterCoffee',
+  'cold-brew': 'coldBrew',
 };
 
 /**

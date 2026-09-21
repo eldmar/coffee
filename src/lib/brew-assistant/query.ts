@@ -9,7 +9,17 @@ export interface AssistantSeed {
   entry: string | null;
 }
 
-const METHODS = new Set<Method>(['espresso', 'v60', 'aeropress', 'french-press']);
+const METHODS = new Set<Method>([
+  'espresso',
+  'v60',
+  'aeropress',
+  'french-press',
+  'moka-pot',
+  'cezve',
+  'phin',
+  'batch-filter',
+  'cold-brew',
+]);
 const TASTES = new Set<Taste>([
   'sour',
   'bitter',
@@ -32,6 +42,11 @@ const METHOD_BEHAVIOURS: Record<Method, Set<Behaviour>> = {
   v60: new Set(['v60-stalled', 'v60-fast', 'v60-uneven', 'none']),
   aeropress: new Set(['aeropress-easy', 'aeropress-hard', 'none']),
   'french-press': new Set(['french-press-sediment', 'french-press-hard', 'none']),
+  'moka-pot': new Set(['moka-sputtering', 'moka-stalled', 'moka-erupted', 'none']),
+  cezve: new Set(['cezve-boiled-over', 'cezve-no-foam', 'none']),
+  phin: new Set(['phin-fast', 'phin-stalled', 'none']),
+  'batch-filter': new Set(['batch-bed-uneven', 'batch-slow', 'none']),
+  'cold-brew': new Set(['cold-brew-silty', 'none']),
 };
 
 function genericBehaviour(method: Method | null, issue: string | null): Behaviour | null {

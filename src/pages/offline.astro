@@ -39,6 +39,10 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <script>
+  import { trackRetentionEvent } from '../lib/analytics';
+
+  trackRetentionEvent('offline_page_shown', {});
+
   const retry = document.querySelector<HTMLButtonElement>('[data-retry]');
   retry?.addEventListener('click', () => {
     window.location.reload();

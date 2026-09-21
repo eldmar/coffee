@@ -134,6 +134,17 @@ export type RetentionAnalyticsEventMap = {
     content_type: 'recipe' | 'guide' | 'learn' | 'journal';
     content_slug: string;
   };
+  /** Only on an explicit switch, so this counts choices made, not page loads. */
+  theme_changed: {
+    theme_choice: 'auto' | 'light' | 'dark';
+  };
+  /** Once per session, and only when launched from a home screen. */
+  app_launched_standalone: Record<never, never>;
+  /** The service worker had no copy of the page and no network to fetch one. */
+  offline_page_shown: Record<never, never>;
+  brew_timer_started: {
+    recipe_slug: string;
+  };
 };
 
 type AnalyticsValue = string | number | boolean | null;
@@ -182,6 +193,7 @@ const ALLOWED_PROPERTIES = new Set([
   'units',
   'content_type',
   'content_slug',
+  'theme_choice',
 ]);
 
 type PostHogClient = (typeof import('posthog-js'))['default'];

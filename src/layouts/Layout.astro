@@ -115,6 +115,27 @@ const revealBrewWidgetAfterScroll = Astro.url.pathname === '/';
     </main>
     <Footer />
     <script>
+      import { trackRetentionEvent } from '../lib/analytics';
+
+      // Whether the site was opened from a home screen rather than a browser
+      // tab. Recorded once per session: every page view in a standalone window
+      // would otherwise report the same fact again.
+      const STANDALONE_KEY = 'kavovo.standaloneCounted';
+      const standalone =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as { standalone?: boolean }).standalone === true;
+      if (standalone) {
+        try {
+          if (!sessionStorage.getItem(STANDALONE_KEY)) {
+            sessionStorage.setItem(STANDALONE_KEY, '1');
+            trackRetentionEvent('app_launched_standalone', {});
+          }
+        } catch {
+          // Blocked storage only means the launch goes uncounted.
+        }
+      }
+    </script>
+    <script>
       // Registered after load so it never competes with the page's own
       // requests. The worker only ever adds an offline fallback: every page is
       // still fetched from the network first when there is one.

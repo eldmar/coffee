@@ -87,6 +87,8 @@
 </style>
 
 <script>
+  import { trackRetentionEvent } from '../lib/analytics';
+
   const STORAGE_KEY = 'kavovo.theme';
   // Mirrors --color-paper in src/styles/global.css.
   const BAR_COLOUR = { light: '#fbf8f2', dark: '#1a1512' };
@@ -138,6 +140,7 @@
       const input = event.target;
       if (!(input instanceof HTMLInputElement) || !isChoice(input.value)) return;
       apply(input.value);
+      trackRetentionEvent('theme_changed', { theme_choice: input.value });
       try {
         localStorage.setItem(STORAGE_KEY, input.value);
       } catch {

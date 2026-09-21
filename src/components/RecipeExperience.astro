@@ -10,18 +10,20 @@ export interface StepTiming {
 
 interface Props {
   title: string;
+  recipeSlug: string;
   steps: string[];
   stepTimings?: StepTiming[];
   ingredients: string[];
   espresso?: EspressoRecipe;
 }
 
-const { title, steps, stepTimings, ingredients, espresso } = Astro.props;
+const { title, recipeSlug, steps, stepTimings, ingredients, espresso } = Astro.props;
 const stepTotal = Math.max(steps.length, 1);
 ---
 
 <div
   data-recipe-experience
+  data-recipe-slug={recipeSlug}
   data-espresso-dose={espresso?.dose}
   data-espresso-ratio={espresso?.ratio}
   data-step-timings={stepTimings && stepTimings.length > 0
@@ -516,6 +518,7 @@ const stepTotal = Math.max(steps.length, 1);
 </style>
 
 <script>
+  import { trackRetentionEvent } from '../lib/analytics';
   import {
     scaleInstructionMeasurements,
     type EspressoRecipe,
@@ -806,6 +809,12 @@ const stepTotal = Math.max(steps.length, 1);
       if (timerStartedAt !== undefined) {
         pauseTimer();
         return;
+      }
+      // Resuming after a pause is the same brew, so only a clock still at zero
+      // counts as someone reaching for the timer.
+      const recipeSlug = experience.dataset.recipeSlug;
+      if (elapsedMilliseconds === 0 && recipeSlug) {
+        trackRetentionEvent('brew_timer_started', { recipe_slug: recipeSlug });
       }
       timerStartedAt = Date.now();
       timerInterval = window.setInterval(renderTimer, 250);

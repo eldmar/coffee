@@ -16,6 +16,11 @@ export const WIDGET_METHODS: Array<{ value: Method; label: string }> = [
   { value: 'v60', label: 'V60' },
   { value: 'aeropress', label: 'AeroPress' },
   { value: 'french-press', label: 'French Press' },
+  { value: 'moka-pot', label: 'Moka Pot' },
+  { value: 'batch-filter', label: 'Filter machine' },
+  { value: 'phin', label: 'Vietnamese Phin' },
+  { value: 'cezve', label: 'Cezve' },
+  { value: 'cold-brew', label: 'Cold Brew' },
 ];
 
 export const WIDGET_ISSUES: Record<Method, Array<{ value: WidgetIssue; label: string }>> = {
@@ -55,6 +60,43 @@ export const WIDGET_ISSUES: Record<Method, Array<{ value: WidgetIssue; label: st
     { value: 'strong', label: 'Too strong' },
     { value: 'dry', label: 'Dry or astringent' },
     { value: 'muddy', label: 'Muddy or silty' },
+    { value: 'not-sure', label: 'Not sure' },
+  ],
+  'moka-pot': [
+    { value: 'bitter', label: 'Bitter or burnt' },
+    { value: 'weak', label: 'Weak or watery' },
+    { value: 'sour', label: 'Sour or sharp' },
+    { value: 'sputtering', label: 'Spat and sputtered' },
+    { value: 'slow', label: 'Barely a trickle' },
+    { value: 'not-sure', label: 'Not sure' },
+  ],
+  cezve: [
+    { value: 'boiled', label: 'Boiled over' },
+    { value: 'no-foam', label: 'No foam formed' },
+    { value: 'bitter', label: 'Bitter or harsh' },
+    { value: 'weak', label: 'Weak or watery' },
+    { value: 'muddy', label: 'Gritty in the cup' },
+    { value: 'not-sure', label: 'Not sure' },
+  ],
+  phin: [
+    { value: 'bitter', label: 'Bitter or harsh' },
+    { value: 'weak', label: 'Weak or watery' },
+    { value: 'fast', label: 'Dripped straight through' },
+    { value: 'slow', label: 'Barely dripped' },
+    { value: 'not-sure', label: 'Not sure' },
+  ],
+  'batch-filter': [
+    { value: 'sour', label: 'Sour or sharp' },
+    { value: 'bitter', label: 'Bitter' },
+    { value: 'weak', label: 'Weak or watery' },
+    { value: 'dry', label: 'Dry or astringent' },
+    { value: 'slow', label: 'Took much longer than usual' },
+    { value: 'not-sure', label: 'Not sure' },
+  ],
+  'cold-brew': [
+    { value: 'bitter', label: 'Bitter or harsh' },
+    { value: 'weak', label: 'Weak or watery' },
+    { value: 'muddy', label: 'Silty or cloudy' },
     { value: 'not-sure', label: 'Not sure' },
   ],
 };
@@ -191,13 +233,31 @@ export function nextWidgetQuestion(
   return null;
 }
 
+/**
+ * A plausible recipe per brewer. The widget deliberately never asks for numbers
+ * — it is three taps, not a recording — so the rules are handed a typical brew
+ * and reason from the symptom instead.
+ */
+const BASELINE: Record<Method, { dose: number; water: number; time: number }> = {
+  espresso: { dose: 18, water: 0, time: 29 },
+  v60: { dose: 15, water: 250, time: 180 },
+  aeropress: { dose: 15, water: 250, time: 180 },
+  'french-press': { dose: 15, water: 250, time: 300 },
+  'moka-pot': { dose: 17, water: 250, time: 240 },
+  cezve: { dose: 7, water: 70, time: 180 },
+  phin: { dose: 20, water: 90, time: 270 },
+  'batch-filter': { dose: 60, water: 1000, time: 300 },
+  'cold-brew': { dose: 100, water: 1000, time: 16 * 3600 },
+};
+
 const baseline = (method: Method): BrewInput => {
+  const recipe = BASELINE[method];
   if (method === 'espresso') {
     return {
       method,
-      dose: 18,
+      dose: recipe.dose,
       yieldOut: 38,
-      time: 29,
+      time: recipe.time,
       roast: 'medium',
       tastes: [],
       behaviour: 'none',
@@ -205,9 +265,9 @@ const baseline = (method: Method): BrewInput => {
   }
   return {
     method,
-    dose: 15,
-    water: 250,
-    time: method === 'v60' ? 180 : method === 'aeropress' ? 180 : 300,
+    dose: recipe.dose,
+    water: recipe.water,
+    time: recipe.time,
     roast: 'medium',
     tastes: [],
     behaviour: 'none',
@@ -231,7 +291,7 @@ function quickInput(
     input.tastes = answers.sharpness === 'yes' ? ['weak', 'sour'] : ['weak'];
     if (answers.sharpness === 'no') {
       if (method === 'espresso') input.yieldOut = 50;
-      else input.water = 300;
+      else input.water = Math.round((input.water ?? 0) * 1.2);
     }
   }
 
@@ -245,7 +305,12 @@ function quickInput(
   if (issue === 'muddy') {
     input.tastes = ['muddy'];
     if (method === 'french-press') input.behaviour = 'french-press-sediment';
+    if (method === 'cold-brew') input.behaviour = 'cold-brew-silty';
   }
+
+  if (issue === 'sputtering') input.behaviour = 'moka-sputtering';
+  if (issue === 'boiled') input.behaviour = 'cezve-boiled-over';
+  if (issue === 'no-foam') input.behaviour = 'cezve-no-foam';
 
   if (issue === 'flat') {
     if (answers['flat-character'] !== 'sharp') return null;
@@ -261,12 +326,21 @@ function quickInput(
     input.tastes = ['sour', 'weak'];
     if (method === 'espresso') input.behaviour = 'espresso-fast';
     if (method === 'v60') input.behaviour = 'v60-fast';
+    if (method === 'phin') input.behaviour = 'phin-fast';
   }
 
   if (issue === 'slow') {
     input.tastes = ['bitter', 'dry'];
     if (method === 'espresso') input.behaviour = 'espresso-slow';
     if (method === 'v60') input.behaviour = 'v60-stalled';
+    if (method === 'phin') input.behaviour = 'phin-stalled';
+    if (method === 'batch-filter') input.behaviour = 'batch-slow';
+    // The guide calls a trickle a grind problem, not a taste one, so the
+    // symptom stands on its own rather than carrying bitterness with it.
+    if (method === 'moka-pot') {
+      input.behaviour = 'moka-stalled';
+      input.tastes = [];
+    }
   }
 
   if (method === 'espresso' && flow === 'fast') input.behaviour = 'espresso-fast';

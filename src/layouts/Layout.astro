@@ -40,7 +40,12 @@ const {
  * below could quietly drift out of step with what is actually collected. With
  * the token here, the beacon and its disclosure are the same switch.
  */
-const webAnalyticsToken = import.meta.env.PUBLIC_WEB_ANALYTICS_TOKEN;
+// Production only: the beacon is registered against kavovo.uk, so on a dev
+// server it just fails CORS on every page load and fills the console with
+// errors that mean nothing.
+const webAnalyticsToken = import.meta.env.PROD
+  ? import.meta.env.PUBLIC_WEB_ANALYTICS_TOKEN
+  : undefined;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImagePath = ogImage ?? photo('hero').src;

@@ -19,6 +19,12 @@ export type WidgetIssue =
   | 'strong'
   | 'muddy'
   | 'flat'
+  /** Stovetop: the pot spat from the start. */
+  | 'sputtering'
+  /** Cezve: it rose and boiled instead of foaming. */
+  | 'boiled'
+  /** Cezve: no foam formed at all. */
+  | 'no-foam'
   | 'not-sure';
 
 export type WidgetQuestionId =

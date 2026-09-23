@@ -16,6 +16,7 @@ import VariableCards from '../../components/guide/VariableCards.astro';
 import TasteTable from '../../components/guide/TasteTable.astro';
 import TroubleshootingList from '../../components/guide/TroubleshootingList.astro';
 import RelatedLearning from '../../components/guide/RelatedLearning.astro';
+import { assistantHref } from '../../lib/brew-assistant/query';
 
 export async function getStaticPaths() {
   const [guides, recipes] = await Promise.all([
@@ -62,6 +63,9 @@ const heroAlt = canonical.data.imageAlt ?? `${data.title} coffee being brewed`;
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
 const url = `${site}/guides/${guide.id}/`;
+// A guide explains the method; the assistant fixes one brew of it. The page
+// already knows which brewer, so it hands that over rather than asking again.
+const fixHref = assistantHref(data.method, 'guide');
 const ogImagePath = photo(heroImage).src;
 
 // Article, not Recipe: the Recipe schema belongs to the recipe page.
@@ -143,6 +147,25 @@ const schema = {
         <GuideSection id="choosing-coffee" title="Choosing coffee" paragraphs={data.choosingCoffee} />
         {data.milk && <GuideSection id="milk" title="Milk" paragraphs={data.milk} />}
         <TroubleshootingList items={data.troubleshooting} />
+
+        {
+          fixHref && (
+            <section class="guide-section" data-brew-widget-standdown>
+              <h2 class="font-display text-2xl font-medium">Still not right?</h2>
+              <p class="mt-4 text-ink-soft">
+                The table above covers the usual faults. If yours is not on it, describe the brew
+                you actually got and the assistant works back to one change — with {data.title}
+                already selected.
+              </p>
+              <a
+                href={fixHref}
+                class="mt-6 inline-flex min-h-11 items-center rounded-md bg-accent px-5 text-sm font-medium text-accent-ink transition-colors hover:bg-accent-dark"
+              >
+                Fix my next brew
+              </a>
+            </section>
+          )
+        }
         <GuideSection id="cleaning" title="Cleaning and care" paragraphs={data.cleaning} />
         <RelatedLearning lessons={data.relatedLearning} />
 

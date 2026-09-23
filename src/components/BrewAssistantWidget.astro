@@ -910,6 +910,28 @@ const { revealAfterScroll = false } = Astro.props;
       if (window.scrollY > 0) revealTrigger();
       else window.addEventListener('scroll', revealTrigger, { once: true, passive: true });
     }
+
+    /*
+      Recipe and guide pages carry their own "Fix my next brew" card. While that
+      is on screen the floating shortcut is the same action twice — and, pinned
+      to the bottom right, it lands on top of the card's own button. So the chip
+      stands down for as long as the dedicated call to action is visible.
+    */
+    const rivals = document.querySelectorAll('[data-brew-widget-standdown]');
+    if (rivals.length > 0 && 'IntersectionObserver' in window) {
+      const visible = new Set<Element>();
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) visible.add(entry.target);
+            else visible.delete(entry.target);
+          }
+          root.classList.toggle('brew-assistant-widget--standdown', visible.size > 0);
+        },
+        { rootMargin: '0px 0px -64px 0px' },
+      );
+      for (const rival of rivals) observer.observe(rival);
+    }
   }
 
   if (document.readyState === 'loading') {
@@ -944,6 +966,19 @@ const { revealAfterScroll = false } = Astro.props;
 
   .brew-widget-trigger[hidden] {
     display: none;
+  }
+
+  /* Faded rather than removed, so it does not jump back mid-scroll. */
+  .brew-assistant-widget--standdown .brew-widget-trigger {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brew-assistant-widget--standdown .brew-widget-trigger {
+      transition: none;
+    }
   }
 
   .brew-widget-tooltip {
@@ -1293,17 +1328,13 @@ const { revealAfterScroll = false } = Astro.props;
     overflow: hidden;
   }
 
-  @media (max-width: 79.4375rem) {
-    .brew-assistant-widget[data-brew-widget-reveal='immediate'] {
-      display: flex;
-      justify-content: flex-end;
-      padding: 12px 20px 0;
-    }
-
-    .brew-assistant-widget[data-brew-widget-reveal='immediate'] .brew-widget-trigger {
-      position: static;
-    }
-  }
+  /*
+    The trigger used to drop into the document flow below 1272px on every page
+    but the homepage, which meant it scrolled away with the header. An assistant
+    for fixing the brew in front of you is needed halfway down a recipe, not
+    only in the first screenful, so it stays pinned at every width. `reveal`
+    now decides only when it appears, never whether it is reachable.
+  */
 
   @media (min-width: 79.5rem) and (max-width: 96rem) {
     .brew-widget-trigger {

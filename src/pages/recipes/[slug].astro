@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { assistantHref } from '../../lib/brew-assistant/query';
 import Photo from '../../components/Photo.astro';
 import { photo } from '../../lib/photos';
 import Layout from '../../layouts/Layout.astro';
@@ -236,6 +237,8 @@ const dateFmt = (d: Date) =>
   d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+// The page already knows the brewer, so the assistant should not ask again.
+const fixHref = assistantHref(data.brewMethod, 'recipe');
 const recipeUrl = `${site}/recipes/${recipe.id}/`;
 const shortUrl = recipeUrl.replace(/^https?:\/\//, '');
 const steps = extractSteps(recipe.body ?? '');
@@ -410,6 +413,31 @@ const initialIngredientLines = formatIngredients(
     </div>
 
     <FaqSchema items={faqs} />
+
+    {
+      fixHref && (
+        <aside
+          class="mt-12 rounded-lg border border-line bg-ivory px-5 py-6 print:hidden sm:px-8"
+          data-brew-widget-standdown
+          aria-labelledby="fix-this-brew-heading"
+        >
+          <span class="eyebrow">Not quite right?</span>
+          <h2 id="fix-this-brew-heading" class="mt-2 font-display text-2xl font-medium">
+            Tell us how it tasted
+          </h2>
+          <p class="mt-3 max-w-lg text-ink-soft">
+            Describe the cup you actually got and the assistant suggests one change for the next
+            one — with your brewer already selected.
+          </p>
+          <a
+            href={fixHref}
+            class="mt-5 inline-flex min-h-11 items-center rounded-md bg-accent px-5 text-sm font-medium text-accent-ink transition-colors hover:bg-accent-dark"
+          >
+            Fix my next brew
+          </a>
+        </aside>
+      )
+    }
 
     <section class="mt-12 border-t border-line pt-8 print:hidden" aria-labelledby="related-content-heading">
       <span class="eyebrow">Continue exploring</span>

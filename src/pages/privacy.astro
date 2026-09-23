@@ -5,7 +5,7 @@ import TextPage from '../components/TextPage.astro';
 const subscriptionsEnabled = import.meta.env.PUBLIC_SUBSCRIPTIONS_ENABLED === 'true';
 // Same switch that renders the beacon in the layout, so this section cannot
 // claim more or less than the site actually does.
-const webAnalyticsEnabled = Boolean(import.meta.env.PUBLIC_WEB_ANALYTICS_TOKEN);
+const webAnalyticsEnabled = import.meta.env.PROD && Boolean(import.meta.env.PUBLIC_WEB_ANALYTICS_TOKEN);
 
 // TODO before launch: add the operating legal entity, its registered address and,
 // if required in your jurisdiction, a data protection contact. Have a lawyer review.

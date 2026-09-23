@@ -80,3 +80,34 @@ export function parseAssistantParams(search: string): AssistantSeed {
 }
 
 export const isAssistantMethod = (value: string): value is Method => METHODS.has(value as Method);
+
+/**
+ * Recipes and guides name their brewers in their own frontmatter vocabulary,
+ * which is close to the assistant's but not identical: content says `filter`
+ * where the assistant says `batch-filter`, and `no-brewer` has no brewer to
+ * diagnose at all.
+ */
+const CONTENT_METHOD: Record<string, Method> = {
+  espresso: 'espresso',
+  v60: 'v60',
+  aeropress: 'aeropress',
+  'french-press': 'french-press',
+  'moka-pot': 'moka-pot',
+  cezve: 'cezve',
+  phin: 'phin',
+  'cold-brew': 'cold-brew',
+  filter: 'batch-filter',
+};
+
+export const assistantMethodFor = (contentMethod: string): Method | null =>
+  CONTENT_METHOD[contentMethod] ?? null;
+
+/**
+ * A link straight into the assistant with the brewer already chosen, so the
+ * page that knows the method does not make the reader pick it again. Null when
+ * there is no brewer to diagnose — an affogato has nothing to dial in.
+ */
+export function assistantHref(contentMethod: string, entry: 'recipe' | 'guide'): string | null {
+  const method = assistantMethodFor(contentMethod);
+  return method === null ? null : `/assistant/?method=${method}&entry=${entry}`;
+}

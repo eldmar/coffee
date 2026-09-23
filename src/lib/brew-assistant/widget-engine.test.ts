@@ -3,6 +3,8 @@ import {
   buildFullAssistantHref,
   diagnoseWidget,
   nextWidgetQuestion,
+  WIDGET_ISSUES,
+  WIDGET_METHODS,
 } from './widget-engine';
 import type { Method } from './types';
 import type { WidgetIssue, WidgetState } from './widget-types';
@@ -128,5 +130,46 @@ describe('widget confidence and handoff', () => {
     expect(
       nextWidgetQuestion('espresso', 'not-sure', { closest: 'sharp', flow: 'not-sure' }),
     ).toBeNull();
+  });
+});
+
+describe('widget: the brewers added later', () => {
+  it('offers every method the rule engine knows', () => {
+    expect(WIDGET_METHODS.map((m) => m.value).sort()).toEqual(
+      (Object.keys(WIDGET_ISSUES) as Method[]).sort(),
+    );
+    expect(WIDGET_METHODS).toHaveLength(9);
+  });
+
+  it('gives every method at least one symptom besides "not sure"', () => {
+    for (const { value } of WIDGET_METHODS) {
+      const real = WIDGET_ISSUES[value].filter((i) => i.value !== 'not-sure');
+      expect(real.length, `${value} has no symptoms`).toBeGreaterThan(0);
+    }
+  });
+
+  it('sends a sputtering moka pot to the hob, matching the published guide', () => {
+    const result = recommendation(state('moka-pot', 'sputtering'));
+    expect(result.adjustmentVariable).toBe('heat');
+    expect(result.adjustmentDirection).toBe('decrease');
+    expect(result.keepUnchanged).toContain('Grind');
+  });
+
+  it('reads a trickling moka pot as grind, not as taste', () => {
+    const result = recommendation(state('moka-pot', 'slow'));
+    expect(result.adjustmentVariable).toBe('grind');
+    expect(result.adjustmentDirection).toBe('coarser');
+  });
+
+  it('treats a boiled cezve as heat', () => {
+    const result = recommendation(state('cezve', 'boiled'));
+    expect(result.adjustmentVariable).toBe('heat');
+  });
+
+  it('dilutes a cold brew in proportion rather than to a fixed 300 g', () => {
+    // 300 g against a 100 g dose would be a concentrate, not a correction.
+    const result = recommendation(state('cold-brew', 'weak', { sharpness: 'no' }));
+    expect(result.adjustment).toBeTruthy();
+    expect(result.method).toBe('cold-brew');
   });
 });
